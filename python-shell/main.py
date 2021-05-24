@@ -6,9 +6,11 @@ This is the main file for the project 'Python Practice Shell'. This file defines
 Author : Rishav Das (https://github.com/rdofficial/)
 Created on : May 9, 2021
 
-Last modified by : -
-Last modified on : -
+Last modified by : Rishav Das (https://github.com/rdofficial/)
+Last modified on : May 24, 2021
 
+Changes made in the last modification :
+1. Updated the commented docs + added __doc__ for the Shell.help() function.
 
 Authors contributed to this script (Add your name below if you have contributed) :
 1. Rishav Das (github:https://github.com/rdofficial/, email:rdofficial192@gmail.com)
@@ -67,6 +69,14 @@ class Shell:
 			# Parsing and executing the command
 			token = self.commandParser()
 			self.executeCommand(token)
+
+			# The in-built commands defined in this shell
+			# ----
+			# 1. exit
+			# 2. list-files / ls
+			# 3. cd / chdir / change-dirrectory / change-dir
+			# 4. add
+			# ----
 
 	def commandParser(self):
 		""" """
@@ -287,12 +297,12 @@ class Shell:
 			print(f'[ Command not recognized : {self.command.split(" ")[0]} ]')
 
 	def help(self, command = None):
-		""" """
+		""" This method / function serves the task of serving the help for the in-built commands defined in this shell project / application. This function takes 1 argument : command. The command argument is to be specified with a particular command of this shell. The function then prints the brief help information for that script on the console screen. The information would contain 2-3 lines for command purpose and then the arguments as well as the warning too. If the argument command is not specified, then the function displays the help info for the entire shell. """
 
 		if command == None:
 			# If the command is not mentioned, then we display the help info for the entire shell
 
-			print(f'Help info for overall shell project')
+			print(f'Help info for overall shell project - To be updated')
 		else:
 			# If the command is mentioned, then we display the help info for the specified command
 

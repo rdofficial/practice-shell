@@ -6,8 +6,11 @@ A module created for supplying the required functions to the shell application. 
 Author : Rishav Das (https://github.com/rdofficial/)
 Created on : May 9, 2021
 
-Last modified by : -
-Last modified on : -
+Last modified by : Rishav Das (https://github.com/rdofficial/)
+Last modified on : May 24, 2021
+
+Changes made in the last modifications :
+1. Updated the little bug in the FilesLister.tree() function.
 
 Authors contributed to this script (Add your name below if you have contributed) :
 1. Rishav Das (github:https://github.com/rdofficial/, email:rdofficial192@gmail.com)
@@ -83,7 +86,7 @@ class FilesLister:
 			
 			# Giving absolute path to the files / sub-directories
 			file = directory + '/' + file
-			file.split('//', '/')
+			file.replace('//', '/')
 
 			# Checking wheter a file or directory
 			if path.isfile(file):
