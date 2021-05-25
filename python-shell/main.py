@@ -1,5 +1,5 @@
 """
-Python Practice Shell
+Python Shell
 
 This is the main file for the project 'Python Practice Shell'. This file defines the structure, command parsing algorithm as well as the command executing codes for the shell program. The entire project is powered by Python3, i.e., written in Python3 programming language.
 
@@ -10,8 +10,7 @@ Last modified by : Rishav Das (https://github.com/rdofficial/)
 Last modified on : May 25, 2021
 
 Changes made in the last modification :
-1. Updated the initial working directory from the python script file's directory to the data/ directory.
-2. Fixed the error for the command 'ls --directory' / 'ls -d'.
+1. Added the clear command.
 
 Authors contributed to this script (Add your name below if you have contributed) :
 1. Rishav Das (github:https://github.com/rdofficial/, email:rdofficial192@gmail.com)
@@ -20,7 +19,7 @@ Authors contributed to this script (Add your name below if you have contributed)
 # Importing the required modules
 try:
 	# Importing regular modules (the ones that are available in the standard python library)
-	from os import system, path, listdir, remove, chdir, mkdir
+	from os import system as cmd, path, listdir, remove, chdir, mkdir
 	from sys import platform, argv as arguments
 
 	# Importing the installed modules (the ones that are installed using pip3, or any external source)
@@ -28,7 +27,7 @@ try:
 
 	# Importing the self-defined modules (the custom modules created in this project)
 	from modules import directory as DirectoryTools
-	# from modules import 
+	from modules.regular import TerminalCommands
 except Exception as e:
 	# If there are any errors during the importing of the modules, then we display the error on the console screen
 
@@ -225,8 +224,13 @@ class Shell:
 							# If the argument entered by the user is neither recognized by the script nor it is a existing directory, then we display an directory not found error
 
 							print(f'[ Error : No such directory "{token["arguments"][0]}" ]')
+		elif token["command"] == 'clear':
+			# If the user entered command is to clear the terminal / console screen, then we continue
+
+			# Clearing the terminal screen
+			cmd(TerminalCommands.CLEAR)
 		elif token["command"] == 'add':
-			# If the user command is to add, then we continue
+			# If the user entered command is to add, then we continue
 
 			# Checking for the numeric arguments if exists
 			if len(token["arguments"]) == 0:
