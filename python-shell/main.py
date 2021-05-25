@@ -10,7 +10,8 @@ Last modified by : Rishav Das (https://github.com/rdofficial/)
 Last modified on : May 25, 2021
 
 Changes made in the last modification :
-1. Added the clear command.
+1. Added the subtract, multiply, divide commands to this shell.
+2. Created sections for storing the if..else conditional statements belonging to execute a particular type of code.
 
 Authors contributed to this script (Add your name below if you have contributed) :
 1. Rishav Das (github:https://github.com/rdofficial/, email:rdofficial192@gmail.com)
@@ -70,14 +71,6 @@ class Shell:
 			token = self.commandParser()
 			self.executeCommand(token)
 
-			# The in-built commands defined in this shell
-			# ----
-			# 1. exit
-			# 2. list-files / ls
-			# 3. cd / chdir / change-dirrectory / change-dir
-			# 4. add
-			# ----
-
 	def commandParser(self):
 		""" """
 
@@ -102,6 +95,9 @@ class Shell:
 			# If the command is blank, then we skip the line
 
 			pass
+
+		# BASIC COMMANDS
+		# ----
 		elif token["command"] == 'exit':
 			# If the user entered command is to exit the script, then we do it
 
@@ -229,6 +225,10 @@ class Shell:
 
 			# Clearing the terminal screen
 			cmd(TerminalCommands.CLEAR)
+		# ----
+
+		# ARITHMETIC COMMANDS
+		# ----
 		elif token["command"] == 'add':
 			# If the user entered command is to add, then we continue
 
@@ -242,12 +242,6 @@ class Shell:
 
 				isNumber = False
 				for i in token["arguments"]:
-					# if i.isnumeric():
-					# 	isNumber = True
-					# else:
-					# 	isNumber = False
-					# 	break
-
 					# Checking wheter numeric or not
 					try:
 						i = float(i)
@@ -287,6 +281,76 @@ class Shell:
 						else:
 							open(f'data/{filename}', 'w+').write('')
 							print(f'[ File created : {filename} ]')
+		elif token["command"] == 'subtract':
+			# If the user entered command is to subtract (arithmetic operation), then we continue
+
+			# Asking the user to enter the numbers
+			number1 = float(input('Enter the first number : '))
+			number2 = float(input('Enter the second number : '))
+
+			# Displaying the result on the console screen
+			print(number1 - number2)
+		elif token["command"] == 'multiply':
+			# If the user entered command is to multiply (arithmetic operation), then we continue
+
+			# Checking for the numeric arguments if exists
+			if len(token["arguments"]) == 0:
+				# If there are no arguments entered by the user, then we pass
+
+				pass
+			else:
+				# If there are atleast more than 0 arguments entered by the user
+
+				isNumber = False
+				for i in token["arguments"]:
+					# Checking wheter numeric or not
+					try:
+						i = float(i)
+					except ValueError:
+						# If the value error is encountered, it means the argument is not a numeric term
+
+						isNumber = False
+						break
+					except Exception as e:
+						# If there are any other errors encountered during the process, then we display the error on the console screen
+
+						print(f'[ Error : Failed to parse the arguments for the command "{token["command"]}" ]')
+						return 0
+					else:
+						# If there are no errors in the process, then we assume that the argument is a numebr
+
+						isNumber = True
+				if isNumber:
+					# If the arguments are all numbers, then we continue to find out the sum
+
+					result = 1
+					for number in token["arguments"]:
+						result *= float(number)
+					print(result)
+					return 0
+
+			# If the arguments are not mentioned or the arguments aint numeric, then we continue to ask the user for the manual input
+			number1 = float(input('Enter the first number : '))
+			number2 = float(input('Enter the second number : '))
+			print(number1 * number2)
+		elif token["command"] == 'divide':
+			# If the user entered command is to divide (arithmetic operation), then we continue
+
+			# Asking the user to enter the numbers (2 currently)
+			number1 = float(input('Enter the first number : '))
+			number2 = float(input('Enter the second number : '))
+
+			# Checking for 0 division error
+			if number2 == 0:
+				# If the second number entered by the user is 0, then we print the error
+
+				print('[ Error : Cannot divide by 0. The second number entered is 0. ]')
+			else:
+				# If the second number entered by the user is not 0, then we continue to print the result
+
+				print(number1 / number2)
+		# ----
+
 		else:
 			# If the user entered command is unrecognized, then we display an error on the console screen
 
