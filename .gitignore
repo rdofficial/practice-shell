@@ -1,0 +1,24 @@
+# The ignore list - Shell
+# ----
+# 1. Ignore the tests and cache directories (including the __pycache__/)
+# 2. Ignore the data, JSON, database files.
+# ----
+
+# Ignoring the tests/ and cache files + directories
+tests/
+test/
+test*
+cache/
+__pycache__/
+
+
+# Ignoring the data, JSON, database files and directories
+data/
+datafiles/
+*.json
+json/
+databases/
+db/
+*.database
+*.sqlite3
+*.db
