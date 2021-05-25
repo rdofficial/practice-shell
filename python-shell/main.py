@@ -7,10 +7,11 @@ Author : Rishav Das (https://github.com/rdofficial/)
 Created on : May 9, 2021
 
 Last modified by : Rishav Das (https://github.com/rdofficial/)
-Last modified on : May 24, 2021
+Last modified on : May 25, 2021
 
 Changes made in the last modification :
-1. Updated the commented docs + added __doc__ for the Shell.help() function.
+1. Updated the initial working directory from the python script file's directory to the data/ directory.
+2. Fixed the error for the command 'ls --directory' / 'ls -d'.
 
 Authors contributed to this script (Add your name below if you have contributed) :
 1. Rishav Das (github:https://github.com/rdofficial/, email:rdofficial192@gmail.com)
@@ -37,18 +38,18 @@ except Exception as e:
 class Shell:
 	def __init__(self):
 		# Initially switching to the data/ directory as it is the default location for our shell
-		if path.isdir('data/'):
+		if path.isdir(f'{path.dirname(__file__)}/data/'):
 			# If the data/ directory exists, then we directly switch to it
 
-			chdir('data/')
+			chdir(f'{path.dirname(__file__)}/data/')
 		else:
 			# If the data/ directory does not exists, then we first create it and then switch to it
 
-			mkdir('data/')
-			chdir('data/')
+			mkdir(f'{path.dirname(__file__)}/data/')
+			chdir(f'{path.dirname(__file__)}/data/')
 		
 		# Setting the initial directory and the current working directory
-		self.initialDirectory = path.dirname(path.abspath(__file__))
+		self.initialDirectory = f'{path.dirname(__file__)}/data/'
 		self.currentWorkingDirectory = self.initialDirectory
 
 		# Using a while true loop for infinite runtime of the shell, and would stop only if the user wants so
@@ -61,7 +62,7 @@ class Shell:
 			else:
 				# If the current working directory and the initial directory are not same
 
-				self.shellPrompt = f'wsb-shell:{self.currentWorkingDirectory}$'
+				self.shellPrompt = f'wsb-shell:{self.currentWorkingDirectory}$ '
 
 			# Asking the user to enter a command
 			self.command = input(f'{self.shellPrompt}')
@@ -144,7 +145,7 @@ class Shell:
 					else:
 						# If the user does not entered more than 2 arguments, then we display an error on the console screen
 
-						print(f'[ Error : Mention a directory location post --tree argument ]')
+						print(f'[ Error : Mention a directory location post --tree / -t argument ]')
 					return 0
 				elif token["arguments"][0].lower() == '--directory' or token["arguments"][0].lower() == '-d':
 					# If the user added the argument to specify the directory, then we continue with it
@@ -157,11 +158,11 @@ class Shell:
 
 							token["arguments"][1] = self.currentWorkingDirectory
 
-						directoryLocation = token["arguments"][1]
+						DirectoryTools.FilesLister(token["arguments"][1])
 					else:
 						# If the user does not entered more than 2 arguments, then we display an error on the console screen
 
-						print(f'[ Error : Mention a directory location post --directory argument ]')
+						print(f'[ Error : Mention a directory location post --directory / -d argument ]')
 					return 0
 				elif token["arguments"][0].lower() == '--size' or token["arguments"][0].lower() == '-s':
 					# If the user added the argument to specify the size of the files too while listing them
@@ -178,25 +179,16 @@ class Shell:
 					else:
 						# If the user does not entered more than 2 arguments, then we display an error on the console screen
 
-						print(f'[ Error : Mention a directory location post --size argument ]')
+						print(f'[ Error : Mention a directory location post --size / -s argument ]')
 					return 0
 				else:
 					# If the argument is not recognized, then we treat it as the directory location
 
 					directoryLocation = token["arguments"][0]
 
-			# Checking if the specified directory exists or not
-			if path.isdir(directoryLocation):
-				# If the user specified directory exists, then we continue to list the files
-
-				print(f'\nContents of "{directoryLocation}" :')
-				for i in listdir(directoryLocation):
-					print(f'[*] {i}')
-			else:
-				# If the user specified directory does not exists, then we display an error message on the screen
-
-				print(f'[ Error : No such directory "{directoryLocation}" ]')
-				return 0
+			# Printing the list of the files as per user specified directory location
+			DirectoryTools.FilesLister(directory = directoryLocation)
+			return 0
 		elif token["command"] == 'change-directory' or token["command"] == 'change-dir' or token["command"] == 'chdir' or token["command"] == 'cd':
 			# If the user entered command is to change the current working directory, then we continue the process
 

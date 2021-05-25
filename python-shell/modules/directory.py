@@ -7,10 +7,11 @@ Author : Rishav Das (https://github.com/rdofficial/)
 Created on : May 9, 2021
 
 Last modified by : Rishav Das (https://github.com/rdofficial/)
-Last modified on : May 24, 2021
+Last modified on : May 25, 2021
 
 Changes made in the last modifications :
-1. Updated the little bug in the FilesLister.tree() function.
+1. Updated the size listing format specifier in the FilesLister(size = True). From integer %d to float %f format specifier.
+2. Added the feature to display the quantity of the files in the directory whose files are to be listed.
 
 Authors contributed to this script (Add your name below if you have contributed) :
 1. Rishav Das (github:https://github.com/rdofficial/, email:rdofficial192@gmail.com)
@@ -38,45 +39,50 @@ class FilesLister:
 			# If the specified directory does not exists, then we display an error on the console screen
 
 			print(f'[ Error : No such directory "{directory}" ]')
-
-		# Checking for the other parameters mentioned
-		if size:
-			# If the argument for displaying the size as well is also mentioned, then we continue
-
-			print(f'\nContents of "{directory}" :')
-			files = listdir(directory)
-			for file in files:
-				if path.isfile(file):
-					# If the currently iterated item is a file, then we mention its size
-
-					print('[*] %-40s    %-5d KB' %(file, (stat(directory + '/' + file).st_size / 1024)))
-				elif path.isdir(file):
-					# If the currently iterated item is a directory, then we do not mention its size 
-					# ----
-					# 1. The directory sizes are'not calculated that easily, they requires per file calculation. So, if we see the stats of the directory using the regular way, then we can only see the 4KBs of the space it takes for  the directory node, not the actual size of the overall contents inside the folder
-					# ----
-
-					print('[*] %-40s    ----- KB' %(file))
-				else:
-					# If the currently iterated item is neither a file nor a directory, then we print it as per the way we did for the files
-
-					print('[*] %-40s    %-5d KB' %(file, (stat(directory + '/' + file).st_size / 1024)))
-		elif tree:
-			# If the argument for displaying the list of files in tree format
-
-			print(f'\nThe tree format for "{directory}" :')
-			self.files = []
-			self.tree(directory)
-			for file in self.files:
-				print(f'[*] {file}')
-			print(f'Total files : {len(self.files)}')
-			del self.files
 		else:
-			# If there are no arguments defined, then we list the files in plain form
+			# If the specified directory exists, then we continue
 
-			print(f'\nContents of "{directory}" :')
-			for file in files:
-				print(f'[*] {file}')
+			# Checking for the other parameters mentioned
+			if size:
+				# If the argument for displaying the size as well is also mentioned, then we continue
+
+				print(f'\nContents of "{directory}" :')
+				files = listdir(directory)
+				for file in files:
+					if path.isfile(file):
+						# If the currently iterated item is a file, then we mention its size
+
+						print('[*] %-40s    %.2f KB' %(file, (stat(directory + '/' + file).st_size / 1024)))
+					elif path.isdir(file):
+						# If the currently iterated item is a directory, then we do not mention its size 
+						# ----
+						# 1. The directory sizes are'not calculated that easily, they requires per file calculation. So, if we see the stats of the directory using the regular way, then we can only see the 4KBs of the space it takes for  the directory node, not the actual size of the overall contents inside the folder
+						# ----
+
+						print('[*] %-40s    ----- KB' %(file))
+					else:
+						# If the currently iterated item is neither a file nor a directory, then we print it as per the way we did for the files
+
+						print('[*] %-40s    %-5d KB' %(file, (stat(directory + '/' + file).st_size / 1024)))
+				print(f'\nTotal files : {len(files)}')
+			elif tree:
+				# If the argument for displaying the list of files in tree format
+
+				print(f'\nThe tree format for "{directory}" :')
+				self.files = []
+				self.tree(directory)
+				for file in self.files:
+					print(f'[*] {file}')
+				print(f'\nTotal files : {len(self.files)}')
+				del self.files
+			else:
+				# If there are no arguments defined, then we list the files in plain form
+
+				print(f'\nContents of "{directory}" :')
+				files = listdir(directory)
+				for file in files:
+					print(f'[*] {file}')
+				print(f'\nTotal files : {len(files)}')
 
 	def tree(self, directory):
 		""" This method of the FilesLister class, returns the total files in the directory and even inside it's sub directories and more inside too. As the name says, the tree of the files. The function when called requires an argument, the directory location of where we want to list the files in the tree format. Also, note the algorithm used by the function is very different. It first iterates through an directory and then append the listed files to a class variable (property) list, and then proceed to each sub-directories using the same algorithm. Thus, we need also to define an object with the class FilesLister, before using this method alone. The class variable where this function saves the fetched file list is a list / array type data object named as files (self.files). """
