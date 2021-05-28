@@ -1,7 +1,9 @@
-# The ignore file list - Python Practie Shell
-#
-# 1. Ignore the data folder + all the __pycache__/ folders
-#
+# The ignore file list - Python Shell
+# ----
+# 1. Ignore the data folder + all the __pycache__/ files as well as directories.
+# ----
 
+# Ignoring the data and pycache files as well as directories
 data/
 __pycache__/
+modules/__pycache__/
