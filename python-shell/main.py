@@ -10,8 +10,8 @@ Last modified by : Rishav Das (https://github.com/rdofficial/)
 Last modified on : May 25, 2021
 
 Changes made in the last modification :
-1. Added the subtract, multiply, divide commands to this shell.
-2. Created sections for storing the if..else conditional statements belonging to execute a particular type of code.
+1. Added the power, square-root, cube-root commands functions to the shell. These newly added commads belongs to the arithmetical sections.
+2. Added the command 'number-details', but not written the entire code for it.
 
 Authors contributed to this script (Add your name below if you have contributed) :
 1. Rishav Das (github:https://github.com/rdofficial/, email:rdofficial192@gmail.com)
@@ -212,7 +212,7 @@ class Shell:
 					else:
 						# If the argument entered by the user is not an existing directory, then we check for other argument type
 
-						if token["arguments"][0].lower(0) == '--help' or token["arguments"][0].lower(0) == '-h':
+						if token["arguments"][0].lower() == '--help' or token["arguments"][0].lower() == '-h':
 							# If the argument entered by the user asks for displaying the help info for the command, then we continue to do it
 
 							self.help('cd')
@@ -349,6 +349,133 @@ class Shell:
 				# If the second number entered by the user is not 0, then we continue to print the result
 
 				print(number1 / number2)
+		elif token["command"] == 'power':
+			# If the user entered command is to calculate the power (arithmetic operation), then we continue
+
+			# Checking for the user entered arguments
+			if len(token["arguments"]) == 0:
+				# If the user did not entered any arguments, then we continue to manually ask for the numbers (currently, we pass)
+
+				pass
+			else:
+				# If the user did entered some arguments, then we continue
+
+				# Checking wheter the arguments are numeric or not
+				try:
+					token["arguments"][0] = float(token["arguments"][0])
+					token["arguments"][1] = float(token["arguments"][1])
+				except ValueError:
+					# If there occur any error in the conversion of the numbers, means the user entered arguments are not numeric, thus we break to the manual asking for numbers
+
+					pass
+				except Exception as e:
+					# If there are any other errors encountered during the process, then we display the error on the console screen
+
+					print(f'[ Error : Failed to parse the arguments for the command "{token["command"]}" ]')
+					return 0
+				else:
+					# If there are no errors encountered during the process (i.e., the user entered arguments are numeric), then we continue to print the result
+
+					print(token["arguments"][0] ** token["arguments"][1])
+					return 0
+
+			# Asking the user to enter the numbers manually
+			number1 = float(input('Enter the base number : '))
+			number1 = float(input('Enter the power number : '))
+			print(number1 ** number2)
+		elif token["command"] == 'square-root':
+			# If the user entered argument is to calculate the square root (arithmetic operation), then we continue
+
+			# Checking for user entered arguments
+			if len(token["arguments"]) == 0:
+				# If the user did not entered any arguments, then we continue to manually ask for the numbers (currently, we pass)
+
+				pass
+			else:
+				# If the user did entered some arguments, then we continue
+
+				# Checking wheter the user entered arguments are numeric or not
+				try:
+					token["arguments"][0] = float(token["arguments"][0])
+				except ValueError:
+					# If there occur any error in the conversion of the numbers, means the user entered arguments are not numeric, thus we break to the manual asking for numbers
+
+					pass
+				except Exception as e:
+					# If there are any other errors encountered during the process, then we display the error on the console screen
+
+					print(f'[ Error : Failed to parse the arguments for the command "{token["command"]}" ]')
+					return 0
+				else:
+					# If there are no errors encountered during the process (i.e., the user entered arguments are numeric), then we continue to print the result
+
+					print(token["arguments"][0] ** 0.5)
+					return 0
+
+			# Asking the number from the user manually (if the arguments are not mentioned properly)
+			number1 = float(input('Enter the number :'))
+			print(number1 ** 0.5)
+		elif token["command"] == 'cube-root':
+			# If the user entered argument is to calculate the cube root (arithmetic operation), then we continue
+
+			# Checking for user entered arguments
+			if len(token["arguments"]) == 0:
+				# If the user did not entered any arguments, then we continue to manually ask for the numbers (currently, we pass)
+
+				pass
+			else:
+				# If the user did entered some arguments, then we continue
+
+				# Checking wheter the user entered arguments are numeric or not
+				try:
+					token["arguments"][0] = float(token["arguments"][0])
+				except ValueError:
+					# If there occur any error in the conversion of the numbers, means the user entered arguments are not numeric, thus we break to the manual asking for numbers
+
+					pass
+				except Exception as e:
+					# If there are any other errors encountered during the process, then we display the error on the console screen
+
+					print(f'[ Error : Failed to parse the arguments for the command "{token["command"]}" ]')
+					return 0
+				else:
+					# If there are no errors encountered during the process (i.e., the user entered arguments are numeric), then we continue to print the result
+
+					print(token["arguments"][0] ** (1/3))
+					return 0
+
+			# Asking the number from the user manually (if the arguments are not mentioned properly)
+			number1 = float(input('Enter the number :'))
+			print(number1 ** (1/3))
+		elif token["command"] == "number-details":
+			# If the user entered argument is to print out the number details, then we continue
+
+			# Checking for user entered arguments
+			if len(token["arguments"]) >= 2:
+				# If the user did not entered any arguments, then we continue to manually ask for the numbers (currently, we pass)
+
+				pass
+			else:
+				# If the user did entered some arguments, then we continue
+
+				if token["arguments"][0].lower() == '--number':
+					# If the argument entered by the user is for specifying the number whose details are to be displayed, then we continue to assign it to the number
+
+					number1 = 2
+				else:
+					# If the user entered argument is not --number, then we continue to check for other arguments after asking the user to enter the number manually
+
+					number1 = int(input('Enter the number : '))
+
+					# Checking for other arguments and labels
+					if argument[0].lower() == '--table':
+						# If the user entered argument specifies to print the table of the number as well as details
+
+						pass
+					else:
+						# If the argument entered by the user is not recognized, then we display just the number details on the console screen
+
+						pass
 		# ----
 
 		else:
