@@ -10,7 +10,7 @@ Last modified by : Rishav Das (https://github.com/rdofficial/)
 Last modified on : May 29, 2021
 
 Changed made in last modification :
-1. Added a new function / method 'checkNumber()' to the NumberDetails class.
+1. Added a new paramter to the class NumberDetails indicating the execute or not command.
 
 Authors contributed to this script (Add your name below if you have contributed) :
 1. Rishav Das (github:https://github.com/rdofficial/, email:rdofficial192@gmail.com)
@@ -28,20 +28,23 @@ except Exception as e:
 class NumberDetails:
 	""" The class which serves the feature of the Number Details. The number details is a in-built command for the shell. The purpose of this command / utility is for analyzing the number input given to it. The functions are defined inside this class which checks for the various properties of the number ranging from posstive-negative to the existence of the square-cube roots. """
 
-	def __init__(self, number = 0):
+	def __init__(self, number = 0, execute = False):
 		# If the user does not mention the number, then the default number assigned is 0
 
 		self.number = number
 
-		# Displaying the analysed information on the console screen
-		print(f"""
+		if execute:
+			# If the object created via this class is called out with execute flag marked True, then we display the below fetched and calculated details
+
+			# Displaying the analysed information on the console screen
+			print(f"""
 [#] Type : {self.checkNegativePossitive()}
 [#] Prime / Composite : {self.checkPrimeComposite()}
 [#] Even / Odd : {self.checkEvenOdd()}
 [#] Square root : {self.checkSquareRoot()}
 [#] Cube root : {self.checkCubeRoot()}
 [#] Armstrong number : {self.checkArmstrongNumber()}
-			""")
+				""")
 
 	def checkNegativePossitive(self):
 		""" This method / function checks whether the number is a possitive or a negative number, and then returns the string values 'possitive' or 'negative' or '0' as per the calculations. This function checks for the class variable self.number. """
