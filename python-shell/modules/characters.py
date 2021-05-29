@@ -10,7 +10,7 @@ Last modified by : Rishav Das (https://github.com/rdofficial/)
 Last modified on : May 29, 2021
 
 Changed made in last modification :
-1. Updated the code and if..else.. conditional statements in the function printPattern() in the NumberDetails().
+1. Added a new function / method 'checkNumber()' to the NumberDetails class.
 
 Authors contributed to this script (Add your name below if you have contributed) :
 1. Rishav Das (github:https://github.com/rdofficial/, email:rdofficial192@gmail.com)
@@ -169,6 +169,37 @@ class NumberDetails:
 			# If the number is a negative number, then we return the error string
 
 			return '[ The number is a negative number ]'
+
+	def checkNumber(self):
+		""" The function checks for the number stored in the class variable self.number. """
+
+		characters = ['1', '2', '3', '4', '5', '6', '7', '8', '9', '0',]
+		decimal = False
+		for i in str(self.number):
+			# Iterating through each character stored in the self.number value
+
+			if i == '.':
+				# If the currently iterated character is a decimal point
+
+				if decimal:
+					# If one decimal point is already recognized, then we return error (False)
+
+					return False
+				else:
+					# If the decimal point is not recognized until this iteration, then we mark the decimal variable as True
+
+					decimal = True
+			elif i in characters:
+				# If the currently iterated character is a number in the character set
+
+				continue
+			else:
+				# If the currently iterated character is neither the decimal point nor any number in the character set, then we return error (False)
+
+				return False
+
+		# After all if the function runs till now, then we return True
+		return True
 
 	# Below funtions are not used by the self.__init__() method in particular. We need to call these functions directly in order to the execute the tasks served by them. The functions uses the same number stored at the class variable self.number
 	# ----
