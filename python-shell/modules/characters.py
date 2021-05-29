@@ -10,7 +10,7 @@ Last modified by : Rishav Das (https://github.com/rdofficial/)
 Last modified on : May 29, 2021
 
 Changed made in last modification :
-1. Added the method / function of checkArmstrongNumber() and numberPattern() to the NumberDetails class.
+1. Updated the code and if..else.. conditional statements in the function printPattern() in the NumberDetails().
 
 Authors contributed to this script (Add your name below if you have contributed) :
 1. Rishav Das (github:https://github.com/rdofficial/, email:rdofficial192@gmail.com)
@@ -188,7 +188,7 @@ class NumberDetails:
 				print(f'{i},', end = '')
 		print()
 
-	def numberPattern(self):
+	def printPattern(self):
 		""" This method / function prints a numeric pattern using the number (the numeric value stored in the class variable self.number). The number pattern works as per the number specified at the self.number. For 0 as the numeric value of self.number, this function prints the default pattern which is as per specified below :
 
 		0
@@ -205,8 +205,22 @@ class NumberDetails:
 		if self.number > 0:
 			# If the number is posstive, then we continue
 
-			for i in range(self.number):
-				print(f'{self.number} ' * i)
+			# Validating the self.number value to possible below 10 number (below 2 digit number)
+			number1 = self.number % 10
+			if number1 == 0:
+				# If the number reduces to 0, then we return the default pattern design
+
+				for i in range(1, 6):
+					print(f'{self.number} ' * i)
+				for i in range(4, 1, -1):
+					print(f'{self.number} ' * i)
+			else:
+				# If the number reduces to any number rather than 0, then we print the custom patten
+
+				for i in range(0, number1):
+					print(f'{self.number} ' * i)
+				for i in range(number1, 1, -1):
+					print(f'{self.number} ' * i)
 		elif self.number == 0:
 			# If the number is 0, then we return the default pattern for 0
 
@@ -217,5 +231,23 @@ class NumberDetails:
 		else:
 			# If the number is a negative number, then we make it possitive and then print the pattern
 
+			# Making the number possitive version of itself
 			number1 = self.number * (-1)
+
+			# Validating the self.number value to possible below 10 number (below 2 digit number)
+			number1 = self.number % 10
+			if number1 == 0:
+				# If the number reduces to 0, then we return the default pattern design
+
+				for i in range(1, 6):
+					print(f'{self.number} ' * i)
+				for i in range(4, 1, -1):
+					print(f'{self.number} ' * i)
+			else:
+				# If the number reduces to any number rather than 0, then we print the custom patten
+
+				for i in range(0, number1):
+					print(f'{self.number} ' * i)
+				for i in range(number1, 1, -1):
+					print(f'{self.number} ' * i)
 	# ----
