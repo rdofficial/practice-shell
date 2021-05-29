@@ -10,7 +10,7 @@ Last modified by : Rishav Das (https://github.com/rdofficial/)
 Last modified on : May 29, 2021
 
 Changed made in last modification :
-1. Fixed a variable error in the NumberDetails.checkPossitiveNegative().
+1. Added the method / function of checkArmstrongNumber() and numberPattern() to the NumberDetails class.
 
 Authors contributed to this script (Add your name below if you have contributed) :
 1. Rishav Das (github:https://github.com/rdofficial/, email:rdofficial192@gmail.com)
@@ -40,6 +40,7 @@ class NumberDetails:
 [#] Even / Odd : {self.checkEvenOdd()}
 [#] Square root : {self.checkSquareRoot()}
 [#] Cube root : {self.checkCubeRoot()}
+[#] Armstrong number : {self.checkArmstrongNumber()}
 			""")
 
 	def checkNegativePossitive(self):
@@ -138,6 +139,37 @@ class NumberDetails:
 
 			return '[ The number is a negative number ]'
 
+	def checkArmstrongNumber(self):
+		""" This method / function checks whether the number is an armstrong number or not. This function checks the number (numeric value) stored in the class variable self.number. The function returns true and false string depending upon the calculations.
+		Armstrong number : A number whose value is equal to the sum of the cubes of its digits.
+		e.g., 153 -> 1 + 125 + 27 """
+
+		if self.number > 0:
+			# If the number is a possitive number, then we continue to check
+
+			number1 = 0
+			for i in str(self.number):
+				# Iterating through each of the digits of the number
+
+				number1 += (int(i) ** 3)
+
+			if number1 == self.number:
+				# If the sum of cubes of each digits matches the original number, then we return 'True'
+
+				return 'True'
+			else:
+				# If the sum of cubes of each digits does not matches the original number, then we return 'False'
+
+				return 'False'
+		elif self.number == 0:
+			# If the number is 0, then we return '0'
+
+			return '0'
+		else:
+			# If the number is a negative number, then we return the error string
+
+			return '[ The number is a negative number ]'
+
 	# Below funtions are not used by the self.__init__() method in particular. We need to call these functions directly in order to the execute the tasks served by them. The functions uses the same number stored at the class variable self.number
 	# ----
 	def table(self):
@@ -155,4 +187,35 @@ class NumberDetails:
 			if self.number % i == 0:
 				print(f'{i},', end = '')
 		print()
+
+	def numberPattern(self):
+		""" This method / function prints a numeric pattern using the number (the numeric value stored in the class variable self.number). The number pattern works as per the number specified at the self.number. For 0 as the numeric value of self.number, this function prints the default pattern which is as per specified below :
+
+		0
+		0 0
+		0 0 0
+		0 0 0 0
+		0 0 0 0 0
+		0 0 0 0
+		0 0 0
+		0 0
+		0
+		"""
+
+		if self.number > 0:
+			# If the number is posstive, then we continue
+
+			for i in range(self.number):
+				print(f'{self.number} ' * i)
+		elif self.number == 0:
+			# If the number is 0, then we return the default pattern for 0
+
+			for i in range(1, 6):
+				print('0 ' * i)
+			for i in range(4, 1, -1):
+				print('0 ' * i)
+		else:
+			# If the number is a negative number, then we make it possitive and then print the pattern
+
+			number1 = self.number * (-1)
 	# ----
