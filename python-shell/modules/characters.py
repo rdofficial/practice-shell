@@ -10,7 +10,7 @@ Last modified by : Rishav Das (https://github.com/rdofficial/)
 Last modified on : May 29, 2021
 
 Changed made in last modification :
-1. Added more functions to the NumberDetails class + Added commented docs to the class (__doc__).
+1. Fixed a variable error in the NumberDetails.checkPossitiveNegative().
 
 Authors contributed to this script (Add your name below if you have contributed) :
 1. Rishav Das (github:https://github.com/rdofficial/, email:rdofficial192@gmail.com)
@@ -45,11 +45,11 @@ class NumberDetails:
 	def checkNegativePossitive(self):
 		""" This method / function checks whether the number is a possitive or a negative number, and then returns the string values 'possitive' or 'negative' or '0' as per the calculations. This function checks for the class variable self.number. """
 
-		if number > 0:
+		if self.number > 0:
 			# If the number is a possitive number, then we return 'possitive'
 
 			return 'possitive'
-		elif number == 0:
+		elif self.number == 0:
 			# If the number is zero, then we return '0'
 
 			return '0'
