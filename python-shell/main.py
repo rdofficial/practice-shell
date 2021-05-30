@@ -10,8 +10,7 @@ Last modified by : Rishav Das (https://github.com/rdofficial/)
 Last modified on : May 25, 2021
 
 Changes made in the last modification :
-1. Added the power, square-root, cube-root commands functions to the shell. These newly added commads belongs to the arithmetical sections.
-2. Added the command 'number-details', but not written the entire code for it.
+1. Added the frontend if..else.. conditional statements for the ip command.
 
 Authors contributed to this script (Add your name below if you have contributed) :
 1. Rishav Das (github:https://github.com/rdofficial/, email:rdofficial192@gmail.com)
@@ -123,7 +122,7 @@ class Shell:
 				elif token["arguments"][0].lower() == '--help':
 					# If the user entered argument to display help info for list-files command, then we continue
 
-					self.help('--help')
+					self.help(command = '--help')
 					return 0
 				elif token["arguments"][0].lower() == '--tree' or token["arguments"][0].lower() == '-t':
 					# If the user added the argument to display the directory info in the tree format
@@ -215,7 +214,7 @@ class Shell:
 						if token["arguments"][0].lower() == '--help' or token["arguments"][0].lower() == '-h':
 							# If the argument entered by the user asks for displaying the help info for the command, then we continue to do it
 
-							self.help('cd')
+							self.help(command = 'cd')
 						else:
 							# If the argument entered by the user is neither recognized by the script nor it is a existing directory, then we display an directory not found error
 
@@ -225,6 +224,69 @@ class Shell:
 
 			# Clearing the terminal screen
 			cmd(TerminalCommands.CLEAR)
+		# ----
+
+		# IP RELATED COMMANDS
+		# ----
+		elif token["command"] == 'ip':
+			# If the user entered command is for ip related tasks, then we continue
+
+			# Checking for the numeric arguments if exists
+			if len(token["arguments"]) == 0:
+				# If there are no arguments entered by the user
+
+				print('[ ip : requires arguments, use ip --help for more info ]')
+			else:
+				# If there are atleast more than 0 arguments entered by the user
+
+				if token["arguments"][0] == 'self':
+					# If the argument entered by the user asks for displaying information related to the IP address of the local machine and local network
+
+					pass
+				elif token["arguments"][0] == 'track':
+					# If the argument entered by the user asks for tracking a required IP address, then we continue
+
+					# Getting the IP address input
+					ip = ''
+					if len(token["arguments"]) >= 2:
+						# If there are equal or more than 2 arguments entered by the user, then we assume the second argument as the user entered IP address to track
+
+						ip = token["arguments"][1]
+					else:
+						# If there are less than 2 arguments entered by the user, then we manually ask the user for the IP address
+						
+						ip = input('Enter the IP address : ')
+				elif token["arguments"][0] == 'portscan':
+					# If the argument entered by the user asks for port scanning the particular IP address, then we continue
+
+					# Getting the IP address input
+					ip = ''
+					if len(token["arguments"]) >= 2:
+						# If there are equal or more than 2 arguments entered by the user, then we assume the second argument as the user entered IP address to port scan for
+
+						ip = token["arguments"][1]
+					else:
+						# If there are less than 2 arguments entered by the user, then we manually ask the user for the IP address
+
+						ip = input('Enter the IP address : ')
+
+					if len(token["arguments"]) >= 4:
+						# If there are equal or more than 4 arguments entered by the user, then we assume the third argument as the start port and the fourth argument as the end port to scan for
+
+						number1 = token["arguments"][2]
+						number2 = token["arguments"][3]
+					else:
+						# If there are less than 4 arguments entered by the user, then we start from 1 to 65500 port number for the scanning
+
+						pass
+				elif token["arguments"][0] == '--help' or token["arguments"][0] == '-h':
+					# If the argument entered by the user is for displaying the help related information for the ip command, then we continue
+
+					self.help(command = 'ip')
+				else:
+					# If the argument entered by the user is not recognized, then we display the error message on the console screen
+
+					print(f'[ Error : Unrecognized argument "{token["arguments"][0]}" for the command ip. Use ip --help command for more information. ]')
 		# ----
 
 		# ARITHMETIC COMMANDS
@@ -273,7 +335,7 @@ class Shell:
 					if filename.lower() == '--help':
 						# If the user entered argument for displaying the help for the command, then here we go
 
-						self.help(token["command"])
+						self.help(command = token["command"])
 					else:
 						choice = input('Creating a new file - Enter N to cancel : ')
 						if choice.lower() == 'no' or choice.lower() == 'n':
