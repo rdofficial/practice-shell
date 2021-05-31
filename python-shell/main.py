@@ -7,10 +7,10 @@ Author : Rishav Das (https://github.com/rdofficial/)
 Created on : May 9, 2021
 
 Last modified by : Rishav Das (https://github.com/rdofficial/)
-Last modified on : May 25, 2021
+Last modified on : May 31, 2021
 
 Changes made in the last modification :
-1. Added the frontend if..else.. conditional statements for the ip command.
+1. Added the if..else conditional statements and other code for the number-details command (tool).
 
 Authors contributed to this script (Add your name below if you have contributed) :
 1. Rishav Das (github:https://github.com/rdofficial/, email:rdofficial192@gmail.com)
@@ -28,6 +28,7 @@ try:
 	# Importing the self-defined modules (the custom modules created in this project)
 	from modules import directory as DirectoryTools
 	from modules.regular import TerminalCommands
+	from modules.characters import NumberDetails
 except Exception as e:
 	# If there are any errors during the importing of the modules, then we display the error on the console screen
 
@@ -513,7 +514,7 @@ class Shell:
 			# If the user entered argument is to print out the number details, then we continue
 
 			# Checking for user entered arguments
-			if len(token["arguments"]) >= 2:
+			if len(token["arguments"]) == 0:
 				# If the user did not entered any arguments, then we continue to manually ask for the numbers (currently, we pass)
 
 				pass
@@ -523,21 +524,37 @@ class Shell:
 				if token["arguments"][0].lower() == '--number':
 					# If the argument entered by the user is for specifying the number whose details are to be displayed, then we continue to assign it to the number
 
-					number1 = 2
+					number1 = int(token["arguments"][1])
+					NumberDetails(number = number1, execute = True)
 				else:
 					# If the user entered argument is not --number, then we continue to check for other arguments after asking the user to enter the number manually
 
-					number1 = int(input('Enter the number : '))
+					try:
+						number1 = int(input('Enter the number : '))
+					except ValueError:
+						# If the user either entered blank value or non-numeric value, then we display the error message on the console screen
 
-					# Checking for other arguments and labels
-					if argument[0].lower() == '--table':
-						# If the user entered argument specifies to print the table of the number as well as details
-
-						pass
+						print('[ Error : Only numeric values are valid here ]')
 					else:
-						# If the argument entered by the user is not recognized, then we display just the number details on the console screen
+						# If there are no errors encountered in the process, then we continue
 
-						pass
+						# Checking for other arguments and labels
+						if token["arguments"][0].lower() == '--table':
+							# If the user entered argument specifies to display the table of the number
+
+							NumberDetails(number = number1).table()
+						elif token["arguments"][0].lower() == '--factors':
+							# If the user entered argument specifies to display the factors of the number
+
+							NumberDetails(number = number1).factors()
+						elif token["arguments"][0].lower() == '--pattern' or token["arguments"][0].lower() == '--print-pattern':
+							# If the user entered argument specifies to display the pattern of the number
+
+							NumberDetails(number = number1).printPattern()
+						else:
+							# If the argument entered by the user is not recognized, then we display just the number details on the console screen
+
+							NumberDetails(number = number1, execute = True)
 		# ----
 
 		else:
