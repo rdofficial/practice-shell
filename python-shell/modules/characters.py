@@ -7,10 +7,10 @@ Author : Rishav Das (https://github.com/rdofficial/)
 Created on : May 28, 2021
 
 Last modified by : Rishav Das (https://github.com/rdofficial/)
-Last modified on : May 29, 2021
+Last modified on : May 31, 2021
 
 Changed made in last modification :
-1. Added a new paramter to the class NumberDetails indicating the execute or not command.
+1. Updating the loop for the pattern printing with fixing the pattern print range value.
 
 Authors contributed to this script (Add your name below if you have contributed) :
 1. Rishav Das (github:https://github.com/rdofficial/, email:rdofficial192@gmail.com)
@@ -241,7 +241,7 @@ class NumberDetails:
 
 			# Validating the self.number value to possible below 10 number (below 2 digit number)
 			number1 = self.number % 10
-			if number1 == 0:
+			if number1 == 0 or number1 == 1	:
 				# If the number reduces to 0, then we return the default pattern design
 
 				for i in range(1, 6):
@@ -253,7 +253,7 @@ class NumberDetails:
 
 				for i in range(0, number1):
 					print(f'{self.number} ' * i)
-				for i in range(number1, 1, -1):
+				for i in range(number1, 0, -1):
 					print(f'{self.number} ' * i)
 		elif self.number == 0:
 			# If the number is 0, then we return the default pattern for 0
