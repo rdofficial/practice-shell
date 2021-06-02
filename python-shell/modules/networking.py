@@ -6,8 +6,11 @@ A module created for supplying the required functions to the shell application. 
 Author : Rishav Das (https://github.com/rdofficial/)
 Created on : June 1, 2021
 
-Last modified by : -
-Last modified on : -
+Last modified by : Rishav Das (https://github.com/rdofficial/)
+Last modified on : June 2, 2021
+
+Changes made in the last modifications :
+1. Added the more source code to the IP.localinfo(). Added the local host IP address and the port scanning processes fot that particular function.
 
 Authors contributed to this script (Add your name below if you have contributed) :
 1. Rishav Das (github:https://github.com/rdofficial/, email:rdofficial192@gmail.com)
@@ -113,7 +116,53 @@ class IP:
 	def localinfo(self):
 		""" This method / function serves the task of fetching the information about the local IP address. The self.address field might not be required to be present for using this particular function. We will directly call this function from the class. """
 
+		# Fetching the hostname of the local machine
 		self.address = socket.gethostname()
+
+		# Displaying the fetched information on the console screen (Also fetching them during the print process)
+		print(f"""[#] Local hostname : {self.address}
+[#] Local IP address : {socket.gethostbyname(self.address)}""")
+
+		# Scanning open ports on the local machine
+		ports = []  # The list to store the ports on the local machine which were found open during the port scan
+		stdout.write('\r')
+		for port in range(1, 65536):
+			# Iterating through each port number from 1 to 65535
+
+			# Displaying the port scan information on the console screen
+			stdout.write(f'[ Scanning ports : {port} ]')
+
+			# Intiating a connection to the target host with the currently iterated port number
+			connection = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+			socket.setdefaulttimeout(1) 
+
+			# Returns an error indicator 
+			result = connection.connect_ex((self.address, port)) 
+			stdout.write('\r')
+			if result == 0:
+				# If the port is open, then we append it to the ports list
+
+				openPorts.append(port)
+			else:
+				# If the port is not open (i.e., closed)
+
+				continue
+
+			# Closing the initiated connection
+			connection.close()
+
+		# Checking the result of the port scan
+		stdout.write(f'[#] Ports found open : ',)
+		stdout.flush()
+		if len(ports) == 0:
+			# If there are no open ports were found during the port scan
+
+			print(f'None')
+		else:
+			# If there are atleast one or more ports that were found open during the port scan proces, then we display them on the console screen
+
+			for port in ports:
+				print({port}, end = ' ,')
 
 	def gethostbyname(self):
 		""" This method / function serves the task of fetching the host IP address using the hostname (address) provided by the user. The user provided address (hostname) is stored in the class variable self.gethostbyname. The result is then displayed on the console screen. This function fetches the IP addresses from hostname like www.google.com, etc. Example usage is given below :
