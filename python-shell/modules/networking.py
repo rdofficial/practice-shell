@@ -10,7 +10,7 @@ Last modified by : Rishav Das (https://github.com/rdofficial/)
 Last modified on : June 2, 2021
 
 Changes made in the last modifications :
-1. Added the code for the beta version of the new portscanner feature of the IP tool (class). Created a new method 'IP.portscan_beta().
+1. Added the code for the HttpServer tool for the shell i.e., created the class for the HttpServer.
 
 Authors contributed to this script (Add your name below if you have contributed) :
 1. Rishav Das (github:https://github.com/rdofficial/, email:rdofficial192@gmail.com)
@@ -19,6 +19,9 @@ Authors contributed to this script (Add your name below if you have contributed)
 # Importing the required functions and modules
 try:
 	import socket
+	from socketserver import TCPServer
+	from http.server import SimpleHTTPRequestHandler
+
 	from urllib import request
 	from json import loads
 	from sys import stdout
@@ -241,3 +244,28 @@ class IP:
 
 			for port in ports:
 				print(port, end = ', ')
+
+class HttpServer:
+	""" The class which serves the features of the HttpServer tool / command of the shell. The class contains certain functions (methods) defined within itself. The simple server can be launched by just calling the class as an object. """
+
+	def __init__(self, port = 8000, root = ''):
+		# The default port number is 8000
+		# The root of the server will be of the current working directory
+		self.port = port
+		self.root = root
+
+		handler = SimpleHTTPRequestHandler
+		with TCPServer(('', self.port), handler) as httpd:
+			# Launching the http server
+
+			try:
+				print(f'Serving at port : {port}')
+				httpd.serve_forever()
+			except KeyboardInterrupt:
+				# If the user pressed CTRL+C key combo, then we stop the server
+
+				httpd.server_close()
+			except Exception as e:
+				# If there are any errors encountered during the process, then we display the error message on the console screen
+
+				print(f'[ Http Server Error : {e} ]')
