@@ -10,7 +10,7 @@ Last modified by : Rishav Das (https://github.com/rdofficial/)
 Last modified on : June 2, 2021
 
 Changes made in the last modifications :
-1. Added the code for the HttpServer tool for the shell i.e., created the class for the HttpServer.
+1. Added the code for custom root location setting for the HttpServer, the custom root location is entered by the user.
 
 Authors contributed to this script (Add your name below if you have contributed) :
 1. Rishav Das (github:https://github.com/rdofficial/, email:rdofficial192@gmail.com)
@@ -18,11 +18,14 @@ Authors contributed to this script (Add your name below if you have contributed)
 
 # Importing the required functions and modules
 try:
+	# Importing the networks and connections related functions and modules
 	import socket
 	from socketserver import TCPServer
 	from http.server import SimpleHTTPRequestHandler
-
 	from urllib import request
+
+	# Importing the other functions and modules that are required
+	from os import chdir, path
 	from json import loads
 	from sys import stdout
 except Exception as e:
@@ -248,11 +251,16 @@ class IP:
 class HttpServer:
 	""" The class which serves the features of the HttpServer tool / command of the shell. The class contains certain functions (methods) defined within itself. The simple server can be launched by just calling the class as an object. """
 
-	def __init__(self, port = 8000, root = ''):
+	def __init__(self, port = 8000, root = None):
 		# The default port number is 8000
 		# The root of the server will be of the current working directory
 		self.port = port
 		self.root = root
+
+		if self.root != None:
+			# If a specific directory is specified for the server intiliazation, then we continue
+
+			self.changeroot()
 
 		handler = SimpleHTTPRequestHandler
 		with TCPServer(('', self.port), handler) as httpd:
@@ -264,8 +272,26 @@ class HttpServer:
 			except KeyboardInterrupt:
 				# If the user pressed CTRL+C key combo, then we stop the server
 
+				chdir(self.initialDirectory)  # Unsetting the current root location to the intial working directory
 				httpd.server_close()
 			except Exception as e:
 				# If there are any errors encountered during the process, then we display the error message on the console screen
 
 				print(f'[ Http Server Error : {e} ]')
+
+	def changeroot(self):
+		""" This method / function changes the current working directory to the user specified directory in order to set up as a root location for our simple web server. This function reads the user specified custom root location stored in the class variable self.root """
+
+		# Saving the initial directory location to a class variable
+		self.initialDirectory = path.dirname(path.abspath(__file__))
+
+		if path.isdir(self.root):
+			# If the user specified directory does exists, then we continue
+			
+			# Changing the current working directory to the user specified directory
+			chdir(self.root)
+		else:
+			# If the user specified directory does not exists, then we raise the error message and continue with the default directory
+
+			print(f'[ Error : No such directory found "{self.root}" ]')
+			self.root = ''
