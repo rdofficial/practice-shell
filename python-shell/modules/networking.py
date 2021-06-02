@@ -10,7 +10,7 @@ Last modified by : Rishav Das (https://github.com/rdofficial/)
 Last modified on : June 2, 2021
 
 Changes made in the last modifications :
-1. Added the more source code to the IP.localinfo(). Added the local host IP address and the port scanning processes fot that particular function.
+1. Added the code for the beta version of the new portscanner feature of the IP tool (class). Created a new method 'IP.portscan_beta().
 
 Authors contributed to this script (Add your name below if you have contributed) :
 1. Rishav Das (github:https://github.com/rdofficial/, email:rdofficial192@gmail.com)
@@ -192,3 +192,52 @@ class IP:
 
 		# Executing the port scan attack (by calling the portscan() method defined withing this class)
 		self.portscan(initial = initial, final = final)
+
+	def portscan_beta(self, initial, final):
+		""" Beta version for the portscanning feature of this Class / tool (IP). Changes here are : changed way of output on the console screen. """
+
+		# Checking for the user specified ports
+		if initial == None or final == None:
+			# If the user did not specified the port ranges properly, then we start scaning ports in the range (default port range)
+
+			initial = 1
+			final = 65535
+			print('[ Executing the port scanner with default ports (i.e., 1 to 65535) ]')
+		
+		# Defining a list which will store the ports which were found open during port scan
+		ports = []
+
+		# Executing the attack
+		for port in range(initial, final + 1):
+			# Intiating a connection to the target host with the currently iterated port number
+			connection = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+			socket.setdefaulttimeout(1) 
+
+			# Returns an error indicator 
+			result = connection.connect_ex((self.address, port)) 
+			stdout.write('\r')
+			if result == 0:
+				# If the port is open
+
+				stdout.write('[!] Port %d : open' %port)
+				ports.append(port)
+			else:
+				# If the port is not open (i.e., closed)
+
+				stdout.write('[!] Port %d : closed' %port)
+
+			# Closing the initiated connection
+			connection.close()
+
+		# Displaying the filtered and open ports on the console screen
+		stdout.write('Ports found open : ')
+		stdout.flush()
+		if len(ports) == 0:
+			# If there are no open ports found on the target in the port scan, then we continue to display the no ports found message on the console screen
+
+			print('None')
+		else:
+			# If there are open ports found, then we continue to iterate them on the console screen
+
+			for port in ports:
+				print(port, end = ', ')
