@@ -10,7 +10,7 @@ Last modified by : Rishav Das (https://github.com/rdofficial/)
 Last modified on : June 3, 2021
 
 Changes made in the last modification :
-1. Added the basic code for the functionality of the IP related commands of the shell. Added the functionality from the IP class defined in the networking.py module file.
+1. Added the new functionality to the IP related commands by adding the argument feature of 'all' and 'allbyname', where the user can fetch information, port scan or all other tasks in a single argument.
 
 Authors contributed to this script (Add your name below if you have contributed) :
 1. Rishav Das (github:https://github.com/rdofficial/, email:rdofficial192@gmail.com)
@@ -335,6 +335,74 @@ class Shell:
 
 						ip = input('Enter the hostname : ')
 
+					if len(token["arguments"]) >= 4:
+						# If there are equal or more than 4 arguments entered by the user, then we assume the third argument as the start port and the fourth argument as the end port to scan for
+
+						# Setting the port number range from the arguments
+						number1 = token["arguments"][2]
+						number2 = token["arguments"][3]
+						
+						# Starting a port scan attack on the user specified host
+						IP(address = ip).portscanhostbyname(initial = number1, final = number2)
+					else:
+						# If there are less than 4 arguments entered by the user, then we start from 1 to 65500 port number for the scanning
+
+						# Starting a port scan attack on the user specified IP address (with default port number range)
+						IP(address = ip).portscanhostbyname()
+				elif token["arguments"][0] == 'all':
+					# If the argument entered by the user asks for executing all the IP address related tasks (fetching information, port scanning etc), then we continue
+
+					# Getting the IP address input
+					ip = ''
+					if len(token["arguments"]) >= 2:
+						# If there are equal or more than 2 arguments entered by the user, then we assume the second argument as the user entered IP address
+
+						ip = token["arguments"][1]
+					else:
+						# If there are less than 2 arguments entered by the user, then we manually ask the user for the IP address
+
+						ip = input('Enter the IP address : ')
+
+					# Fetching the information for the user specified host
+					print(f'\n[ Fetching the information of {ip} ]')
+					IP(address = ip).track()
+
+					# Starting a port scan on the user specified host
+					print(f'\n[ Starting port scan on {ip} ]')
+					if len(token["arguments"]) >= 4:
+						# If there are equal or more than 4 arguments entered by the user, then we assume the third argument as the start port and the fourth argument as the end port to scan for
+
+						# Setting the port number range from the arguments
+						number1 = token["arguments"][2]
+						number2 = token["arguments"][3]
+						
+						# Starting a port scan attack on the user specified IP address
+						IP(address = ip).portscan(initial = number1, final = number2)
+					else:
+						# If there are less than 4 arguments entered by the user, then we start from 1 to 65500 port number for the scanning
+
+						# Starting a port scan attack on the user specified IP address (with default port number range)
+						IP(address = ip).portscan()
+				elif token["arguments"][0] == 'allbyname':
+					# If the argument entered by the user asks for executing all the IP address related tasks (fetching information, port scanning etc) + using the user entered hostname (not IP address), then we continue
+
+					# Getting the hostname input
+					ip = ''
+					if len(token["arguments"]) >= 2:
+						# If there are equal or more than 2 arguments entered by the user, then we assume the second argument as the user entered hostname
+
+						ip = token["arguments"][1]
+					else:
+						# If there are less than 2 arguments entered by the user, then we manually ask the user for the hostname
+
+						ip = input('Enter the IP address : ')
+
+					# Fetching the information for the user specified host
+					print(f'\n[ Fetching the information of {ip} ]')
+					IP(address = ip).trackhostbyname()
+
+					# Starting a port scan on the user specified host
+					print(f'\n[ Starting port scan on {ip} ]')
 					if len(token["arguments"]) >= 4:
 						# If there are equal or more than 4 arguments entered by the user, then we assume the third argument as the start port and the fourth argument as the end port to scan for
 
