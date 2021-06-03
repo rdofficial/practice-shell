@@ -10,7 +10,7 @@ Last modified by : Rishav Das (https://github.com/rdofficial/)
 Last modified on : June 2, 2021
 
 Changes made in the last modifications :
-1. Fixed the errors for the initial directory switching in the HttpServer class. Changed some of the conditional statements in the entire class in order to fix the errors.
+1. Updated the entire structure of the HttpServer class and changed its way of functionality.
 
 Authors contributed to this script (Add your name below if you have contributed) :
 1. Rishav Das (github:https://github.com/rdofficial/, email:rdofficial192@gmail.com)
@@ -261,21 +261,76 @@ class IP:
 class HttpServer:
 	""" The class which serves the features of the HttpServer tool / command of the shell. The class contains certain functions (methods) defined within itself. The simple server can be launched by just calling the class as an object. """
 
-	def __init__(self, port = 8000, root = None):
-		# The default port number is 8000
-		# The root of the server will be of the current working directory
-		self.port = port
-		self.root = root
+	def __init__(self, arguments = []):
+		# Setting the self.port and self.root class variables
+		self.port = None
+		self.root = None
 
-		# Calling the changeroot() method in order to switch to a custom location if provided by the user
-		self.changeroot()
+		# Parsing the argument sent to this class while creating the object
+		for index, argument in enumerate(arguments):
+			# Iterating through each argument item
 
+			if argument == '--port' or argument == '-p':
+				# If the argument is for specifying the port number, then we continue to parse the next argument as the entered value
+
+				try:
+					self.port = int(arguments[index + 1])
+				except IndexError:
+					# If the next argument is out of the list index (i.e., it does not exists), then we continue for the next iteration
+
+					continue
+				except ValueError:
+					# If there are errors in parsing the port number input from the user to integer format, then we display the error on the console screen
+
+					print(f'[ Error : Invalid port number specified. Proper numeric value between 1-65535 should be provided. ]')
+			elif argument == '--root' or argument == '-r':
+				# If the argument is for specifying the root location, then we continue to parse the next argument as the entered value
+
+				try:
+					self.root = arguments[index + 1]
+				except IndexError:
+					# If the next argument is out of the list index (i.e., it does not exists), then we continue for the next iteration
+
+					continue
+			else:
+				# If the currently iterated argument is not recognized, then we skip the current iteration
+
+				continue
+
+		# Checking the port number and root location input from the user
+		if self.port == None:
+			# If the port number is stil not specified by the user, then we ask the port number from the user manually
+
+			self.port = input('Enter the port number : ')
+		if self.root == None:
+			# If the root location is still not specified by the user, then we give use the current directory as the root location and launch the server
+
+			print('[ Launching the server at current directory ]')
+		else:
+			# If the root location is specified, then we launch the server at the custom provided root location
+
+			if path.isdir(self.root):
+				# If the user specified directory does exists, then we continue
+
+				# Moving to the specified directory
+				chdir(self.root)
+				print(f'[ Launching the server at : {self.root} ]')
+			else:
+				# If the user specified directory does not exists, then we display the error message on the console screen
+
+				print(f'[ Error : No such directory found "{self.root}" ]')
+				return 0
+
+		# Saving the initial directory location to a class variable
+		self.initialDirectory = path.dirname(path.abspath(__file__))
+
+		# Setting and launching the server
 		handler = SimpleHTTPRequestHandler
 		with TCPServer(('', self.port), handler) as httpd:
 			# Launching the http server
 
 			try:
-				print(f'Serving at port : {port}')
+				print(f'Serving at port : {self.port}')
 				httpd.serve_forever()
 			except KeyboardInterrupt:
 				# If the user pressed CTRL+C key combo, then we stop the server
@@ -286,23 +341,3 @@ class HttpServer:
 				# If there are any errors encountered during the process, then we display the error message on the console screen
 
 				print(f'[ Http Server Error : {e} ]')
-
-	def changeroot(self):
-		""" This method / function changes the current working directory to the user specified directory in order to set up as a root location for our simple web server. This function reads the user specified custom root location stored in the class variable self.root """
-
-		# Saving the initial directory location to a class variable
-		self.initialDirectory = path.dirname(path.abspath(__file__))
-
-		if self.root != None:
-			# If the user has provided a custom root location for the server to launch at, then we continue checking and setting it up
-
-			if path.isdir(self.root):
-				# If the user specified directory does exists, then we continue
-				
-				# Changing the current working directory to the user specified directory
-				chdir(self.root)
-			else:
-				# If the user specified directory does not exists, then we raise the error message and continue with the default directory
-
-				print(f'[ Error : No such directory found "{self.root}" ]')
-				self.root = ''
