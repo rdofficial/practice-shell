@@ -10,7 +10,7 @@ Last modified by : Rishav Das (https://github.com/rdofficial/)
 Last modified on : June 3, 2021
 
 Changes made in the last modification :
-1. Added the code (if..else and try..except blocks) for serving the functionality of the startserver argument of the http / https command of the shell.
+1. Fixed some errors and updated some output strings.
 
 Authors contributed to this script (Add your name below if you have contributed) :
 1. Rishav Das (github:https://github.com/rdofficial/, email:rdofficial192@gmail.com)
@@ -103,6 +103,7 @@ class Shell:
 		elif token["command"] == 'exit':
 			# If the user entered command is to exit the script, then we do it
 
+			print('[ Exiting the shell ]')
 			exit()
 		elif token["command"] == 'list-files' or token["command"] == 'ls':
 			# If the user entered command is to list the files and folders of the current directory, then we continue
@@ -430,14 +431,14 @@ class Shell:
 
 		# HTTP RELATED COMMANDS
 		# ----
-		if token["command"] == 'http' or token["command"] == 'https':
+		elif token["command"] == 'http':
 			# If the user entered command is http/https related tasks, then we continue
 
 			# Checking for the arguments if exists
 			if len(token["arguments"]) == 0:
 				# If there are no arguments entered by the user
 
-				print('[ ip : requires arguments, use ip --help for more info ]')
+				print('[ http : requires arguments, use http --help for more info ]')
 			else:
 				# If there are atleast more than 0 arguments entered by the user
 
