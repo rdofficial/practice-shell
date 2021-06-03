@@ -10,7 +10,7 @@ Last modified by : Rishav Das (https://github.com/rdofficial/)
 Last modified on : June 3, 2021
 
 Changes made in the last modification :
-1. Added the new functionality to the IP related commands by adding the argument feature of 'all' and 'allbyname', where the user can fetch information, port scan or all other tasks in a single argument.
+1. Added the code (if..else and try..except blocks) for serving the functionality of the startserver argument of the http / https command of the shell.
 
 Authors contributed to this script (Add your name below if you have contributed) :
 1. Rishav Das (github:https://github.com/rdofficial/, email:rdofficial192@gmail.com)
@@ -30,6 +30,7 @@ try:
 	from modules.regular import TerminalCommands
 	from modules.characters import NumberDetails
 	from modules.networking import IP
+	from modules.networking import HttpServer
 except Exception as e:
 	# If there are any errors during the importing of the modules, then we display the error on the console screen
 
@@ -425,6 +426,68 @@ class Shell:
 					# If the argument entered by the user is not recognized, then we display the error message on the console screen
 
 					print(f'[ Error : Unrecognized argument "{token["arguments"][0]}" for the command ip. Use ip --help command for more information. ]')
+		# ----
+
+		# HTTP RELATED COMMANDS
+		# ----
+		if token["command"] == 'http' or token["command"] == 'https':
+			# If the user entered command is http/https related tasks, then we continue
+
+			# Checking for the arguments if exists
+			if len(token["arguments"]) == 0:
+				# If there are no arguments entered by the user
+
+				print('[ ip : requires arguments, use ip --help for more info ]')
+			else:
+				# If there are atleast more than 0 arguments entered by the user
+
+				if token["arguments"][0] == 'startserver':
+					# If the argument entered by the user is to start a simple HTTP server, then we continue
+
+					# Checking for port number in the arguments
+					if len(token["arguments"]) >= 2:
+						# If there are more than or equal to 2 arguments entered by the user, then we take the second argument as the port number where we will set our server
+
+						port = token["arguments"][1]
+					else:
+						# If there are no more than 2 arugments entered by the user, then we ask the user to enter the port number manually
+
+						port = input('Enter the port number : ')
+
+					# Checking the validation of the port number
+					try:
+						port = int(port)
+						if 1 <= port and port <= 65535:
+							# If the port number is in valid range, then we continue
+
+							pass
+						else:
+							raise ValueError()
+					except ValueError:
+						# If there are errors encountered when parsing the port number input from the user (the port number is not of numeric value), then we display the error message on the console screen
+
+						print(f'[ Error : Invalid port number specified. Proper numeric value between 1-65535 should be provided. ]')
+					else:
+						# If there are no errors encountered during the process, then we continue
+
+						# Checking for the custom directory location in the arguments
+						if len(token["arguments"]) >= 4:
+							# If there are more than or equal to 4 arguments entered by the user, then we continue
+
+							if token["arguments"][2] == '--root':
+								# If the third argument specified by the user is for specifying the root directory for the server, then we fetch the value of the root location in the fourth argument
+
+								# Launching the http server with the user specified root location
+								HttpServer(port = port, root = token["arguments"][3])
+								return 0
+						else:
+							# If there are no more than 4 arguments entered by the user, then we continue to launch the http server without custom root location
+
+							pass
+
+					# Launching the http server without any custom root location
+					HttpServer(port = port)
+					return 0
 		# ----
 
 		# ARITHMETIC COMMANDS
