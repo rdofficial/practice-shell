@@ -7,10 +7,10 @@ Author : Rishav Das (https://github.com/rdofficial/)
 Created on : May 9, 2021
 
 Last modified by : Rishav Das (https://github.com/rdofficial/)
-Last modified on : May 31, 2021
+Last modified on : June 3, 2021
 
 Changes made in the last modification :
-1. Added the if..else conditional statements and other code for the number-details command (tool).
+1. Added the basic code for the functionality of the IP related commands of the shell. Added the functionality from the IP class defined in the networking.py module file.
 
 Authors contributed to this script (Add your name below if you have contributed) :
 1. Rishav Das (github:https://github.com/rdofficial/, email:rdofficial192@gmail.com)
@@ -29,6 +29,7 @@ try:
 	from modules import directory as DirectoryTools
 	from modules.regular import TerminalCommands
 	from modules.characters import NumberDetails
+	from modules.networking import IP
 except Exception as e:
 	# If there are any errors during the importing of the modules, then we display the error on the console screen
 
@@ -243,7 +244,7 @@ class Shell:
 				if token["arguments"][0] == 'self':
 					# If the argument entered by the user asks for displaying information related to the IP address of the local machine and local network
 
-					pass
+					IP().localinfo()
 				elif token["arguments"][0] == 'track':
 					# If the argument entered by the user asks for tracking a required IP address, then we continue
 
@@ -257,6 +258,9 @@ class Shell:
 						# If there are less than 2 arguments entered by the user, then we manually ask the user for the IP address
 						
 						ip = input('Enter the IP address : ')
+
+					# Tracking the user specified IP address
+					IP(address = ip).track()
 				elif token["arguments"][0] == 'portscan':
 					# If the argument entered by the user asks for port scanning the particular IP address, then we continue
 
@@ -274,12 +278,77 @@ class Shell:
 					if len(token["arguments"]) >= 4:
 						# If there are equal or more than 4 arguments entered by the user, then we assume the third argument as the start port and the fourth argument as the end port to scan for
 
+						# Setting the port number range from the arguments
 						number1 = token["arguments"][2]
 						number2 = token["arguments"][3]
+						
+						# Starting a port scan attack on the user specified IP address
+						IP(address = ip).portscan(initial = number1, final = number2)
 					else:
 						# If there are less than 4 arguments entered by the user, then we start from 1 to 65500 port number for the scanning
 
-						pass
+						# Starting a port scan attack on the user specified IP address (with default port number range)
+						IP(address = ip).portscan()
+				elif token["arguments"][0] == 'gethostbyname':
+					# If the argument entered by the user asks for fetching the host IP address by name, then we continue
+
+					# Getting the hostname input
+					ip = ''
+					if len(token["arguments"]) >= 2:
+						# If there are equal or more than 2 arguments entered by the user, then we assume the second argument as the user entered hostname to fetch IP address
+
+						ip = token["arguments"][1]
+					else:
+						# If there are less than 2 arguments entered by the user, then we manually ask the user for the hostname
+
+						ip = input('Enter the hostname : ')
+
+					# Tracking the host by the user specified hostname
+					IP(address = ip).gethostbyname()
+				elif token["arguments"][0] == 'trackhostbyname':
+					# If the argument entered by the user asks for tracking the host by name, then we continue
+
+					# Getting the hostname input
+					ip = ''
+					if len(token["arguments"]) >= 2:
+						# If there are equal or more than 2 arguments entered by the user, then we assume the second argument as the user entered hostname to track
+
+						ip = token["arguments"][1]
+					else:
+						# If there are less than 2 arguments entered by the user, then we manually ask the user for the hostname
+
+						ip = input('Enter the hostname : ')
+
+					# Tracking the host by the user specified hostname
+					IP(address = ip).trackhostbyname()
+				elif token["arguments"][0] == 'portscanhostbyname':
+					# If the argument entered by the user asks for port scanning the host by name, then we continue
+
+					# Getting the hostname input
+					ip = ''
+					if len(token["arguments"]) >= 2:
+						# If there are equal or more than 2 arguments entered by the user, then we assume the second argument as the user entered hostname to port scan for
+
+						ip = token["arguments"][1]
+					else:
+						# If there are less than 2 arguments entered by the user, then we manually ask the user for the hostname
+
+						ip = input('Enter the hostname : ')
+
+					if len(token["arguments"]) >= 4:
+						# If there are equal or more than 4 arguments entered by the user, then we assume the third argument as the start port and the fourth argument as the end port to scan for
+
+						# Setting the port number range from the arguments
+						number1 = token["arguments"][2]
+						number2 = token["arguments"][3]
+						
+						# Starting a port scan attack on the user specified IP address
+						IP(address = ip).portscanhostbyname(initial = number1, final = number2)
+					else:
+						# If there are less than 4 arguments entered by the user, then we start from 1 to 65500 port number for the scanning
+
+						# Starting a port scan attack on the user specified IP address (with default port number range)
+						IP(address = ip).portscanhostbyname()
 				elif token["arguments"][0] == '--help' or token["arguments"][0] == '-h':
 					# If the argument entered by the user is for displaying the help related information for the ip command, then we continue
 
