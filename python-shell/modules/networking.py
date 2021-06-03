@@ -10,7 +10,7 @@ Last modified by : Rishav Das (https://github.com/rdofficial/)
 Last modified on : June 2, 2021
 
 Changes made in the last modifications :
-1. Added the code for custom root location setting for the HttpServer, the custom root location is entered by the user.
+1. Fixed the errors for the string and int format errors for the port number input in the IP.portscan() method.
 
 Authors contributed to this script (Add your name below if you have contributed) :
 1. Rishav Das (github:https://github.com/rdofficial/, email:rdofficial192@gmail.com)
@@ -75,11 +75,22 @@ class IP:
 
 		# Checking for the user specified ports
 		if initial == None or final == None:
-			# If the user did not specified the port ranges properly, then we start scaning ports in the range (default port range)
+			# If the user did not specified the port number ranges properly, then we start scaning ports in the range (default port range)
 
 			initial = 1
 			final = 65535
 			print('[ Executing the port scanner with default ports (i.e., 1 to 65535) ]')
+		else:
+			# If the user did specified the port number ranges, then we convert them to the integer form (valid form of a port number)
+
+			try:
+				initial = int(initial)
+				final = int(final)
+			except ValueError:
+				# If there are errors encountered in parsing the port number into int format, then we display the error on the console screen
+
+				print(f'[ Error : Unsupported value for port numbers. Numeric values required. ]')
+				return 0
 		
 		# Defining a list which will store the ports which were found open during port scan
 		openPorts = []
