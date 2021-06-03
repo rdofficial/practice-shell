@@ -10,7 +10,7 @@ Last modified by : Rishav Das (https://github.com/rdofficial/)
 Last modified on : June 2, 2021
 
 Changes made in the last modifications :
-1. Fixed the errors for the string and int format errors for the port number input in the IP.portscan() method.
+1. Fixed the errors for the initial directory switching in the HttpServer class. Changed some of the conditional statements in the entire class in order to fix the errors.
 
 Authors contributed to this script (Add your name below if you have contributed) :
 1. Rishav Das (github:https://github.com/rdofficial/, email:rdofficial192@gmail.com)
@@ -137,8 +137,7 @@ class IP:
 		self.address = socket.gethostname()
 
 		# Displaying the fetched information on the console screen (Also fetching them during the print process)
-		print(f"""[#] Local hostname : {self.address}
-[#] Local IP address : {socket.gethostbyname(self.address)}""")
+		print(f"""[#] Local hostname : {self.address}\n[#] Local IP address : {socket.gethostbyname(self.address)}""")
 
 		# Scanning open ports on the local machine
 		ports = []  # The list to store the ports on the local machine which were found open during the port scan
@@ -268,10 +267,8 @@ class HttpServer:
 		self.port = port
 		self.root = root
 
-		if self.root != None:
-			# If a specific directory is specified for the server intiliazation, then we continue
-
-			self.changeroot()
+		# Calling the changeroot() method in order to switch to a custom location if provided by the user
+		self.changeroot()
 
 		handler = SimpleHTTPRequestHandler
 		with TCPServer(('', self.port), handler) as httpd:
@@ -296,13 +293,16 @@ class HttpServer:
 		# Saving the initial directory location to a class variable
 		self.initialDirectory = path.dirname(path.abspath(__file__))
 
-		if path.isdir(self.root):
-			# If the user specified directory does exists, then we continue
-			
-			# Changing the current working directory to the user specified directory
-			chdir(self.root)
-		else:
-			# If the user specified directory does not exists, then we raise the error message and continue with the default directory
+		if self.root != None:
+			# If the user has provided a custom root location for the server to launch at, then we continue checking and setting it up
 
-			print(f'[ Error : No such directory found "{self.root}" ]')
-			self.root = ''
+			if path.isdir(self.root):
+				# If the user specified directory does exists, then we continue
+				
+				# Changing the current working directory to the user specified directory
+				chdir(self.root)
+			else:
+				# If the user specified directory does not exists, then we raise the error message and continue with the default directory
+
+				print(f'[ Error : No such directory found "{self.root}" ]')
+				self.root = ''
