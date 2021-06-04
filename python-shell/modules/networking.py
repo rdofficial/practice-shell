@@ -10,7 +10,7 @@ Last modified by : Rishav Das (https://github.com/rdofficial/)
 Last modified on : June 3, 2021
 
 Changes made in the last modifications :
-1. Adding the new class 'Connections' which serves the funcitonalities of the commands related to the connect / connections in the shell.
+1. Updating the style of the output in the Connections.list() method / function.
 
 Authors contributed to this script (Add your name below if you have contributed) :
 1. Rishav Das (github:https://github.com/rdofficial/, email:rdofficial192@gmail.com)
@@ -468,10 +468,13 @@ class Connections:
 						connection = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 						socket.setdefaulttimeout(1)
 						result = connection.connect_ex((f'{self.address}{i}', port))
+						stdout.write('\r')
+						stdout.write(f'[!] Checking for {self.address}{i}:{port}')
 						if result == 0:
 							# If the connection is made successfully (i.e., port is open for this device), then we display it
 
-							print(f'[#] {self.address}{i} | Port {port} -> available [{self.address}{i}:{port}]')
+							print(f'\r[#] {self.address}{i} | Port {port} -> available [{self.address}{i}:{port}]')
+						stdout.flush()
 				else:
 					# If the port number is something more specific, then we check for connection to that specific port number
 
@@ -479,10 +482,13 @@ class Connections:
 					connection = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 					socket.setdefaulttimeout(1)
 					result = connection.connect_ex((f'{self.address}{i}', self.port))
+					stdout.write('\r')
+					stdout.write(f'[!] Checking for {self.address}{i}:{self.port}')
 					if result == 0:
 						# If the connection is made successfully (i.e., port is open for this device), then we display it
 
-						print(f'[#] {self.address}{i} | Port {self.port} -> available [{self.address}{i}:{self.port}]')
+						print(f'\r[#] {self.address}{i} | Port {self.port} -> available [{self.address}{i}:{self.port}]')
+					stdout.flush()
 		elif self.addressType == 'full':
 			# If the IP address entered by the user is full type address, then we continue
 
@@ -497,10 +503,13 @@ class Connections:
 					connection = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 					socket.setdefaulttimeout(1)
 					result = connection.connect_ex((self.address, port))
+					stdout.write('\r')
+					stdout.write(f'[!] Checking for {self.address}:{port}')
 					if result == 0:
 						# If the connection is made successfully (i.e., port is open for this device), then we display it
 
-						print(f'[#] {self.address} | Port {port} -> available [{self.address}:{port}]')
+						print(f'\r[#] {self.address} | Port {port} -> available [{self.address}:{port}]')
+					stdout.flush()
 			else:
 				# If the port number is something more specific, then we check for connection to that specific port number
 
@@ -508,10 +517,13 @@ class Connections:
 				connection = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 				socket.setdefaulttimeout(1)
 				result = connection.connect_ex((self.address, self.port))
+				stdout.write('\r')
+				stdout.write(f'[!] Checking for {self.address}:{self.port}')
 				if result == 0:
 					# If the connection is made successfully (i.e., port is open for this device), then we display it
 
-					print(f'[#] {self.address} | Port {self.port} -> available [{self.address}:{self.port}]')
+					print(f'\r[#] {self.address} | Port {self.port} -> available [{self.address}:{self.port}]')
+				stdout.flush()
 		else:
 			# If the IP address entered by the user is not recognized by any of the types, then we display the error message on the console screen
 
