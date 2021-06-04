@@ -10,7 +10,7 @@ Last modified by : Rishav Das (https://github.com/rdofficial/)
 Last modified on : June 3, 2021
 
 Changes made in the last modifications :
-1. Updating the error raising feature while validating the user inputs in the 'Connections' class.
+1. Updating the error raising feature while validating the user inputs in the 'HttpServer' class.
 
 Authors contributed to this script (Add your name below if you have contributed) :
 1. Rishav Das (github:https://github.com/rdofficial/, email:rdofficial192@gmail.com)
@@ -282,7 +282,7 @@ class HttpServer:
 				except ValueError:
 					# If there are errors in parsing the port number input from the user to integer format, then we display the error on the console screen
 
-					print(f'[ Error : Invalid port number specified. Proper numeric value between 1-65535 should be provided. ]')
+					raise ValueError ('[ Error : Invalid port number specified. Proper numeric value between 1-65535 should be provided. ]')
 			elif argument == '--root' or argument == '-r':
 				# If the argument is for specifying the root location, then we continue to parse the next argument as the entered value
 
@@ -318,8 +318,7 @@ class HttpServer:
 			else:
 				# If the user specified directory does not exists, then we display the error message on the console screen
 
-				print(f'[ Error : No such directory found "{self.root}" ]')
-				return 0
+				raise SystemError(f'[ Error : No such directory found "{self.root}". ]')
 
 		# Saving the initial directory location to a class variable
 		self.initialDirectory = path.dirname(path.abspath(__file__))
