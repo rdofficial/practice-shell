@@ -10,7 +10,7 @@ Last modified by : Rishav Das (https://github.com/rdofficial/)
 Last modified on : June 3, 2021
 
 Changes made in the last modifications :
-1. Updating the style of the output in the Connections.list() method / function.
+1. Updating the error raising feature while validating the user inputs in the 'Connections' class.
 
 Authors contributed to this script (Add your name below if you have contributed) :
 1. Rishav Das (github:https://github.com/rdofficial/, email:rdofficial192@gmail.com)
@@ -372,7 +372,7 @@ class Connections:
 				except ValueError:
 					# If there are errors in parsing the port number input from the user to integer format, then we display the error on the console screen
 
-					print(f'[ Error : Invalid port number specified. Proper numeric value between 1-65535 should be provided. ]')
+					raise ValueError('[ Error : Invalid port number specified. Proper numeric value between 1-65535 should be provided. ]')
 			elif argument == '--ip-address' or argument == '-i':
 				# If the argument is for specifying the IP address, then we continue to parse the next argument as the entered value
 
@@ -423,7 +423,7 @@ class Connections:
 			else:
 				# If the user entered IP address have neither 3 nor 4 sections, then we display the error message on the console screen
 
-				print(f'[ Error : Please provide a proper IPv4 address for scanning. Use the --help argument for more information. ]')
+				raise SyntaxError('[ Error : Please provide a proper IPv4 address for scanning. Use the --help argument for more information. ]')
 			del address
 
 		# Validating the port number specified
@@ -441,7 +441,7 @@ class Connections:
 			else:
 				# If the port number specified by the user is not in valid range, then we display the error on the console screen
 
-				print(f'[ Error : Invalid port number specified. Proper numeric value between 1-65535 should be provided. ]')
+				raise ValueError('[ Error : Invalid port number specified. Proper numeric value between 1-65535 should be provided. ]')
 
 	def list(self):
 		""" The method / function which checks for the connections at the user specified IP addresses, then lists them in order. This function checks for the IP address stored in the class variable self.address, and the port number stored in the class variable self.port.
