@@ -7,10 +7,10 @@ Author : Rishav Das (https://github.com/rdofficial/)
 Created on : June 1, 2021
 
 Last modified by : Rishav Das (https://github.com/rdofficial/)
-Last modified on : June 2, 2021
+Last modified on : June 3, 2021
 
 Changes made in the last modifications :
-1. Updated the entire structure of the HttpServer class and changed its way of functionality.
+1. Adding the new class 'Connections' which serves the funcitonalities of the commands related to the connect / connections in the shell.
 
 Authors contributed to this script (Add your name below if you have contributed) :
 1. Rishav Das (github:https://github.com/rdofficial/, email:rdofficial192@gmail.com)
@@ -341,3 +341,179 @@ class HttpServer:
 				# If there are any errors encountered during the process, then we display the error message on the console screen
 
 				print(f'[ Http Server Error : {e} ]')
+
+class Connections:
+	""" The class which serves the feature of the connectins command of the shell. There are functions and methods defined under this class which executes the various tasks under the connections commands. The tasks served by this functions are listed below :
+	1. Check all the connections available on a user specified deviced (example - 127.0.0, 192.168.43)
+
+	Some notable points for this class and internal defined variables :
+	1. Only IPv4 type address are accepted by this tool, and there are two types of addresses taken in by this function. 1st is the IP address in format xxx.xxx.xxx (Here all the combinations of 1-255 numbers are used post in order to check for connections), and 2nd type is xxx.xxx.xxx.xxx (Here only this single specified IP address is checked for connections).
+	2. If the port number 0 entered by the user, then the tool scans for all the port numbers ranging from 1 to 65535. Otherwise they check for a particular port numer. This port number is defined by the argument '-p' or '--port'.
+	3. Same if the user does not specifies the port number in the arguments, then the tool checks for all the port numbers ranging from 1 to 65535. """
+
+	def __init__(self, arguments = [], task = None):
+		# Setting the self.port and self.address class variables
+		self.port = None
+		self.address = None
+
+		# Parsing the argument sent to this class while creating the object
+		for index, argument in enumerate(arguments):
+			# Iterating through each argument item
+
+			if argument == '--port' or argument == '-p':
+				# If the argument is for specifying the port number, then we continue to parse the next argument as the entered value
+
+				try:
+					self.port = int(arguments[index + 1])
+				except IndexError:
+					# If the next argument is out of the list index (i.e., it does not exists), then we continue for the next iteration
+
+					continue
+				except ValueError:
+					# If there are errors in parsing the port number input from the user to integer format, then we display the error on the console screen
+
+					print(f'[ Error : Invalid port number specified. Proper numeric value between 1-65535 should be provided. ]')
+			elif argument == '--ip-address' or argument == '-i':
+				# If the argument is for specifying the IP address, then we continue to parse the next argument as the entered value
+
+				try:
+					self.address = arguments[index + 1]
+				except IndexError:
+					# If the next argument is out of the list index (i.e., it does not exists), then we continue for the next iteration
+
+					continue
+			else:
+				# If the currently iterated argument is not recognized, then we skip the current iteration
+
+				continue
+
+		# Checking the address type
+		if self.address == None:
+			# If there are no addresses provided by the user, then we continue with the default address (127.0.0.x / local machine address)
+
+			self.address = '127.0.0.'
+			self.addressType = 'half'
+		else:
+			# If the user provided some of a IP address to the class object, then we continue with the validation of the user entered IP address
+
+			address = self.address
+			if address[len(address) - 1] == '.':
+				# If the user entered IP address does have its last term as '.'
+
+				address = address.split('.')
+				address.pop()
+			else:
+				# If the user entered IP address does not have its last term as '.'
+
+				address = address.split('.')
+
+			# Checking the lengths of sections of the IP address provided
+			if len(address) == 3:
+				# If the user entered IP address have 3 sections for the numbers, then we continue
+
+				self.addressType = 'half'
+				if self.address[len(self.address) - 1] != '.':
+					# Appending a period in the end of the IP address if there aint any (for half addresses)
+
+					self.address += '.'
+			elif len(address) == 4:
+				# If the user entered IP address have 4 sections for the numbers, then we continue
+
+				self.addressType = 'full'
+			else:
+				# If the user entered IP address have neither 3 nor 4 sections, then we display the error message on the console screen
+
+				print(f'[ Error : Please provide a proper IPv4 address for scanning. Use the --help argument for more information. ]')
+			del address
+
+		# Validating the port number specified
+		if self.port == None or self.port == 0:
+			# If the port number is not specified by the user in the arguments, then we mark the port number as 0 (for 1-65535 ports scanning)
+
+			self.port = 0
+		else:
+			# If the port number is specified by the user in the arguments, then we check the range for it
+
+			if 1 <= self.port or self.port >= 65535:
+				# If the port number specified by the user is in valid range, then we continue
+
+				pass
+			else:
+				# If the port number specified by the user is not in valid range, then we display the error on the console screen
+
+				print(f'[ Error : Invalid port number specified. Proper numeric value between 1-65535 should be provided. ]')
+
+	def list(self):
+		""" The method / function which checks for the connections at the user specified IP addresses, then lists them in order. This function checks for the IP address stored in the class variable self.address, and the port number stored in the class variable self.port.
+
+		The method scans for the connections in the specified ports of the specified IP address. The IP addresses should be of IPv4 format + there are two forms of the IP addresses accepted here (as explained in the class __doc__). Just for inforamtion :
+		1. For 3 groups of numbers in the IP address (half) : This function scans for all combination of the last section with 1-255. Example - For input as 192.168.43., the function checks for IPs 192.168.43.1, 192.168.43.2, 192.168.43.3, etc.
+		2. For 4 groups of numbers in the IP address (full) : This function scans for the input as provided. Example - For input as 192.168.43.1, this function scans for 192.68.43.1 only. """
+
+		# Checking for the IP address type
+		if self.addressType == 'half':
+			# If the IP address entered by the user is half type address, then we continue
+
+			for i in range(1, 256):
+				# Checking for all the devices on the network
+
+				# Checking the port number input
+				if self.port == 0:
+					# If the port number is 0, then we check for all the ports ranging from 1 to 65535
+
+					for port in range(1, 65536):
+						# Iterating through each port number
+
+						# Establishing a connection to the currently iterated device (with the IP address) with the specified port number
+						connection = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+						socket.setdefaulttimeout(1)
+						result = connection.connect_ex((f'{self.address}{i}', port))
+						if result == 0:
+							# If the connection is made successfully (i.e., port is open for this device), then we display it
+
+							print(f'[#] {self.address}{i} | Port {port} -> available [{self.address}{i}:{port}]')
+				else:
+					# If the port number is something more specific, then we check for connection to that specific port number
+
+					# Establishing a connection to the currently iterated device (with the IP address) with the specified port number
+					connection = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+					socket.setdefaulttimeout(1)
+					result = connection.connect_ex((f'{self.address}{i}', self.port))
+					if result == 0:
+						# If the connection is made successfully (i.e., port is open for this device), then we display it
+
+						print(f'[#] {self.address}{i} | Port {self.port} -> available [{self.address}{i}:{self.port}]')
+		elif self.addressType == 'full':
+			# If the IP address entered by the user is full type address, then we continue
+
+			# Checking the port number input
+			if self.port == 0:
+				# If the port number is 0, then we check for all the ports ranging from 1 to 65535
+
+				for port in range(1, 65536):
+					# Iterating through each port number
+
+					# Establishing a connection to the device (with the IP address) with the currently iterated port number
+					connection = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+					socket.setdefaulttimeout(1)
+					result = connection.connect_ex((self.address, port))
+					if result == 0:
+						# If the connection is made successfully (i.e., port is open for this device), then we display it
+
+						print(f'[#] {self.address} | Port {port} -> available [{self.address}:{port}]')
+			else:
+				# If the port number is something more specific, then we check for connection to that specific port number
+
+				# Establishing a connection to the device (with the IP address) with the specified port number
+				connection = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+				socket.setdefaulttimeout(1)
+				result = connection.connect_ex((self.address, self.port))
+				if result == 0:
+					# If the connection is made successfully (i.e., port is open for this device), then we display it
+
+					print(f'[#] {self.address} | Port {self.port} -> available [{self.address}:{self.port}]')
+		else:
+			# If the IP address entered by the user is not recognized by any of the types, then we display the error message on the console screen
+
+			print(f'[ Error : Improper IP address provided or failed to render the input from the user. ]')
+			return 0
