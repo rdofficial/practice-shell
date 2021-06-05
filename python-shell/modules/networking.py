@@ -10,8 +10,7 @@ Last modified by : Rishav Das (https://github.com/rdofficial/)
 Last modified on : June 3, 2021
 
 Changes made in the last modifications :
-1. Created a new method / function 'checkSSH()' inside the 'Connections' class.
-2. Updated the name of the method 'list()' to 'listAvaiableConnections()' of the 'Connections' class.
+1. Added the code for connecting to a device on SSH ports to check connectivity, to the method Connections.checkSSH().
 
 Authors contributed to this script (Add your name below if you have contributed) :
 1. Rishav Das (github:https://github.com/rdofficial/, email:rdofficial192@gmail.com)
@@ -537,11 +536,42 @@ class Connections:
 		if self.addressType == 'half':
 			# If the IP address entered by the user is half type address, then we continue
 
-			pass
+			# Checking for the connectivity to the devices in the network via the particular HTTP ports (which are used for SSH)
+			for i in range(1, 256):
+				# Iterating through each number ranging from 1 to 255 in order to check for all available devices
+
+				for port in [22, 8022]:
+					# Iterating through each port number in the list
+
+					connection = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+					socket.setdefaulttimeout(1)
+					result = connection.connect_ex((f'{self.address}{i}', port))
+					stdout.write('\r')
+					stdout.write('[!] Checking for SSH connection at %-20s' %(f'{self.address}{i}:{port}'))
+					if result == 0:
+						# If the connection is made successfully (i.e., port is open for this device), then we display it
+
+						print(f'\r[#] [{self.address}{i}:{port}] --> Available for connections')
+					stdout.flush()
+			print()
 		elif self.addressType == 'full':
 			# If the IP address entered by the user is a full type address, then we continue
 
-			pass
+			# Checking for the connectivity to the specified device on the network via the particular HTTP ports (which are used for SSH)
+			for port in [22, 8022]:
+				# Iterating through each port number in the list
+
+				connection = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+				socket.setdefaulttimeout(1)
+				result = connection.connect_ex((self.address, port))
+				stdout.write('\r')
+				stdout.write('[!] Checking for SSH connection at %-20s' %(f'{self.address}:{port}'))
+				if result == 0:
+					# If the connection is made successfully (i.e., port is open for this device), then we display it
+
+					print(f'\r[#] [{self.address}:{port}] --> Available for connections')
+				stdout.flush()
+			print()
 		else:
 			# If the IP address entered by the user is not recognized by any of the types, then we display the error message on the console screen
 
