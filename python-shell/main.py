@@ -10,7 +10,7 @@ Last modified by : Rishav Das (https://github.com/rdofficial/)
 Last modified on : June 3, 2021
 
 Changes made in the last modification :
-1. Updated the code for the 'startserver' argument of 'http' command in order to compete with the new updates at the 'HttpServer' class defined in the modules/networking.py module file.
+1. Updated the code for the 'http' command in order to compete with the updates in the modules/networking.py module file.
 
 Authors contributed to this script (Add your name below if you have contributed) :
 1. Rishav Das (github:https://github.com/rdofficial/, email:rdofficial192@gmail.com)
@@ -434,8 +434,23 @@ class Shell:
 		elif token["command"] == 'http':
 			# If the user entered command is http/https related tasks, then we continue
 
-			# Passing all the arguments and launching the HttpServer
-			HttpServer(arguments = token["arguments"])
+			# Checking for the arguments if exists
+			if len(token["arguments"]) == 0:
+				# If there are no arguments entered by the user
+
+				print('[ http : requires arguments, use http --help for more info ]')
+			else:
+				# If there are atleast more than 0 arguments entered by the user
+
+				if token["arguments"][0] == 'startserver':
+					# If the argument entered by the user is for starting a simple HTTP server, then we continue to launch the server with the user provided configs
+
+					# Passing all the arguments and launching the HttpServer
+					HttpServer(arguments = token["arguments"])
+				else:
+					# If the argument entered by the user is not recognized, then we display the error message on the console screen
+
+					print(f'[ Error : Unrecognized argument "{token["arguments"][0]}" for the command http. Use http --help command for more information. ]')
 		# ----
 
 		# ARITHMETIC COMMANDS
