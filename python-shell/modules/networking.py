@@ -10,7 +10,7 @@ Last modified by : Rishav Das (https://github.com/rdofficial/)
 Last modified on : June 3, 2021
 
 Changes made in the last modifications :
-1. Added the code for connecting to a device on SSH ports to check connectivity, to the method Connections.checkSSH().
+1. Updated the console screen output texts and code for the 'Connections' class and its inner methods / functions.
 
 Authors contributed to this script (Add your name below if you have contributed) :
 1. Rishav Das (github:https://github.com/rdofficial/, email:rdofficial192@gmail.com)
@@ -468,7 +468,7 @@ class Connections:
 						socket.setdefaulttimeout(1)
 						result = connection.connect_ex((f'{self.address}{i}', port))
 						stdout.write('\r')
-						stdout.write(f'[!] Checking for {self.address}{i}:{port}')
+						stdout.write('[!] Checking connection at %-20s' %(f'{self.address}{i}:{port}'))
 						if result == 0:
 							# If the connection is made successfully (i.e., port is open for this device), then we display it
 
@@ -482,12 +482,13 @@ class Connections:
 					socket.setdefaulttimeout(1)
 					result = connection.connect_ex((f'{self.address}{i}', self.port))
 					stdout.write('\r')
-					stdout.write(f'[!] Checking for {self.address}{i}:{self.port}')
+					stdout.write('[!] Checking connection at %-20s' %(f'{self.address}:{self.port}'))
 					if result == 0:
 						# If the connection is made successfully (i.e., port is open for this device), then we display it
 
 						print(f'\r[#] {self.address}{i} | Port {self.port} -> available [{self.address}{i}:{self.port}]')
 					stdout.flush()
+			print('\r[================== Scan completed ==================]')
 		elif self.addressType == 'full':
 			# If the IP address entered by the user is full type address, then we continue
 
@@ -503,7 +504,7 @@ class Connections:
 					socket.setdefaulttimeout(1)
 					result = connection.connect_ex((self.address, port))
 					stdout.write('\r')
-					stdout.write(f'[!] Checking for {self.address}:{port}')
+					stdout.write('[!] Checking connection at %-20s' %(f'{self.address}:{port}'))
 					if result == 0:
 						# If the connection is made successfully (i.e., port is open for this device), then we display it
 
@@ -517,12 +518,13 @@ class Connections:
 				socket.setdefaulttimeout(1)
 				result = connection.connect_ex((self.address, self.port))
 				stdout.write('\r')
-				stdout.write(f'[!] Checking for {self.address}:{self.port}')
+				stdout.write('[!] Checking connection at %-20s' %(f'{self.address}:{self.port}'))
 				if result == 0:
 					# If the connection is made successfully (i.e., port is open for this device), then we display it
 
 					print(f'\r[#] {self.address} | Port {self.port} -> available [{self.address}:{self.port}]')
 				stdout.flush()
+			print('\r[================== Scan completed ==================]')
 		else:
 			# If the IP address entered by the user is not recognized by any of the types, then we display the error message on the console screen
 
@@ -547,13 +549,13 @@ class Connections:
 					socket.setdefaulttimeout(1)
 					result = connection.connect_ex((f'{self.address}{i}', port))
 					stdout.write('\r')
-					stdout.write('[!] Checking for SSH connection at %-20s' %(f'{self.address}{i}:{port}'))
+					stdout.write('[!] Checking SSH connection at %-20s' %(f'{self.address}{i}:{port}'))
 					if result == 0:
 						# If the connection is made successfully (i.e., port is open for this device), then we display it
 
 						print(f'\r[#] [{self.address}{i}:{port}] --> Available for connections')
 					stdout.flush()
-			print()
+			print('\r[================== Scan completed ==================]')
 		elif self.addressType == 'full':
 			# If the IP address entered by the user is a full type address, then we continue
 
@@ -565,13 +567,13 @@ class Connections:
 				socket.setdefaulttimeout(1)
 				result = connection.connect_ex((self.address, port))
 				stdout.write('\r')
-				stdout.write('[!] Checking for SSH connection at %-20s' %(f'{self.address}:{port}'))
+				stdout.write('[!] Checking SSH connection at %-20s' %(f'{self.address}:{port}'))
 				if result == 0:
 					# If the connection is made successfully (i.e., port is open for this device), then we display it
 
 					print(f'\r[#] [{self.address}:{port}] --> Available for connections')
 				stdout.flush()
-			print()
+			print('\r[================== Scan completed ==================]')
 		else:
 			# If the IP address entered by the user is not recognized by any of the types, then we display the error message on the console screen
 
