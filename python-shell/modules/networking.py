@@ -10,7 +10,8 @@ Last modified by : Rishav Das (https://github.com/rdofficial/)
 Last modified on : June 3, 2021
 
 Changes made in the last modifications :
-1. Updating the error raising feature while validating the user inputs in the 'HttpServer' class.
+1. Created a new method / function 'checkSSH()' inside the 'Connections' class.
+2. Updated the name of the method 'list()' to 'listAvaiableConnections()' of the 'Connections' class.
 
 Authors contributed to this script (Add your name below if you have contributed) :
 1. Rishav Das (github:https://github.com/rdofficial/, email:rdofficial192@gmail.com)
@@ -442,7 +443,7 @@ class Connections:
 
 				raise ValueError('[ Error : Invalid port number specified. Proper numeric value between 1-65535 should be provided. ]')
 
-	def list(self):
+	def listAvailableConnections(self):
 		""" The method / function which checks for the connections at the user specified IP addresses, then lists them in order. This function checks for the IP address stored in the class variable self.address, and the port number stored in the class variable self.port.
 
 		The method scans for the connections in the specified ports of the specified IP address. The IP addresses should be of IPv4 format + there are two forms of the IP addresses accepted here (as explained in the class __doc__). Just for inforamtion :
@@ -523,6 +524,24 @@ class Connections:
 
 					print(f'\r[#] {self.address} | Port {self.port} -> available [{self.address}:{self.port}]')
 				stdout.flush()
+		else:
+			# If the IP address entered by the user is not recognized by any of the types, then we display the error message on the console screen
+
+			print(f'[ Error : Improper IP address provided or failed to render the input from the user. ]')
+			return 0
+
+	def checkSSH(self):
+		""" This method / function checks whether the SSH connections are available for the user entered IP address. This function checks for the IP address stored in the class variable self.address, also uses the same algorithms for half and full addresses as per provided. We will check for the port numbers [22, 8022]. """
+
+		# Checking for the IP address type
+		if self.addressType == 'half':
+			# If the IP address entered by the user is half type address, then we continue
+
+			pass
+		elif self.addressType == 'full':
+			# If the IP address entered by the user is a full type address, then we continue
+
+			pass
 		else:
 			# If the IP address entered by the user is not recognized by any of the types, then we display the error message on the console screen
 
