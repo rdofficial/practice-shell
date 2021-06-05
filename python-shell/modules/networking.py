@@ -10,7 +10,7 @@ Last modified by : Rishav Das (https://github.com/rdofficial/)
 Last modified on : June 3, 2021
 
 Changes made in the last modifications :
-1. Updated the console screen output texts and code for the 'Connections' class and its inner methods / functions.
+1. Created the class 'SSH' to serve the ssh command and related stuff in the shell.
 
 Authors contributed to this script (Add your name below if you have contributed) :
 1. Rishav Das (github:https://github.com/rdofficial/, email:rdofficial192@gmail.com)
@@ -23,6 +23,7 @@ try:
 	from socketserver import TCPServer
 	from http.server import SimpleHTTPRequestHandler
 	from urllib import request
+	from pexcept impot pxssh
 
 	# Importing the other functions and modules that are required
 	from os import chdir, path
@@ -342,7 +343,7 @@ class HttpServer:
 				print(f'[ Http Server Error : {e} ]')
 
 class Connections:
-	""" The class which serves the feature of the connectins command of the shell. There are functions and methods defined under this class which executes the various tasks under the connections commands. The tasks served by this functions are listed below :
+	""" The class which serves the feature of the connections command of the shell. There are functions and methods defined under this class which executes the various tasks under the connections commands. The tasks served by this functions are listed below :
 	1. Check all the connections available on a user specified deviced (example - 127.0.0, 192.168.43)
 
 	Some notable points for this class and internal defined variables :
@@ -579,3 +580,15 @@ class Connections:
 
 			print(f'[ Error : Improper IP address provided or failed to render the input from the user. ]')
 			return 0
+
+class SSH:
+	""" The class which defines the functionality of the SSH commands of the shell. """
+
+	def __init__(self, task = 'None'):
+		pass
+
+	def sendFiles(self):
+		pass
+
+	def recieveFiles(self):
+		pass
