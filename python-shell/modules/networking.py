@@ -7,10 +7,10 @@ Author : Rishav Das (https://github.com/rdofficial/)
 Created on : June 1, 2021
 
 Last modified by : Rishav Das (https://github.com/rdofficial/)
-Last modified on : June 3, 2021
+Last modified on : June 6, 2021
 
 Changes made in the last modifications :
-1. Updated with the notice that the SSH class which supplies the functions of the ssh command of the shell are not working.
+1. Updated the 'HttpServer' class with the documentation (--help argument) as well as improving some lines of codes which could possibly cause error in some places further.
 
 Authors contributed to this script (Add your name below if you have contributed) :
 1. Rishav Das (github:https://github.com/rdofficial/, email:rdofficial192@gmail.com)
@@ -266,6 +266,7 @@ class HttpServer:
 		# Setting the self.port and self.root class variables
 		self.port = None
 		self.root = None
+		self.documentation = False
 
 		# Parsing the argument sent to this class while creating the object
 		for index, argument in enumerate(arguments):
@@ -283,7 +284,7 @@ class HttpServer:
 				except ValueError:
 					# If there are errors in parsing the port number input from the user to integer format, then we display the error on the console screen
 
-					raise ValueError ('[ Error : Invalid port number specified. Proper numeric value between 1-65535 should be provided. ]')
+					raise ValueError ('Invalid port number specified. Proper numeric value between 1-65535 should be provided.')
 			elif argument == '--root' or argument == '-r':
 				# If the argument is for specifying the root location, then we continue to parse the next argument as the entered value
 
@@ -293,54 +294,66 @@ class HttpServer:
 					# If the next argument is out of the list index (i.e., it does not exists), then we continue for the next iteration
 
 					continue
+			elif argument == '--help':
+				# If the argument is for displaying the help information, then we mark the documentation mode True
+
+				self.documentation = True
 			else:
 				# If the currently iterated argument is not recognized, then we skip the current iteration
 
 				continue
 
-		# Checking the port number and root location input from the user
-		if self.port == None:
-			# If the port number is stil not specified by the user, then we ask the port number from the user manually
+		# Checking whether the class object is called for documentation mode (display help) or just running tasks
+		if self.documentation:
+			# If the class object is called for displaying the documentation, then we continue displaying the help section contents
 
-			self.port = input('Enter the port number : ')
-		if self.root == None:
-			# If the root location is still not specified by the user, then we give use the current directory as the root location and launch the server
-
-			print('[ Launching the server at current directory ]')
+			print('\nhttp startserver\nUsage : http startserver <arguments>\n\n"http startserver" is a tool which provides the feature to launch a very basic http server. The server hosted at the user speciifed port and root location. The server just hosts the html, js and css files. It does not allows databases or any form\nof backend functionality as it is a simple server. Just display the files in the root location and its sub-directories. Make sure that the index.html file is present in the root directory for proper indexing.\n\nSome arguments used are :\n--port, -p    Used to specify the port number\n--root, -r    Used to specify the root location\n--help        Displays this text\n\nSome points to be noted :\n1. The port number input should be an integer between 1 to 65535.\n2. Some of the port numbers requires superuser permissions in order to work.\n3. The root location input should be an existing and a directory with the user permitted to work on.\n\nSee the documentation of this project for more information about this tool (http startserver).')
 		else:
-			# If the root location is specified, then we launch the server at the custom provided root location
+			# If the class object is called for executing tasks instead of the documentation mode, then we continue
 
-			if path.isdir(self.root):
-				# If the user specified directory does exists, then we continue
+			# Checking the port number and root location input from the user
+			if self.port == None:
+				# If the port number is stil not specified by the user, then we ask the port number from the user manually
 
-				# Moving to the specified directory
-				chdir(self.root)
-				print(f'[ Launching the server at : {self.root} ]')
+				self.port = int(input('Enter the port number : '))
+			if self.root == None:
+				# If the root location is still not specified by the user, then we give use the current directory as the root location and launch the server
+
+				print('[ Launching the server at current directory ]')
 			else:
-				# If the user specified directory does not exists, then we display the error message on the console screen
+				# If the root location is specified, then we launch the server at the custom provided root location
 
-				raise SystemError(f'[ Error : No such directory found "{self.root}". ]')
+				if path.isdir(self.root):
+					# If the user specified directory does exists, then we continue
 
-		# Saving the initial directory location to a class variable
-		self.initialDirectory = path.dirname(path.abspath(__file__))
+					# Moving to the specified directory
+					chdir(self.root)
+					print(f'[ Launching the server at : {self.root} ]')
+				else:
+					# If the user specified directory does not exists, then we display the error message on the console screen
 
-		# Setting and launching the server
-		handler = SimpleHTTPRequestHandler
-		with TCPServer(('', self.port), handler) as httpd:
-			# Launching the http server
+					raise SystemError(f'No such directory found "{self.root}"')
 
-			try:
-				print(f'Serving at port : {self.port}')
-				httpd.serve_forever()
-			except KeyboardInterrupt:
-				# If the user pressed CTRL+C key combo, then we stop the server
+			# Saving the initial directory location to a class variable
+			self.initialDirectory = path.dirname(path.abspath(__file__))
 
-				chdir(self.initialDirectory)  # Unsetting the current root location to the intial working directory
-				httpd.server_close()
-			except Exception as e:
-				# If there are any errors encountered during the process, then we display the error message on the console screen
+			# Setting and launching the server
+			handler = SimpleHTTPRequestHandler
+			with TCPServer(('', self.port), handler) as httpd:
+				# Launching the http server
 
-				print(f'[ Http Server Error : {e} ]')
+				try:
+					print(f'Serving at port : {self.port}')
+					httpd.serve_forever()
+				except KeyboardInterrupt:
+					# If the user pressed CTRL+C key combo, then we stop the server
+
+					chdir(self.initialDirectory)  # Unsetting the current root location to the intial working directory
+					httpd.server_close()
+				except Exception as e:
+					# If there are any errors encountered during the process, then we display the error message on the console screen
+
+					print(f'[ Http Server Error : {e} ]')
 
 class Connections:
 	""" The class which serves the feature of the connections command of the shell. There are functions and methods defined under this class which executes the various tasks under the connections commands. The tasks served by this functions are listed below :
