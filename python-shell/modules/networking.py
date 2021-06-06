@@ -10,7 +10,7 @@ Last modified by : Rishav Das (https://github.com/rdofficial/)
 Last modified on : June 6, 2021
 
 Changes made in the last modifications :
-1. Updated the 'Connections' class with the documentation (--help argument) as well as improving some lines of codes which could possibly cause error in some places further.
+1. Added the code for the class 'HttpRequests'.
 
 Authors contributed to this script (Add your name below if you have contributed) :
 1. Rishav Das (github:https://github.com/rdofficial/, email:rdofficial192@gmail.com)
@@ -712,4 +712,16 @@ class SSH:
 		pass
 
 	def recieveFiles(self):
+		pass
+
+class HttpRequests:
+	""" """
+
+	def __init__(self):
+		pass
+
+	def get(self):
+		pass
+
+	def post(self):
 		pass
