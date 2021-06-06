@@ -10,7 +10,7 @@ Last modified by : Rishav Das (https://github.com/rdofficial/)
 Last modified on : June 6, 2021
 
 Changes made in the last modifications :
-1. Added the code for the class 'HttpRequests'.
+1. Added the code to take user entered URL in the 'HttpRequests' class.
 
 Authors contributed to this script (Add your name below if you have contributed) :
 1. Rishav Das (github:https://github.com/rdofficial/, email:rdofficial192@gmail.com)
@@ -717,8 +717,17 @@ class SSH:
 class HttpRequests:
 	""" """
 
-	def __init__(self):
-		pass
+	def __init__(self, url = None):
+		# Checking the URL input by the user
+		if url == None:
+			# If the user did not entered the URL for executing the HTTP requests, then we raise the error with a custom message
+
+			raise SyntaxError('URL not mentioned for executing HTTP requests.')
+		else:
+			# If the user did entered the URL for executing the HTTP requests, then we continue
+
+			# Setting the URL for the HTTP requests (Storing the URL in the class variable self.url)
+			self.url = url
 
 	def get(self):
 		pass
