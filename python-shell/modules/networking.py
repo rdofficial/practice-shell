@@ -10,7 +10,7 @@ Last modified by : Rishav Das (https://github.com/rdofficial/)
 Last modified on : June 3, 2021
 
 Changes made in the last modifications :
-1. Created the class 'SSH' to serve the ssh command and related stuff in the shell.
+1. Updated with the notice that the SSH class which supplies the functions of the ssh command of the shell are not working.
 
 Authors contributed to this script (Add your name below if you have contributed) :
 1. Rishav Das (github:https://github.com/rdofficial/, email:rdofficial192@gmail.com)
@@ -23,7 +23,7 @@ try:
 	from socketserver import TCPServer
 	from http.server import SimpleHTTPRequestHandler
 	from urllib import request
-	from pexcept impot pxssh
+	from pexpect import pxssh
 
 	# Importing the other functions and modules that are required
 	from os import chdir, path
@@ -582,10 +582,87 @@ class Connections:
 			return 0
 
 class SSH:
-	""" The class which defines the functionality of the SSH commands of the shell. """
+	""" The class which defines the functionality of the SSH commands of the shell. 
 
-	def __init__(self, task = 'None'):
-		pass
+
+	TO BE UPDATED. CURRENTLY NOT WORKING. WILL BE UPDATED LATER, REMEMBER THIS ONE!!!
+	"""
+
+	def __init__(self, arguments = [], task = None):
+		# Setting the class variables (properties) to their respective default values
+		self.port = 22
+		self.username = None
+		self.password = None
+		self.address = None
+
+		# Parsing the argument sent to this class while creating the object
+		for index, argument in enumerate(arguments):
+			# Iterating through each argument item
+
+			if argument == '--port' or argument == '-p':
+				# If the argument is for specifying the port number, then we continue to parse the next argument as the entered value
+
+				try:
+					self.port = int(arguments[index + 1])
+				except IndexError:
+					# If the next argument is out of the list index (i.e., it does not exists), then we continue for the next iteration
+
+					continue
+				except ValueError:
+					# If there are errors in parsing the port number input from the user to integer format, then we display the error on the console screen
+
+					raise ValueError('[ Error : Invalid port number specified. Proper numeric value between 1-65535 should be provided. ]')
+			elif argument == '--address' or argument == '-i' or argument == '--hostname' or argument == '-h':
+				# If the argument is for specifying the IP address, then we continue to parse the next argument as the entered value
+
+				try:
+					self.address = arguments[index + 1]
+				except IndexError:
+					# If the next argument is out of the list index (i.e., it does not exists), then we continue for the next iteration
+
+					continue
+			elif argument == '--username' or argument == '-u':
+				# If the argument is for specifying the username for the SSH login, then we continue to parse the next argument as the entered value
+
+				try:
+					self.username = arguments[index + 1]
+				except IndexError:
+					# If the next argument is out of the list index (i.e., it does not exists), then we continue for the next iteration
+
+					continue
+			elif argument == '--password' or argument == '-k':
+				# If the argument is for specifying the password for the SSH login, then we continue to parse the next argument as the entered value
+
+				try:
+					self.password = arguments[index +  1]
+				except IndexError:
+					# If the next argument is out of the list index (i.e., it does not exists), then we continue for the next iteration
+
+					continue
+			else:
+				# If the currently iterated argument is not recognized, then we skip the current iteration
+
+				continue
+
+		# Checking for the task
+		if task == None:
+			# If the task is not specified, then we just connect to the required server and return the status
+
+			try:
+				ssh = pxssh.pxssh()
+				ssh.login(self.address, self.username, self.password)
+				ssh.sendline('uptime')
+				ssh.prompt()
+				print(ssh.before)
+				ssh.logout()
+			except pxssh.ExceptionPxssh as e:
+				# If there are any errors during the process, then we display the error message on the console screen
+
+				print(f'[ Error : {e} ]')
+		else:
+			# If the task specified by the user is not recognized by the user, then we display the error on the console screen
+
+			print(f'[ Error : Task specified to the SSH tool is not recognized. ]')
 
 	def sendFiles(self):
 		pass
