@@ -10,7 +10,7 @@ Last modified by : Rishav Das (https://github.com/rdofficial/)
 Last modified on : June 6, 2021
 
 Changes made in the last modifications :
-1. Updated the 'HttpServer' class with the documentation (--help argument) as well as improving some lines of codes which could possibly cause error in some places further.
+1. Updated the 'Connections' class with the documentation (--help argument) as well as improving some lines of codes which could possibly cause error in some places further.
 
 Authors contributed to this script (Add your name below if you have contributed) :
 1. Rishav Das (github:https://github.com/rdofficial/, email:rdofficial192@gmail.com)
@@ -307,7 +307,7 @@ class HttpServer:
 		if self.documentation:
 			# If the class object is called for displaying the documentation, then we continue displaying the help section contents
 
-			print('\nhttp startserver\nUsage : http startserver <arguments>\n\n"http startserver" is a tool which provides the feature to launch a very basic http server. The server hosted at the user speciifed port and root location. The server just hosts the html, js and css files. It does not allows databases or any form\nof backend functionality as it is a simple server. Just display the files in the root location and its sub-directories. Make sure that the index.html file is present in the root directory for proper indexing.\n\nSome arguments used are :\n--port, -p    Used to specify the port number\n--root, -r    Used to specify the root location\n--help        Displays this text\n\nSome points to be noted :\n1. The port number input should be an integer between 1 to 65535.\n2. Some of the port numbers requires superuser permissions in order to work.\n3. The root location input should be an existing and a directory with the user permitted to work on.\n\nSee the documentation of this project for more information about this tool (http startserver).')
+			print('\nhttp startserver\nUsage : http startserver <arguments>\n\n"http startserver" is a tool which provides the feature to launch a very basic http server. The server hosted at the user speciifed port and root location. The server just hosts the html, js and css files. It does not allows databases or any form\nof backend functionality as it is a simple server. Just display the files in the root location and its sub-directories. Make sure that the index.html file is present in the root directory for proper indexing.\n\nSome arguments used are :\n--port, -p    Used to specify the port number\n--root, -r    Used to specify the root location\n--help        Displays this text\n\nSome points to be noted :\n1. The port number input should be an integer between 1 to 65535.\n2. Some of the port numbers requires superuser permissions in order to work.\n3. The root location input should be an existing and a directory with the user permitted to work on.\n\nSee the docs of this project for more information about this tool (http startserver).')
 		else:
 			# If the class object is called for executing tasks instead of the documentation mode, then we continue
 
@@ -368,6 +368,7 @@ class Connections:
 		# Setting the self.port and self.address class variables
 		self.port = None
 		self.address = None
+		self.documentation = False
 
 		# Parsing the argument sent to this class while creating the object
 		for index, argument in enumerate(arguments):
@@ -385,7 +386,7 @@ class Connections:
 				except ValueError:
 					# If there are errors in parsing the port number input from the user to integer format, then we display the error on the console screen
 
-					raise ValueError('[ Error : Invalid port number specified. Proper numeric value between 1-65535 should be provided. ]')
+					raise ValueError('Invalid port number specified. Proper numeric value between 1-65535 should be provided.')
 			elif argument == '--ip-address' or argument == '-i':
 				# If the argument is for specifying the IP address, then we continue to parse the next argument as the entered value
 
@@ -395,66 +396,96 @@ class Connections:
 					# If the next argument is out of the list index (i.e., it does not exists), then we continue for the next iteration
 
 					continue
+			elif argument == '--help':
+				# If the argument is for displaying the help information, then we mark the documentation mode True
+
+				self.documentation = True
 			else:
 				# If the currently iterated argument is not recognized, then we skip the current iteration
 
 				continue
 
-		# Checking the address type
-		if self.address == None:
-			# If there are no addresses provided by the user, then we continue with the default address (127.0.0.x / local machine address)
+		# Checking whether the class object is called for documentation mode (display help) or just running tasks
+		if self.documentation:
+			# If the class object is called for displaying the documentation, then we continue displaying the help section contents
 
-			self.address = '127.0.0.'
-			self.addressType = 'half'
+			print('connections\nUsage connections [task] <arguments>\n\n"connections" is a tool which provides the feature of serving various tasks related to networks and connections. Currently servers tasks are listed below with the specific command to invoke them.\n\nconnections list <arguments>    Lists all the active connections in the local address / user provided network address\nconnections check-ssh <arguments>    Checks for availablity of SSH connections on the network\n\nArguments that can be used are :\n--port, p            Used to specify the port number\n--ip-address, -i     Used to specify the IP address of the device\n--help               Displays this text\n\nUsage :\n[Listing available connections on a network]\n1. For listing available connections in network with IP address format in 192.168.43.xxx, we may scan all the ports of each devices using the command specified below\nconnections list -i 192.168.43\n\n2. For listing available connections in network with IP address format in 192.168.43.xxx + fixed port number, we may scan all the ports of each devices using the command specified below\nconnections list -i 192.168.43 -p 80\n\n3. For listing available connections in a single device (the available ports) (device IP : 192.168.43.1 For example), we use the command specified below\nconnections list -i 192.68.43.1\n\n4. For listing available connections in a single device (the available ports) (device IP : 192.168.43.1 For example + fixed port number), we use the command specified below\nconnections list -i 192.68.43.1 -p 80\n\nSummary : Either you can scan all the devices on the network (192.xxx.xxx.1 to 192.xxx.xxx.255) or any particular device. Either you can scan all the ports ranging 1 to 65535, or just a specific port of the network devices.\n\n[Checking SSH connection availability]\n1. List all the available SSH connections on the network, with IP address format 192.168.43.xxx, use the below command (It checks for port 22 and 8022 for all the devices 1-255).\nconnections check-ssh -i 192.168.43\n\n2. Check for a particular port for SSH connection of all the devices in the network (with IP address of format 192.168.43.xxx), we use the below specified command.\nconnections check-ssh -i 192.168.43 -p 8022\n\n3. Check for a particular device on the network for SSH connection (For example, IP : 192.168.43.1 with all the ports), we use the below specified command.\nconnections check-ssh -i 192.168.43.1\n\n4. Check for a particular device on the network for SSH connection with a particular port number specified (For example, IP : 192.168.43.1, port : 22), we use the below specified command :\nconnections check-ssh -i 192.168.43.1 -p 22\n\nSummary : Either you can scan all the devices on the network (192.xxx.xxx.1 to 192.xxx.xxx.255) or any particular device. Either you can scan all the ports ranging 1 to 65535, or just a specific port of the network devices.\n\nSee the docs of this project for more information about this tool (connections).')
 		else:
-			# If the user provided some of a IP address to the class object, then we continue with the validation of the user entered IP address
+			# If the class object is called for executing tasks instead of the documentation mode, then we continue
 
-			address = self.address
-			if address[len(address) - 1] == '.':
-				# If the user entered IP address does have its last term as '.'
+			# Checking the address type
+			if self.address == None:
+				# If there are no addresses provided by the user, then we continue with the default address (127.0.0.x / local machine address)
 
-				address = address.split('.')
-				address.pop()
-			else:
-				# If the user entered IP address does not have its last term as '.'
-
-				address = address.split('.')
-
-			# Checking the lengths of sections of the IP address provided
-			if len(address) == 3:
-				# If the user entered IP address have 3 sections for the numbers, then we continue
-
+				self.address = '127.0.0.'
 				self.addressType = 'half'
-				if self.address[len(self.address) - 1] != '.':
-					# Appending a period in the end of the IP address if there aint any (for half addresses)
-
-					self.address += '.'
-			elif len(address) == 4:
-				# If the user entered IP address have 4 sections for the numbers, then we continue
-
-				self.addressType = 'full'
 			else:
-				# If the user entered IP address have neither 3 nor 4 sections, then we display the error message on the console screen
+				# If the user provided some of a IP address to the class object, then we continue with the validation of the user entered IP address
 
-				raise SyntaxError('[ Error : Please provide a proper IPv4 address for scanning. Use the --help argument for more information. ]')
-			del address
+				address = self.address
+				if address[len(address) - 1] == '.':
+					# If the user entered IP address does have its last term as '.'
 
-		# Validating the port number specified
-		if self.port == None or self.port == 0:
-			# If the port number is not specified by the user in the arguments, then we mark the port number as 0 (for 1-65535 ports scanning)
+					address = address.split('.')
+					address.pop()
+				else:
+					# If the user entered IP address does not have its last term as '.'
 
-			self.port = 0
-		else:
-			# If the port number is specified by the user in the arguments, then we check the range for it
+					address = address.split('.')
 
-			if 1 <= self.port or self.port >= 65535:
-				# If the port number specified by the user is in valid range, then we continue
+				# Checking the lengths of sections of the IP address provided
+				if len(address) == 3:
+					# If the user entered IP address have 3 sections for the numbers, then we continue
+
+					self.addressType = 'half'
+					if self.address[len(self.address) - 1] != '.':
+						# Appending a period in the end of the IP address if there aint any (for half addresses)
+
+						self.address += '.'
+				elif len(address) == 4:
+					# If the user entered IP address have 4 sections for the numbers, then we continue
+
+					self.addressType = 'full'
+				else:
+					# If the user entered IP address have neither 3 nor 4 sections, then we display the error message on the console screen
+
+					raise SyntaxError('Please provide a proper IPv4 address for scanning. Use the --help argument for more information.')
+				del address
+
+			# Validating the port number specified
+			if self.port == None or self.port == 0:
+				# If the port number is not specified by the user in the arguments, then we mark the port number as 0 (for 1-65535 ports scanning)
+
+				self.port = 0
+			else:
+				# If the port number is specified by the user in the arguments, then we check the range for it
+
+				if 1 <= self.port or self.port >= 65535:
+					# If the port number specified by the user is in valid range, then we continue
+
+					pass
+				else:
+					# If the port number specified by the user is not in valid range, then we display the error on the console screen
+
+					raise ValueError('Invalid port number specified. Proper numeric value between 1-65535 should be provided.')
+
+			# Checking the task assigned to this objext
+			if task == None:
+				# If the task is not assigned by the user, then we just pass
 
 				pass
-			else:
-				# If the port number specified by the user is not in valid range, then we display the error on the console screen
+			elif task == 'list':
+				# If the task assigned by the user is to list active and available connections, then we continue
 
-				raise ValueError('[ Error : Invalid port number specified. Proper numeric value between 1-65535 should be provided. ]')
+				self.listAvailableConnections()
+			elif task == 'check-ssh':
+				# If the task assigned by the user is to check for ssh connections, then we continue
+
+				self.checkSSH()
+			else:
+				# If the task assigned by the user is not recognized, then we we display the error on the console screen
+
+				print(f'[ Error : Task specified to the Connections tool is not recognized. ]')
 
 	def listAvailableConnections(self):
 		""" The method / function which checks for the connections at the user specified IP addresses, then lists them in order. This function checks for the IP address stored in the class variable self.address, and the port number stored in the class variable self.port.
