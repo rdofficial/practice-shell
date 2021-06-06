@@ -7,10 +7,10 @@ Author : Rishav Das (https://github.com/rdofficial/)
 Created on : May 9, 2021
 
 Last modified by : Rishav Das (https://github.com/rdofficial/)
-Last modified on : June 3, 2021
+Last modified on : June 6, 2021
 
 Changes made in the last modification :
-1. Updated the code for the 'http' command in order to compete with the updates in the modules/networking.py module file.
+1. Added the code for serving the functionality of the command 'connections' to the shell.
 
 Authors contributed to this script (Add your name below if you have contributed) :
 1. Rishav Das (github:https://github.com/rdofficial/, email:rdofficial192@gmail.com)
@@ -31,6 +31,7 @@ try:
 	from modules.characters import NumberDetails
 	from modules.networking import IP
 	from modules.networking import HttpServer
+	from modules.networking import Connections
 except Exception as e:
 	# If there are any errors during the importing of the modules, then we display the error on the console screen
 
@@ -451,6 +452,40 @@ class Shell:
 					# If the argument entered by the user is not recognized, then we display the error message on the console screen
 
 					print(f'[ Error : Unrecognized argument "{token["arguments"][0]}" for the command http. Use http --help command for more information. ]')
+		# ----
+
+		# CONNECTIONS RELATED COMMANDS
+		# ----
+		elif token["command"] == 'connections':
+			# If the user entered command is connections related tasks, then we continue
+
+			# Checking for the arguments if exists
+			if len(token["arguments"]) == 0:
+				# If there are no arguments entered by the user
+
+				print('[ connections : requires arguments, use connections --help for more info ]')
+			else:
+				# If there are atleast more than 0 arguments entered by the user
+
+				if token["arguments"][0] == 'list':
+					# If the argument entered by the user is to list all the active / available connections on a network, then we continue
+
+					# Passing the arguments to the Connections object with task specified to 'list'
+					Connections(arguments = token["arguments"], task = 'list')
+				elif token["arguments"][0] == 'check-ssh':
+					# If the argument entered by the user is to check for availability of SSH connections on the network, then we continue
+
+					# Passing the arguments to the Connections object with task specified to 'check-ssh'
+					Connections(arguments = token["arguments"], task = 'check-ssh')
+				elif token["arguments"][0] == '--help':
+					# If the argument entered by the user is to display the help / documentation of the connections command / tool, then we continue
+
+					# Passing the arguments to the Connections object with help argument specified
+					Connections(arguments = token["arguments"])
+				else:
+					# If the argument entered by the user is not recognized, then we display the error message on the console screen
+
+					print(f'[ Error : Unrecognized argument "{token["arguments"][0]}" for the command connections. Use connections --help command for more information. ]')
 		# ----
 
 		# ARITHMETIC COMMANDS
