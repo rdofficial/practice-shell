@@ -10,7 +10,7 @@ Last modified by : Rishav Das (https://github.com/rdofficial/)
 Last modified on : June 9, 2021
 
 Changes made in the last modifications :
-1. Updated the method HttpRequest' to parse arguments entered by the user (Useful for shell command and argument parsing).
+1. Added proper data and url validation before sending the HTTP GET requests in the method HttpRequest.get().
 
 Authors contributed to this script (Add your name below if you have contributed) :
 1. Rishav Das (github:https://github.com/rdofficial/, email:rdofficial192@gmail.com)
@@ -811,12 +811,30 @@ class HttpRequest:
 	def get(self):
 		""" This method / function serves the functionality of executing a HTTP GET request using the user specified URL and data parameters. This function uses the values of the URL and data from the class variables self.url and self.data. This function uses the 'request' function from the urllib module which is by default available in the standard python3 library. """
 
-		# Sending the HTTP GET request
-		if self.url[len(self.url)-1:] != '?':
-			self.url += '?'
-		self.data = parse.urlencode(self.data)
-		response = request.urlopen(f'{self.url}{self.data}')
-		del self.data
+		# Sending the HTTP GET request (Also with custom validation of the data)
+		if self.url != None:
+			# If the URL is not left default, then we continue
+
+			if self.data != None:
+				# If the data is not defined for this GET request, then we continue without specifying the data
+
+				# Sending the GET request
+				response = request.urlopen(self.url)
+			else:
+				# If the data is defined, then we continue with custom data (Parsing and encoding them too)
+
+				if self.url[len(self.url)-1:] != '?':
+					self.url += '?'
+				self.data = parse.urlencode(self.data)
+				response = request.urlopen(f'{self.url}{self.data}')
+				del self.data
+		else:
+			# If the URL is left default (not specified by the user), then we raise an error
+
+			raise ValueError('No proper URL specified for HTTP GET request')
+			return 0
+
+		# Checking the HTTP GET request response status code
 		if response.status == 200:
 			# If the request response HTTP code is 200, then we continue
 
