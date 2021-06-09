@@ -10,8 +10,7 @@ Last modified by : Rishav Das (https://github.com/rdofficial/)
 Last modified on : June 9, 2021
 
 Changes made in the last modifications :
-1. Renamed the class 'HttpRequests' to 'HttpRequest'.
-2. Updated the entire structure of the 'HttpRequest' class with adding more features (data parsing, GET request function, etc).
+1. Updated the method HttpRequest.get().
 
 Authors contributed to this script (Add your name below if you have contributed) :
 1. Rishav Das (github:https://github.com/rdofficial/, email:rdofficial192@gmail.com)
@@ -778,7 +777,11 @@ class HttpRequest:
 		""" This method / function serves the functionality of executing a HTTP GET request using the user specified URL and data parameters. This function uses the values of the URL and data from the class variables self.url and self.data. This function uses the 'request' function from the urllib module which is by default available in the standard python3 library. """
 
 		# Sending the HTTP GET request
-		response = request.urlopen(self.url, self.data)
+		if self.url[len(self.url)-1:] != '?':
+			self.url += '?'
+		self.data = parse.urlencode(self.data)
+		response = request.urlopen(f'{self.url}{self.data}')
+		del self.data
 		if response.status == 200:
 			# If the request response HTTP code is 200, then we continue
 
@@ -800,7 +803,7 @@ class HttpRequest:
 		self.data = parse.urlencode(self.data).encode()
 		req = request.Request(self.url, data = self.data)
 		response = request.urlopen(req)
-		del req
+		del req, self.data
 		if response.status == 200:
 			# If the request response HTTP code is 200, then we continue
 
