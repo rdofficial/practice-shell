@@ -10,7 +10,7 @@ Last modified by : Rishav Das (https://github.com/rdofficial/)
 Last modified on : June 9, 2021
 
 Changes made in the last modifications :
-1. Updated the method HttpRequest.get().
+1. Updated the method HttpRequest' to parse arguments entered by the user (Useful for shell command and argument parsing).
 
 Authors contributed to this script (Add your name below if you have contributed) :
 1. Rishav Das (github:https://github.com/rdofficial/, email:rdofficial192@gmail.com)
@@ -727,14 +727,45 @@ class HttpRequest:
 		else:
 			# If the arguments are specified, then we continue to parse them
 
-			pass
+			# Parsing the argument sent to this class while creating the object
+			self.url = None
+			self.data = None
+			for index, argument in enumerate(arguments):
+				# Iterating through each argument item
+
+				if argument == '--url' or argument == '-u':
+					# If the argument is for specifying the port number, then we continue to parse the next argument as the entered value
+
+					try:
+						self.url = arguments[index + 1]
+					except IndexError:
+						# If the next argument is out of the list index (i.e., it does not exists), then we continue for the next iteration
+
+						continue
+				elif argument == '--data' or argument == '-d':
+					# If the argument is for specifying the root location, then we continue to parse the next argument as the entered value
+
+					try:
+						self.data = arguments[index + 1]
+					except IndexError:
+						# If the next argument is out of the list index (i.e., it does not exists), then we continue for the next iteration
+
+						continue
+				elif argument == '--help':
+					# If the argument is for displaying the help information, then we mark the method as 'help'
+
+					method = 'help'
+				else:
+					# If the currently iterated argument is not recognized, then we skip the current iteration
+
+					continue
 
 		# Parsing the data items as per specified by the user
-		if type(self.data) == dict:
+		if type(self.data) == dict and self.data != None:
 			# If the data is a dictionary object, then we pass
 
 			pass
-		elif type(self.data) == str:
+		elif type(self.data) == str and self.data != None:
 			# If the data is a string object, then we proceed forward to parse in JSON format
 
 			try:
@@ -768,6 +799,10 @@ class HttpRequest:
 			# If the method is specified to be a POST request by the user, then we continue
 
 			self.post()
+		elif method.lower() == 'help':
+			# If the method is specified for displaying the help text, then we continue
+
+			print('<--help-->')
 		else:
 			# If the method specified is not recognized, then we raise an error with custom message
 
