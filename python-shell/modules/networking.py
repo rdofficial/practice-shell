@@ -23,7 +23,7 @@ try:
 	import socket
 	from socketserver import TCPServer
 	from http.server import SimpleHTTPRequestHandler
-	from urllib import request
+	from urllib import request, parse
 	from pexpect import pxssh
 
 	# Importing the other functions and modules that are required
@@ -794,4 +794,23 @@ class HttpRequest:
 			return 0
 
 	def post(self):
-		pass
+		""" This method / function serves the functionality of executing a HTTP POST request using the user specified URL and data parameters. This function uses the values of the URL and data from the class variables self.url and self.data. This function uses the 'request' function from the urllib module which is by default available in the standard python3 library. """
+
+		# Sending the HTTP POST request
+		self.data = parse.urlencode(self.data).encode()
+		req = request.Request(self.url, data = self.data)
+		response = request.urlopen(req)
+		del req
+		if response.status == 200:
+			# If the request response HTTP code is 200, then we continue
+
+			self.status = response.status
+
+			# Setting the response message to a class variable
+			self.text = response.read().decode()
+			return 0
+		else:
+			# If the request response HTTP code is anything else than 200, then we return the value
+
+			self.status = response.status
+			return 0
