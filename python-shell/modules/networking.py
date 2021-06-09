@@ -7,10 +7,11 @@ Author : Rishav Das (https://github.com/rdofficial/)
 Created on : June 1, 2021
 
 Last modified by : Rishav Das (https://github.com/rdofficial/)
-Last modified on : June 6, 2021
+Last modified on : June 9, 2021
 
 Changes made in the last modifications :
-1. Added the code to take user entered URL in the 'HttpRequests' class.
+1. Renamed the class 'HttpRequests' to 'HttpRequest'.
+2. Updated the entire structure of the 'HttpRequest' class with adding more features (data parsing, GET request function, etc).
 
 Authors contributed to this script (Add your name below if you have contributed) :
 1. Rishav Das (github:https://github.com/rdofficial/, email:rdofficial192@gmail.com)
@@ -714,23 +715,83 @@ class SSH:
 	def recieveFiles(self):
 		pass
 
-class HttpRequests:
+class HttpRequest:
 	""" """
 
-	def __init__(self, url = None):
-		# Checking the URL input by the user
-		if url == None:
-			# If the user did not entered the URL for executing the HTTP requests, then we raise the error with a custom message
+	def __init__(self, url = None, method = None, data = None, arguments = None):
+		# Setting the class variables
+		if arguments == None:
+			# If the arguments are not specified, then we set the class variables for the url and data
 
-			raise SyntaxError('URL not mentioned for executing HTTP requests.')
-		else:
-			# If the user did entered the URL for executing the HTTP requests, then we continue
-
-			# Setting the URL for the HTTP requests (Storing the URL in the class variable self.url)
 			self.url = url
+			self.data = data
+		else:
+			# If the arguments are specified, then we continue to parse them
+
+			pass
+
+		# Parsing the data items as per specified by the user
+		if type(self.data) == dict:
+			# If the data is a dictionary object, then we pass
+
+			pass
+		elif type(self.data) == str:
+			# If the data is a string object, then we proceed forward to parse in JSON format
+
+			try:
+				self.data = loads(self.data)
+			except Exception as e:
+				# If there are any errors encountered during the process, then we proceed forward to check for custom parsing of the data string
+
+				try:
+					data = self.data.split(';')
+					self.data = {}
+					for item in data:
+						# Iterating over each data items (key:value pairs)
+
+						item = item.split(':')
+						self.data[item[0]] = item[1]
+				except Exception as e:
+					# If there are any errors encountered during the process, then we raise an error with a custom message
+
+					raise SyntaxError('Provided data failed to parse. Supported formats : JSON, default. Check out docs for more information')
+
+		# Checking the method of the request as per entered by the user
+		if method == None:
+			# If the method is not specified (default value), then we pass
+
+			pass
+		elif method.lower() == 'get':
+			# If the method is specified to be a GET request by the user, then we continue
+
+			self.get()
+		elif method.lower() == 'post':
+			# If the method is specified to be a POST request by the user, then we continue
+
+			self.post()
+		else:
+			# If the method specified is not recognized, then we raise an error with custom message
+
+			raise SyntaxError(f'method = {method} not recognized')
 
 	def get(self):
-		pass
+		""" This method / function serves the functionality of executing a HTTP GET request using the user specified URL and data parameters. This function uses the values of the URL and data from the class variables self.url and self.data. This function uses the 'request' function from the urllib module which is by default available in the standard python3 library. """
+
+		# Sending the HTTP GET request
+		response = request.urlopen(self.url, self.data)
+		if response.status == 200:
+			# If the request response HTTP code is 200, then we continue
+
+			self.status = response.status
+
+			# Setting the response message to a class variable
+			self.text = response.read().decode()
+			return 0
+		else:
+			# If the request response HTTP code is anything else than 200, then we return the value
+
+			self.status = response.status
+			return 0
 
 	def post(self):
 		pass
