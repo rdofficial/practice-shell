@@ -10,7 +10,7 @@ Last modified by : Rishav Das (https://github.com/rdofficial/)
 Last modified on : June 10, 2021
 
 Changes made in the last modifications :
-1. Added the help text and __doc__ to the 'HttpRequest' class.
+1. Added the functionality of parsing the arguments (entered in the shell as a commands) in the class of 'Mail'.
 
 Authors contributed to this script (Add your name below if you have contributed) :
 1. Rishav Das (github:https://github.com/rdofficial/, email:rdofficial192@gmail.com)
@@ -24,6 +24,8 @@ try:
 	from http.server import SimpleHTTPRequestHandler
 	from urllib import request, parse
 	from pexpect import pxssh
+
+	# Importing the mail and mail server related functions and modules
 	import smtplib
 	from email.mime.multipart import MIMEMultipart
 	from email.mime.text import MIMEText
@@ -925,140 +927,235 @@ class Mail:
 		else:
 			# If the arguments are passed to this class object by the user, then we continue to parse the arguments
 
-			pass
+			# Parsing the arguments entered to this class object
+			# ----
+			# Setting the default value of the class variables to None
+			self.sender = None
+			self.password = None
+			self.receiver = None
+			self.subject = None
+			self.body = None
+			self.webservice = None
+			self.documentation = False 	# Setting the documentation mode to False by default
 
-		# Validating the user entered inputs
-		# ----
-		# Validating the sender (sender's username) 
-		if self.sender == None:
-			# If the sender is not specified by the user, then we raise an error with custom message
+			# Iterating through each argument to filter out the values
+			for index, argument in enumerate(arguments):
+				# Iterating through each argument item
 
-			raise SyntaxError('sender not specified. Check out the help for more info and usage.')
+				if argument == '--sender':
+					# If the argument is for specifying the sender's username, then we continue to parse the next argument as the entered value
+
+					try:
+						self.sender = arguments[index + 1]
+					except IndexError:
+						# If the next argument is out of the list index (i.e., it does not exists), then we continue for the next iteration
+
+						continue
+				elif argument == '--password':
+					# If the argument is for specifying the user's password, then we continue to parse the next argument as the entered value
+
+					try:
+						self.password = arguments[index + 1]
+					except IndexError:
+						# If the next argument is out of the list index (i.e., it does not exists), then we continue for the next iteration
+
+						continue
+				elif argument == '--receiver':
+					# If the argument is for specifying the receiver's email address, then we continue to parse the next argument as the entered value
+
+					try:
+						self.receiver = arguments[index + 1]
+					except IndexError:
+						# If the next argument is out of the list index (i.e., it does not exists), then we continue for the next iteration
+
+						continue
+				elif argument == '--subject':
+					# If the argument is for specifying the subject of the mail, then we continue to parse the next argument as the entered value
+
+					try:
+						self.password = arguments[index + 1]
+					except IndexError:
+						# If the next argument is out of the list index (i.e., it does not exists), then we continue for the next iteration
+
+						continue
+				elif argument == '--body':
+					# If the argument is for specifying the body of the mail, then we continue to parse the next argument as the entered value (The value would be of a text file which will contain the entire contents of the body of the mail)
+
+					try:
+						# Reading the data of the file location specified
+						data = open(arguments[index + 1], 'r').open()
+					except IndexError:
+						# If the next argument is out of the list index (i.e., it does not exists), then we continue for the next iteration
+
+						continue
+					except FileNotFoundError:
+						# If the file location specified by the very next argument does not exists, then we continue without specifying the self.body
+
+						continue
+					else:
+						# If there are not errors encountered during the process, then we set the contents of the specified file as the body of the email
+
+						self.body = data
+						del data
+				elif argument == '--service':
+					# If the argument is for specifying the web service of the mails, then we continue to parse the next argument as the entered value
+
+					try:
+						self.webservice = arguments[index + 1]
+					except IndexError:
+						# If the next argument is out of the list index (i.e., it does not exists), then we continue for the next iteration
+
+						continue
+				elif argument == '--help':
+					# If the argument is for displaying the help information, then we mark the self.documentation as True
+
+					self.documentation = True
+				else:
+					# If the currently iterated argument is not recognized, then we skip the current iteration
+
+					continue
+			# ----
+
+		# Checking whether user requested to be launched in documentation mode or execution mode
+		if self.documentation:
+			# If the user specified to be run in documentation mode, then we continue displaying the help text on the console screen
+
+			print('<--help for mail -->')
 		else:
-			# If the sender is specified by the user, then we continue
+			# If the user specified to be run in execution mode (not in documentation mode), then we continue
 
-			if type(self.sender) == str:
-				# If the type of the value for sender entered by the user is string, then we continue
+			# Validating the user entered inputs
+			# ----
+			# Validating the sender (sender's username) 
+			if self.sender == None:
+				# If the sender is not specified by the user, then we raise an error with custom message
 
-				if len(self.sender) < 3:
-					# If the length of the sender string (sender's username string) is less than 3 characters, then we raise an error with a custom message
-
-					raise ValueError('sender value should be string with a proper length. It is the username of the sender\'s email address.')
+				raise SyntaxError('sender not specified. Check out the help for more info and usage.')
 			else:
-				# If the type of the value for sender entered by the user is not string, then we raise an error with a custom message
+				# If the sender is specified by the user, then we continue
 
-				raise TypeError('sender value should be a string. It is the username of the sender\'s email address.')
+				if type(self.sender) == str:
+					# If the type of the value for sender entered by the user is string, then we continue
 
-		# Validating the password (sender's password)
-		if self.password == None:
-			# If the password is not specified by the user, then we raise an error with custom message
+					if len(self.sender) < 3:
+						# If the length of the sender string (sender's username string) is less than 3 characters, then we raise an error with a custom message
 
-			raise SyntaxError('password not specified. Check out the help for more info and usage.')
-		else:
-			# If the password is specified by the user, then we continue
+						raise ValueError('sender value should be string with a proper length. It is the username of the sender\'s email address.')
+				else:
+					# If the type of the value for sender entered by the user is not string, then we raise an error with a custom message
 
-			if type(self.password) == str:
-				# If the type of the value for password entered by the user is string, then we continue
+					raise TypeError('sender value should be a string. It is the username of the sender\'s email address.')
 
-				if len(self.password) < 4:
-					# If the length of the password string (password of the sender) is less than 4 characters, then we raise an error with a custom message
+			# Validating the password (sender's password)
+			if self.password == None:
+				# If the password is not specified by the user, then we raise an error with custom message
 
-					raise ValueError('password value should be string with a proper length. It is the username of the password\'s email address.')
+				raise SyntaxError('password not specified. Check out the help for more info and usage.')
 			else:
-				# If the type of the value for password entered by the user is not string, then we raise an error with a custom message
+				# If the password is specified by the user, then we continue
 
-				raise TypeError('password value should be a string. It is the username of the password\'s email address.')
+				if type(self.password) == str:
+					# If the type of the value for password entered by the user is string, then we continue
 
-		# Validating the receiver (receiver email address)
-		if self.receiver == None:
-			# If the receiver is not specified by the user, then we raise an error with custom message
+					if len(self.password) < 4:
+						# If the length of the password string (password of the sender) is less than 4 characters, then we raise an error with a custom message
 
-			raise SyntaxError('receiver not specified. Check out the help for more info and usage.')
-		else:
-			# If the receiver is specified by the user, then we continue
+						raise ValueError('password value should be string with a proper length. It is the username of the password\'s email address.')
+				else:
+					# If the type of the value for password entered by the user is not string, then we raise an error with a custom message
 
-			if type(self.receiver) == str:
-				# If the type of the value for receiver entered by the user is string, then we continue
+					raise TypeError('password value should be a string. It is the username of the password\'s email address.')
 
-				if len(self.receiver) < 5:
-					# If the length of the receiver string (receiver's email string) is less than 5 characters, then we raise an error with a custom message
+			# Validating the receiver (receiver email address)
+			if self.receiver == None:
+				# If the receiver is not specified by the user, then we raise an error with custom message
 
-					raise ValueError('receiver value should be string with a proper length. It is the receiver\'s email address.')
+				raise SyntaxError('receiver not specified. Check out the help for more info and usage.')
 			else:
-				# If the type of the value for receiver entered by the user is not string, then we raise an error with a custom message
+				# If the receiver is specified by the user, then we continue
 
-				raise TypeError('receiver value should be a string. It is the username of the receiver\'s email address.')
+				if type(self.receiver) == str:
+					# If the type of the value for receiver entered by the user is string, then we continue
 
-		# Validating the subject of the mail
-		if self.subject == None:
-			# If the subject of the mail is not specified by the user, then we raise an error with a custom message
+					if len(self.receiver) < 5:
+						# If the length of the receiver string (receiver's email string) is less than 5 characters, then we raise an error with a custom message
 
-			raise SyntaxError('subject not specified. Check out the help for more info and usage.')
-		else:
-			# If the subject of the mail is specified by the user, then we continue
+						raise ValueError('receiver value should be string with a proper length. It is the receiver\'s email address.')
+				else:
+					# If the type of the value for receiver entered by the user is not string, then we raise an error with a custom message
 
-			if type(self.subject) == str:
-				# If the type of value for subject of the mail entered by the user is string, then we continue
+					raise TypeError('receiver value should be a string. It is the username of the receiver\'s email address.')
 
-				if len(self.subject) == 0:
-					# If the length of subject of the mail as per entered by the user is 0, then we raise an error with a custom message
+			# Validating the subject of the mail
+			if self.subject == None:
+				# If the subject of the mail is not specified by the user, then we raise an error with a custom message
 
-					raise ValueError('subject value should be string with atleast length of 1. It is the subject of the mail.')
+				raise SyntaxError('subject not specified. Check out the help for more info and usage.')
 			else:
-				# If the type of value for subject of the mail entered by the user is not string, then we raise an error with a custom message
+				# If the subject of the mail is specified by the user, then we continue
 
-				raise TypeError('subject value should be a string. It is the subject of the mail.')
+				if type(self.subject) == str:
+					# If the type of value for subject of the mail entered by the user is string, then we continue
 
-		# Validating the body of the mail
-		if self.body == None:
-			# If the body of the mail is not specified by the user, then we continue
+					if len(self.subject) == 0:
+						# If the length of subject of the mail as per entered by the user is 0, then we raise an error with a custom message
 
-			raise SyntaxError('body not specifed. Check out the help for more info and usage.')
-		else:
-			# If the body of the mail is specified by the user, then we continue
+						raise ValueError('subject value should be string with atleast length of 1. It is the subject of the mail.')
+				else:
+					# If the type of value for subject of the mail entered by the user is not string, then we raise an error with a custom message
 
-			if type(self.body) == str:
-				# If the type of value for body of the mail entered by the user is string, then we continue
+					raise TypeError('subject value should be a string. It is the subject of the mail.')
 
-				pass
+			# Validating the body of the mail
+			if self.body == None:
+				# If the body of the mail is not specified by the user, then we continue
+
+				raise SyntaxError('body not specifed. Check out the help for more info and usage.')
 			else:
-				# If the type of value for body of the mail entered by the user is not string, then we raise an error with custom message
+				# If the body of the mail is specified by the user, then we continue
 
-				raise TypeError('body value should be a string. It is the body of the mail.')
+				if type(self.body) == str:
+					# If the type of value for body of the mail entered by the user is string, then we continue
 
-		# Validating the webservice input as provided
-		if self.webservice == None:
-			# If the webservice input is not specified by the user, then we raise an error with a custom message
+					pass
+				else:
+					# If the type of value for body of the mail entered by the user is not string, then we raise an error with custom message
 
-			raise SyntaxError('web service not specified. Check out the help for more info and usage.')
-		else:
-			# If the webservice input is specified by the user, then we continue
+					raise TypeError('body value should be a string. It is the body of the mail.')
 
-			if type(self.webservice) == str:
-				# If the type of webservice input is a string, then we continue
+			# Validating the webservice input as provided
+			if self.webservice == None:
+				# If the webservice input is not specified by the user, then we raise an error with a custom message
 
-				pass
+				raise SyntaxError('web service not specified. Check out the help for more info and usage.')
 			else:
-				# If the type of webservice input is not a string, then we raise an error with a custom message
+				# If the webservice input is specified by the user, then we continue
 
-				raise TypeError('webservice value should be a string. It is the web service in which the sender uses to send the email.') 
-		# ----
+				if type(self.webservice) == str:
+					# If the type of webservice input is a string, then we continue
 
-		# Checking the web service (which is used to send the email)
-		# ----
-		if self.webservice.lower() == 'gmail' or self.webservice.lower() == 'google':
-			# If the web service for sending the mail is google / gmail, then we continue
+					pass
+				else:
+					# If the type of webservice input is not a string, then we raise an error with a custom message
 
-			self.gmail()
-		elif self.webservice.lower() == 'yahoo' or self.webservice.lower() == 'yahoomail':
-			# If the web service for sending the mail is yahoo / yahoomail, then we continue
+					raise TypeError('webservice value should be a string. It is the web service in which the sender uses to send the email.') 
+			# ----
 
-			self.yahoomail()
-		else:
-			# If the web service specified by the user is not specified, then we raise an error with a custom message
+			# Checking the web service (which is used to send the email)
+			# ----
+			if self.webservice.lower() == 'gmail' or self.webservice.lower() == 'google':
+				# If the web service for sending the mail is google / gmail, then we continue
 
-			raise TypeError(f'Specified web service "{self.webservice}" is not recognized.')
-		# ----
+				self.gmail()
+			elif self.webservice.lower() == 'yahoo' or self.webservice.lower() == 'yahoomail':
+				# If the web service for sending the mail is yahoo / yahoomail, then we continue
+
+				self.yahoomail()
+			else:
+				# If the web service specified by the user is not specified, then we raise an error with a custom message
+
+				raise TypeError(f'Specified web service "{self.webservice}" is not recognized.')
+			# ----
 
 	def gmail(self):
 		""" This method / function serves the functionality for sending the email through google / gmail. This function uses the value stored in the class variables self.sender, self.password, self.receiver, self.subject, self.body. The function requires the google account to have enabled third-party application access. Otherwise the function will result in error. """
