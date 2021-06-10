@@ -10,7 +10,7 @@ Last modified by : Rishav Das (https://github.com/rdofficial/)
 Last modified on : June 10, 2021
 
 Changes made in the last modifications :
-1. Added the code for the functionality (sending mails) in the method Mail.gmail().
+1. Added the help text and __doc__ to the 'HttpRequest' class.
 
 Authors contributed to this script (Add your name below if you have contributed) :
 1. Rishav Das (github:https://github.com/rdofficial/, email:rdofficial192@gmail.com)
@@ -417,7 +417,7 @@ class Connections:
 		if self.documentation:
 			# If the class object is called for displaying the documentation, then we continue displaying the help section contents
 
-			print('connections\nUsage connections [task] <arguments>\n\n"connections" is a tool which provides the feature of serving various tasks related to networks and connections. Currently servers tasks are listed below with the specific command to invoke them.\n\nconnections list <arguments>    Lists all the active connections in the local address / user provided network address\nconnections check-ssh <arguments>    Checks for availablity of SSH connections on the network\n\nArguments that can be used are :\n--port, p            Used to specify the port number\n--ip-address, -i     Used to specify the IP address of the device\n--help               Displays this text\n\nUsage :\n[Listing available connections on a network]\n1. For listing available connections in network with IP address format in 192.168.43.xxx, we may scan all the ports of each devices using the command specified below\nconnections list -i 192.168.43\n\n2. For listing available connections in network with IP address format in 192.168.43.xxx + fixed port number, we may scan all the ports of each devices using the command specified below\nconnections list -i 192.168.43 -p 80\n\n3. For listing available connections in a single device (the available ports) (device IP : 192.168.43.1 For example), we use the command specified below\nconnections list -i 192.68.43.1\n\n4. For listing available connections in a single device (the available ports) (device IP : 192.168.43.1 For example + fixed port number), we use the command specified below\nconnections list -i 192.68.43.1 -p 80\n\nSummary : Either you can scan all the devices on the network (192.xxx.xxx.1 to 192.xxx.xxx.255) or any particular device. Either you can scan all the ports ranging 1 to 65535, or just a specific port of the network devices.\n\n[Checking SSH connection availability]\n1. List all the available SSH connections on the network, with IP address format 192.168.43.xxx, use the below command (It checks for port 22 and 8022 for all the devices 1-255).\nconnections check-ssh -i 192.168.43\n\n2. Check for a particular port for SSH connection of all the devices in the network (with IP address of format 192.168.43.xxx), we use the below specified command.\nconnections check-ssh -i 192.168.43 -p 8022\n\n3. Check for a particular device on the network for SSH connection (For example, IP : 192.168.43.1 with all the ports), we use the below specified command.\nconnections check-ssh -i 192.168.43.1\n\n4. Check for a particular device on the network for SSH connection with a particular port number specified (For example, IP : 192.168.43.1, port : 22), we use the below specified command :\nconnections check-ssh -i 192.168.43.1 -p 22\n\nSummary : Either you can scan all the devices on the network (192.xxx.xxx.1 to 192.xxx.xxx.255) or any particular device. Either you can scan all the ports ranging 1 to 65535, or just a specific port of the network devices.\n\nSee the docs of this project for more information about this tool (connections).')
+			print('connections\nUsage : connections [task] <arguments>\n\n"connections" is a tool which provides the feature of serving various tasks related to networks and connections. Currently servers tasks are listed below with the specific command to invoke them.\n\nconnections list <arguments>    Lists all the active connections in the local address / user provided network address\nconnections check-ssh <arguments>    Checks for availablity of SSH connections on the network\n\nArguments that can be used are :\n--port, -p            Used to specify the port number\n--ip-address, -i     Used to specify the IP address of the device\n--help               Displays this text\n\nUsage :\n[Listing available connections on a network]\n1. For listing available connections in network with IP address format in 192.168.43.xxx, we may scan all the ports of each devices using the command specified below\nconnections list -i 192.168.43\n\n2. For listing available connections in network with IP address format in 192.168.43.xxx + fixed port number, we may scan all the ports of each devices using the command specified below\nconnections list -i 192.168.43 -p 80\n\n3. For listing available connections in a single device (the available ports) (device IP : 192.168.43.1 For example), we use the command specified below\nconnections list -i 192.68.43.1\n\n4. For listing available connections in a single device (the available ports) (device IP : 192.168.43.1 For example + fixed port number), we use the command specified below\nconnections list -i 192.68.43.1 -p 80\n\nSummary : Either you can scan all the devices on the network (192.xxx.xxx.1 to 192.xxx.xxx.255) or any particular device. Either you can scan all the ports ranging 1 to 65535, or just a specific port of the network devices.\n\n[Checking SSH connection availability]\n1. List all the available SSH connections on the network, with IP address format 192.168.43.xxx, use the below command (It checks for port 22 and 8022 for all the devices 1-255).\nconnections check-ssh -i 192.168.43\n\n2. Check for a particular port for SSH connection of all the devices in the network (with IP address of format 192.168.43.xxx), we use the below specified command.\nconnections check-ssh -i 192.168.43 -p 8022\n\n3. Check for a particular device on the network for SSH connection (For example, IP : 192.168.43.1 with all the ports), we use the below specified command.\nconnections check-ssh -i 192.168.43.1\n\n4. Check for a particular device on the network for SSH connection with a particular port number specified (For example, IP : 192.168.43.1, port : 22), we use the below specified command :\nconnections check-ssh -i 192.168.43.1 -p 22\n\nSummary : Either you can scan all the devices on the network (192.xxx.xxx.1 to 192.xxx.xxx.255) or any particular device. Either you can scan all the ports ranging 1 to 65535, or just a specific port of the network devices.\n\nSee the docs of this project for more information about this tool (connections).')
 		else:
 			# If the class object is called for executing tasks instead of the documentation mode, then we continue
 
@@ -723,7 +723,33 @@ class SSH:
 		pass
 
 class HttpRequest:
-	""" """
+	""" This class serves the functionality of the 'http requests' command of the shell. This class executes HTTP requests on the user specified URLs as well as also includes the HTTP data as per the user specifies. The class is currently not developed enough for file uploads, but can execute normal data sending during HTTP requests.
+
+	The class object work in two ways :
+	1. With arguments specifed
+
+		When the arguments are directly specified, then the class parses the arguments list in order to filter out the class variables and make proper data for executing the HTTP requests.
+		These arguments are generally parsed arguments from the shell commands (i.e., when the user enters any command on the shell, then the shell backend parses the arguments into seperate tokens).
+
+		The arguments that the class object will parse are :
+		--url, -u    Used to specify the URL for the HTTP request
+		--data, -d   Used to specify the data for the HTTP request
+		--help       Used to display the help text for the command (Only displays the help version for the command version of the tool, not for the entire class object)
+
+		When specifying the data via arguments (i.e., specifying the data in the shell commands for the HTTP requests), then note the following points :
+		* The data will be parsed in JSON format. So, directly type in the data for the request in a dictionary.
+		* The whitespaces will separate two arguments during the token parsing,
+		thus use the whitespace escape sequence in order to indicate an whitespace ('\ ' is an whitespace escape sequence).
+
+	2. With parameters directly specified
+
+		The syntax for calling out an HTTP request passing parameters directly to the class object :
+		request = HttpRequest(url = <str>, method = <str>, data = <dict>)
+		
+		When the paramters for the HTTP requests are specified directly, then we have to note the following points :
+		* The URL is to be specified in string format.
+		* The method paramter specifies the type of HTTP request to be executed. Either method = 'get' or method = 'post'.
+		* The data parameter specifies the HTTP data for the request. It can either be in direct python object (dictionary) format or in a JSON (str) format. """
 
 	def __init__(self, url = None, method = None, data = None, arguments = None):
 		# Setting the class variables
@@ -810,7 +836,7 @@ class HttpRequest:
 		elif method.lower() == 'help':
 			# If the method is specified for displaying the help text, then we continue
 
-			print('<--help-->')
+			print('http request\nUsage : http request [task] <arguments>\n\n\'http request\' is a tool which provides the feature of serving HTTP requests around the web. We can use this tool to do GET and POST requests.\n\nTasks that can be assigned are :\nhttp request get <arguments>     To execute a HTTP GET request\nhttp request post <arguments>    To execute a HTTP POST request\n\nArguments that can be used are :\n--url, -u            Used to specify the URL of the server\n--data, -d           Used to specify the HTTP data to be sent along the request\n--help               Displays this text\n\nRead the below steps for proper usage :\n1. Example for executing HTTP GET request,\nhttp request get --url https://www.google.com\n\n2. Example for executing HTTP GET request with data (Use whitespace in the data to swap out whitespaces and avoid an error)\nhttp request get --url https://www.google.com --data {"q":"Search\\ query"}\n\n3. Example for executing HTTP POST request\nhttp request post --url https://website.com --data {"username":"risahvdas",\\ "password":"easy\\ password"}\n\nFor more detailed information, check out the docs.')
 		else:
 			# If the method specified is not recognized, then we raise an error with custom message
 
