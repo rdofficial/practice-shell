@@ -7,10 +7,10 @@ Author : Rishav Das (https://github.com/rdofficial/)
 Created on : June 1, 2021
 
 Last modified by : Rishav Das (https://github.com/rdofficial/)
-Last modified on : June 9, 2021
+Last modified on : June 10, 2021
 
 Changes made in the last modifications :
-1. Added proper data and url validation before sending the HTTP GET requests in the method HttpRequest.get().
+1. Added feature to track public as well as local machine information in the method IP.localinfo().
 
 Authors contributed to this script (Add your name below if you have contributed) :
 1. Rishav Das (github:https://github.com/rdofficial/, email:rdofficial192@gmail.com)
@@ -134,11 +134,16 @@ class IP:
 	def localinfo(self):
 		""" This method / function serves the task of fetching the information about the local IP address. The self.address field might not be required to be present for using this particular function. We will directly call this function from the class. """
 
+		# Fetching the public information for our computer machine's IP address
+		print('Public information :')
+		self.address = ''
+		self.track()
+
 		# Fetching the hostname of the local machine
 		self.address = socket.gethostname()
 
 		# Displaying the fetched information on the console screen (Also fetching them during the print process)
-		print(f"""[#] Local hostname : {self.address}\n[#] Local IP address : {socket.gethostbyname(self.address)}""")
+		print(f'\nLocal information :\n[#] Local hostname : {self.address}\n[#] Local IP address : {socket.gethostbyname(self.address)}')
 
 		# Scanning open ports on the local machine
 		ports = []  # The list to store the ports on the local machine which were found open during the port scan
