@@ -10,7 +10,8 @@ Last modified by : Rishav Das (https://github.com/rdofficial/)
 Last modified on : June 10, 2021
 
 Changes made in the last modifications :
-1. Added feature to track public as well as local machine information in the method IP.localinfo().
+1. Created the class 'Mail' which serves the functionality of the mail command of the shell.
+2. Added the code for validating the paramters in the Mail class.
 
 Authors contributed to this script (Add your name below if you have contributed) :
 1. Rishav Das (github:https://github.com/rdofficial/, email:rdofficial192@gmail.com)
@@ -875,3 +876,164 @@ class HttpRequest:
 
 			self.status = response.status
 			return 0
+
+class Mail:
+	""" This class serves the functionality of the mail command of the shell. This class is defined with some methods and functins that make the proper sending of emails via the web. The class requires the smtplib library in order to work properly. The class can send emails using the following web services : gmail (google), yahoo.
+
+	Currently, only the simple text based emails can be sent. The functiosn of email sending with file attachement and mutlimedia support is still in developement. """
+
+	def __init__(self, sender = None, password = None, receiver = None, subject = None, body = None, webservice = None, arguments = None):
+		# Checking if arguments provided or just the parameters directly
+		if argument == None:
+			# If the arguments are not passed to this class object by the user, then we continue to use the default provided values
+
+			# Setting the user provided parameters as the class variables
+			self.sender = sender
+			self.password = password
+			self.receiver = receiver
+			self.subject = subject
+			self.body = body
+			self.webservice = webservice
+		else:
+			# If the arguments are passed to this class object by the user, then we continue to parse the arguments
+
+			pass
+
+		# Validating the user entered inputs
+		# ----
+		# Validating the sender (sender's username) 
+		if self.sender == None:
+			# If the sender is not specified by the user, then we raise an error with custom message
+
+			raise SyntaxError('sender not specified. Check out the help for more info and usage.')
+		else:
+			# If the sender is specified by the user, then we continue
+
+			if type(self.sender) == str:
+				# If the type of the value for sender entered by the user is string, then we continue
+
+				if len(self.sender) < 3:
+					# If the length of the sender string (sender's username string) is less than 3 characters, then we raise an error with a custom message
+
+					raise ValueError('sender value should be string with a proper length. It is the username of the sender\'s email address.')
+			else:
+				# If the type of the value for sender entered by the user is not string, then we raise an error with a custom message
+
+				raise TypeError('sender value should be a string. It is the username of the sender\'s email address.')
+
+		# Validating the password (sender's password)
+		if self.password == None:
+			# If the password is not specified by the user, then we raise an error with custom message
+
+			raise SyntaxError('password not specified. Check out the help for more info and usage.')
+		else:
+			# If the password is specified by the user, then we continue
+
+			if type(self.password) == str:
+				# If the type of the value for password entered by the user is string, then we continue
+
+				if len(self.password) < 4:
+					# If the length of the password string (password of the sender) is less than 4 characters, then we raise an error with a custom message
+
+					raise ValueError('password value should be string with a proper length. It is the username of the password\'s email address.')
+			else:
+				# If the type of the value for password entered by the user is not string, then we raise an error with a custom message
+
+				raise TypeError('password value should be a string. It is the username of the password\'s email address.')
+
+		# Validating the reciever (reciever email address)
+		if self.receiver == None:
+			# If the receiver is not specified by the user, then we raise an error with custom message
+
+			raise SyntaxError('receiver not specified. Check out the help for more info and usage.')
+		else:
+			# If the receiver is specified by the user, then we continue
+
+			if type(self.receiver) == str:
+				# If the type of the value for receiver entered by the user is string, then we continue
+
+				if len(self.receiver) < 5:
+					# If the length of the receiver string (receiver's email string) is less than 5 characters, then we raise an error with a custom message
+
+					raise ValueError('receiver value should be string with a proper length. It is the receiver\'s email address.')
+			else:
+				# If the type of the value for receiver entered by the user is not string, then we raise an error with a custom message
+
+				raise TypeError('receiver value should be a string. It is the username of the receiver\'s email address.')
+
+		# Validating the subject of the mail
+		if self.subject == None:
+			# If the subject of the mail is not specified by the user, then we raise an error with a custom message
+
+			raise SyntaxError('subject not specified. Check out the help for more info and usage.')
+		else:
+			# If the subject of the mail is specified by the user, then we continue
+
+			if type(self.subject) == str:
+				# If the type of value for subject of the mail entered by the user is string, then we continue
+
+				if len(self.subject) == 0:
+					# If the length of subject of the mail as per entered by the user is 0, then we raise an error with a custom message
+
+					raise ValueError('subject value should be string with atleast length of 1. It is the subject of the mail.')
+			else:
+				# If the type of value for subject of the mail entered by the user is not string, then we raise an error with a custom message
+
+				raise TypeError('subject value should be a string. It is the subject of the mail.')
+
+		# Validating the body of the mail
+		if self.body == None:
+			# If the body of the mail is not specified by the user, then we continue
+
+			raise SyntaxError('body not specifed. Check out the help for more info and usage.')
+		else:
+			# If the body of the mail is specified by the user, then we continue
+
+			if type(self.body) == str:
+				# If the type of value for body of the mail entered by the user is string, then we continue
+
+				pass
+			else:
+				# If the type of value for body of the mail entered by the user is not string, then we raise an error with custom message
+
+				raise TypeError('body value should be a string. It is the body of the mail.')
+
+		# Validating the webservice input as provided
+		if self.webservice == None:
+			# If the webservice input is not specified by the user, then we raise an error with a custom message
+
+			raise SyntaxError('web service not specified. Check out the help for more info and usage.')
+		else:
+			# If the webservice input is specified by the user, then we continue
+
+			if type(self.webservice) == str:
+				# If the type of webservice input is a string, then we continue
+
+				pass
+			else:
+				# If the type of webservice input is not a string, then we raise an error with a custom message
+
+				raise TypeError('webservice value should be a string. It is the web service in which the sender uses to send the email.') 
+		# ----
+
+		# Checking the web service (which is used to send the email)
+		# ----
+		if self.webservice.lower() == 'gmail' or self.webservice.lower() == 'google':
+			# If the web service for sending the mail is google / gmail, then we continue
+
+			self.gmail()
+		elif self.webservice.lower() == 'yahoo' or self.webservice.lower() == 'yahoomail':
+			# If the web service for sending the mail is yahoo / yahoomail, then we continue
+
+			self.yahoomail()
+		else:
+			# If the web service specified by the user is not specified, then we raise an error with a custom message
+
+			raise TypeError(f'Specified web service "{self.webservice}" is not recognized.')
+		# ----
+
+	def gmail(self):
+		pass
+
+	def yahoomail(self):
+		pass
