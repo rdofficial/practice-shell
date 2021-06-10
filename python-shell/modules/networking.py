@@ -10,8 +10,7 @@ Last modified by : Rishav Das (https://github.com/rdofficial/)
 Last modified on : June 10, 2021
 
 Changes made in the last modifications :
-1. Created the class 'Mail' which serves the functionality of the mail command of the shell.
-2. Added the code for validating the paramters in the Mail class.
+1. Added the code for the functionality (sending mails) in the method Mail.gmail().
 
 Authors contributed to this script (Add your name below if you have contributed) :
 1. Rishav Das (github:https://github.com/rdofficial/, email:rdofficial192@gmail.com)
@@ -25,6 +24,9 @@ try:
 	from http.server import SimpleHTTPRequestHandler
 	from urllib import request, parse
 	from pexpect import pxssh
+	import smtplib
+	from email.mime.multipart import MIMEMultipart
+	from email.mime.text import MIMEText
 
 	# Importing the other functions and modules that are required
 	from os import chdir, path
@@ -941,7 +943,7 @@ class Mail:
 
 				raise TypeError('password value should be a string. It is the username of the password\'s email address.')
 
-		# Validating the reciever (reciever email address)
+		# Validating the receiver (receiver email address)
 		if self.receiver == None:
 			# If the receiver is not specified by the user, then we raise an error with custom message
 
@@ -1033,7 +1035,27 @@ class Mail:
 		# ----
 
 	def gmail(self):
-		pass
+		""" This method / function serves the functionality for sending the email through google / gmail. This function uses the value stored in the class variables self.sender, self.password, self.receiver, self.subject, self.body. The function requires the google account to have enabled third-party application access. Otherwise the function will result in error. """
+
+		# Setting up the MIME
+		message = MIMEMultipart()
+		message["From"] = f'{self.sender}@gmail.com'
+		message["To"] = self.receiver
+		message["Subject"] = self.subject
+
+		# Attaching the body of the mail
+		message.attach(MIMEText(self.body, 'plain'))
+
+		# Creating a SMTP session for sending the mail
+		session = smtplib.SMTP('smtp.gmail.com', 587)
+		session.starttls()
+		session.login(self.sender, self.password)  # Logging into the SMTP session using the user provided username and password combination
+
+		# Sending the mail
+		message = message.as_string()
+		session.sendmail(self.sender, self.receiver, message)
+		session.quit()
+		print('[ Mail sent ]')
 
 	def yahoomail(self):
 		pass
