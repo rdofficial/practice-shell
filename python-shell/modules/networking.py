@@ -10,7 +10,7 @@ Last modified by : Rishav Das (https://github.com/rdofficial/)
 Last modified on : June 10, 2021
 
 Changes made in the last modifications :
-1. Added the code to serve the functionality of the method 'Mail.yahoomail()'.
+1. Added commented docs (__doc__) to the Mail class.
 
 Authors contributed to this script (Add your name below if you have contributed) :
 1. Rishav Das (github:https://github.com/rdofficial/, email:rdofficial192@gmail.com)
@@ -910,7 +910,45 @@ class HttpRequest:
 class Mail:
 	""" This class serves the functionality of the mail command of the shell. This class is defined with some methods and functins that make the proper sending of emails via the web. The class requires the smtplib library in order to work properly. The class can send emails using the following web services : gmail (google), yahoo.
 
-	Currently, only the simple text based emails can be sent. The functiosn of email sending with file attachement and mutlimedia support is still in developement. """
+	Currently, only the simple text based emails can be sent. The functiosn of email sending with file attachement and mutlimedia support is still in developement. 
+
+	This class objects takes two types of inputs in order to send emails :
+	1. Arguments parsing
+
+		In this mode, the arguments parsed at the shell after the user enters a command are passed to this class object. The syntax is below
+		Mail(arguments = <parsed arguments list>)
+		
+		The arguments that are recongized by this class object are listed below
+		--sender        Used to specify the sender's username
+		--password      Used to specify the sender's password
+		--receiver      Used to specify the receiver's email address (target email address)
+		--subject       Used to specify the subject of the mail
+		--body          Used to specify the file location which contains the contents of the body of the mail
+		--service       Used to specify the web service used by the sender (Google, Yahoo)
+
+		As we all know that the argument token are parsed on the basis of whitespaces, therefore if the any of the input argument requires whitespaces between them. Then, we will use the whitespace character escape sequence in order to use the whitespace values in our parameters. Example of such is shown below.
+		mail --sender <username> --password <password> --receiver <target-email-address> --subject Subject\ with\ whitespace --body <content file> --service google
+
+	2. Parameters passed directly
+
+		In this mode, the values are directly passed as parameters to the class object. The rules are same, except the fact that the whitespace escape sequence is not used here. As the values are passed directly as strings.
+		Below is an example syntax.
+
+		Mail(
+			sender = <username>,
+			password = <password>,
+			receiver = <receiver email adddress>,
+			subject = <subject of the mail>,
+			body = <body contents of the mail>,
+			webservice = <web service used by sender>,
+		)
+
+		Note that the body parameter here takes the body contents directly instead of taking a file location as an input, from which the contents of the body is to be read.
+
+	Currently supported web services (email services) are :
+	1. Google (gmail)
+	2. Yahoo Mail
+			"""
 
 	def __init__(self, sender = None, password = None, receiver = None, subject = None, body = None, webservice = None, arguments = None):
 		# Checking if arguments provided or just the parameters directly
@@ -1165,16 +1203,27 @@ class Mail:
 		# Attaching the body of the mail
 		message.attach(MIMEText(self.body, 'plain'))
 
-		# Creating a SMTP session for sending the mail
-		session = smtplib.SMTP('smtp.gmail.com', 587)
-		session.starttls()
-		session.login(self.sender, self.password)  # Logging into the SMTP session using the user provided username and password combination
+		try:
+			# Creating a SMTP session for sending the mail
+			# Connecting to the SMTP server of the google mail (gmail) which is available at the port 587
+			session = smtplib.SMTP('smtp.gmail.com', 587)
+			session.starttls()
+			session.login(self.sender, self.password)  # Logging into the SMTP session using the user provided username and password combination
 
-		# Sending the mail
-		message = message.as_string()
-		session.sendmail(self.sender, self.receiver, message)
-		session.quit()
-		print('[ Mail sent ]')
+			# Sending the mail
+			message = message.as_string()
+			session.sendmail(self.sender, self.receiver, message)
+			session.quit()
+		except Exception as e:
+			# If there are any errors encountered during the process, then we display the error message on the console screen
+
+			print(f'[ Error : {e} ]')
+			return 0
+		else:
+			# If there are no errors encountered during the process, then we display the mail sent message on the console screen
+
+			print('[ Mail sent ]')
+			return 0
 
 	def yahoomail(self):
 		"""This method / function serves the functionality for sending the email through yahoo mail. This function uses the value stored in the class variables self.sender, self.password, self.receiver, self.subject, self.body. The function requires the google account to have enabled third-party application access. Otherwise the function will result in error. """
@@ -1188,13 +1237,24 @@ class Mail:
 		# Attaching the body of the mail
 		message.attach(MIMEText(self.body, 'plain'))
 
-		# Creating a SMTP session for sending the mail
-		session = smtplib.SMTP('smtp.mail.yahoo.com', 587)
-		session.starttls()
-		session.login(f'{self.sender}@yahool.com', self.password)  # Logging into the SMTP session using the user provided username and password combination
+		try:
+			# Creating a SMTP session for sending the mail
+			# Connecting to the SMTP server of the yahoo mail which is available at the port 587
+			session = smtplib.SMTP('smtp.mail.yahoo.com', 587)
+			session.starttls()
+			session.login(f'{self.sender}@yahool.com', self.password)  # Logging into the SMTP session using the user provided username and password combination
 
-		# Sending the mail
-		message = message.as_string()
-		session.sendmail(self.sender, self.receiver, message)
-		session.quit()
-		print('[ Mail sent ]')
+			# Sending the mail
+			message = message.as_string()
+			session.sendmail(self.sender, self.receiver, message)
+			session.quit()
+		except Exception as e:
+			# If there are any errors encountered during the process, then we display the error message on the console screen
+
+			print(f'[ Error : {e} ]')
+			return 0
+		else:
+			# If there are no errors encountered during the process, then we display the mail sent message on the console screen
+
+			print('[ Mail sent ]')
+			return 0
