@@ -10,7 +10,8 @@ Last modified by : Rishav Das (https://github.com/rdofficial/)
 Last modified on : June 10, 2021
 
 Changes made in the last modifications :
-1. Added commented docs (__doc__) to the Mail class.
+1. Added protonmail support to the 'Mail' class (Created a new method Mail.protonmail()).
+2. Created the method Mail.custommail(), which serves the functionality of sending emails via a custom / different SMTP server.
 
 Authors contributed to this script (Add your name below if you have contributed) :
 1. Rishav Das (github:https://github.com/rdofficial/, email:rdofficial192@gmail.com)
@@ -1226,7 +1227,7 @@ class Mail:
 			return 0
 
 	def yahoomail(self):
-		"""This method / function serves the functionality for sending the email through yahoo mail. This function uses the value stored in the class variables self.sender, self.password, self.receiver, self.subject, self.body. The function requires the google account to have enabled third-party application access. Otherwise the function will result in error. """
+		""" This method / function serves the functionality for sending the email through yahoo mail. This function uses the value stored in the class variables self.sender, self.password, self.receiver, self.subject, self.body. The function requires the google account to have enabled third-party application access. Otherwise the function will result in error. """
 
 		# Setting up the MIME
 		message = MIMEMultipart()
@@ -1242,7 +1243,7 @@ class Mail:
 			# Connecting to the SMTP server of the yahoo mail which is available at the port 587
 			session = smtplib.SMTP('smtp.mail.yahoo.com', 587)
 			session.starttls()
-			session.login(f'{self.sender}@yahool.com', self.password)  # Logging into the SMTP session using the user provided username and password combination
+			session.login(f'{self.sender}@yahoo.com', self.password)  # Logging into the SMTP session using the user provided username and password combination
 
 			# Sending the mail
 			message = message.as_string()
@@ -1258,3 +1259,362 @@ class Mail:
 
 			print('[ Mail sent ]')
 			return 0
+
+	def protonmail(self):
+		""" This method / function serves the functionality for sending the email through proton mail. This function uses the value stored in the class variables self.sender, self.password, self.receiver, self.subject, self.body. The function requires the google account to have enabled third-party application access. Otherwise the function will result in error.
+
+		This function has the following requirements :
+		1. A proton mail bridge should be running on the local machine and the particular port number should be memorized in order to connect to the SMTP server.
+		2. The proton mail account should have allowed authorizations to these third party applications + 2-step verification is requried to be turned off, otherwise this function will never be able to connect to the respective SMTP server. """
+
+		# Setting up the MIME
+		message = MIMEMultipart()
+		message["From"] = f'{self.sender}@protonmail.com'
+		message["To"] = self.receiver
+		message["Subject"] = self.subject
+
+		# Attaching the body of the mail
+		message.attach(MIMEText(self.body, 'plain'))
+
+		try:
+			# Creating a SMTP session for sending the mail
+
+			# Asking the user to enter the port number where the ProtonMail bridge is running on the local machine
+			port = int(input('Enter the port number (ProtonMail bridge) : '))
+
+			# Connecting to the SMTP server of at the localhost with the user provided port number (where the proton mail bridge is running on the local machine)
+			session = smtplib.SMTP('localhost', port)
+			session.starttls()
+			session.login(f'{self.sender}@protonmail.com', self.password)  # Logging into the SMTP session using the user provided username and password combination
+
+			# Sending the mail
+			message = message.as_string()
+			session.sendmail(self.sender, self.receiver, message)
+			session.quit()
+		except Exception as e:
+			# If there are any errors encountered during the process, then we display the error message on the console screen
+
+			print(f'[ Error : {e} ]')
+			return 0
+		else:
+			# If there are no errors encountered during the process, then we display the mail sent message on the console screen
+
+			print('[ Mail sent ]')
+			return 0
+
+	@staticmethod
+	def custommail(sender = None, password = None, receiver = None, subject = None, body = None, smtpserver_url = None, smtpserver_port = None, arguments = None):
+		""" """
+
+		# Checking if arguments provided or just the parameters directly
+		if arguments == None:
+			# If the arguments are not passed to this function by the user, then we continue to use the default provided values
+
+			pass
+		else:
+			# If the arguments are passed to this function by the user, then we continue to parse the arguments
+
+			# Parsing the arguments entered to this function
+			# ----
+			# Setting the default value of the variables to None
+			sender = None
+			password = None
+			receiver = None
+			subject = None
+			body = None
+			smtpserver_url = None
+			smtpserver_port = None
+			documentation = True
+
+			# Iterating through each argument to filter out the values
+			for index, argument in enumerate(arguments):
+				# Iterating through each argument item
+
+				if argument == '--sender':
+					# If the argument is for specifying the sender's username, then we continue to parse the next argument as the entered value
+
+					try:
+						sender = arguments[index + 1]
+					except IndexError:
+						# If the next argument is out of the list index (i.e., it does not exists), then we continue for the next iteration
+
+						continue
+				elif argument == '--password':
+					# If the argument is for specifying the user's password, then we continue to parse the next argument as the entered value
+
+					try:
+						password = arguments[index + 1]
+					except IndexError:
+						# If the next argument is out of the list index (i.e., it does not exists), then we continue for the next iteration
+
+						continue
+				elif argument == '--receiver':
+					# If the argument is for specifying the receiver's email address, then we continue to parse the next argument as the entered value
+
+					try:
+						receiver = arguments[index + 1]
+					except IndexError:
+						# If the next argument is out of the list index (i.e., it does not exists), then we continue for the next iteration
+
+						continue
+				elif argument == '--subject':
+					# If the argument is for specifying the subject of the mail, then we continue to parse the next argument as the entered value
+
+					try:
+						subject = arguments[index + 1]
+					except IndexError:
+						# If the next argument is out of the list index (i.e., it does not exists), then we continue for the next iteration
+
+						continue
+				elif argument == '--body':
+					# If the argument is for specifying the body of the mail, then we continue to parse the next argument as the entered value (The value would be of a text file which will contain the entire contents of the body of the mail)
+
+					try:
+						# Reading the data of the file location specified
+						data = open(arguments[index + 1], 'r').read()
+					except IndexError:
+						# If the next argument is out of the list index (i.e., it does not exists), then we continue for the next iteration
+
+						continue
+					else:
+						# If there are not errors encountered during the process, then we set the contents of the specified file as the body of the email
+
+						body = data
+						del data
+				elif argument == '--server-url':
+					# If the argument is for specifying the URL of the STMP server, then we continue to parse the next argument as the entered value
+
+					try:
+						smtpserver_url = arguments[index + 1]
+					except IndexError:
+						# If the next argument is out of the list index (i.e., it does not exists), then we continue for the next iteration
+
+						continue
+				elif argument == '--server-port':
+					# If the argument is for specifying the port in which the STMP server is running, then we continue to parse the next argument as the entered value
+
+					try:
+						smtpserver_port = int(arguments[index + 1])
+					except IndexError:
+						# If the next argument is out of the list index (i.e., it does not exists), then we continue for the next iteration
+
+						continue
+					except ValueError:
+						# If the next argument is not an integer (encountered in the process of parsing in int format), then we continue
+
+						print(f'[ Error : Failed to fetch the port number of the SMTP server. Invalid value - {argument[index + 1]} ]')
+						return 0
+				elif argument == '--help':
+					# If the argument is for displaying the help information, then we mark the self.documentation as True
+
+					documentation = True
+				else:
+					# If the currently iterated argument is not recognized, then we skip the current iteration
+
+					continue
+			# ----
+
+		# Checking whether the user requested the documentation mode or the execution mode
+		if documentation:
+			# If the user specified the documentation mode, then we display the entire help text on the console screen
+
+			print('<-- help for custom mail - Mail -->')
+			return 0
+		else:
+			# If the user specified the execution mode, then we continue
+
+			# Validating the user specified inputs
+			# ----
+			# Validating the sender parameter's input value (The sender's email address - complete email addresss)
+			if sender == None:
+				# If the value for the sender is not specified by the user (default value), then we raise an error with a custom message
+
+				raise SyntaxError('sender value not specified. The value is of the sender\'s email address.')
+			else:
+				# If the value of the sender is specified by the user, then we continue for further validation
+
+				if type(sender) == str:
+					# If the value of the sender parameter specified by the user is of string type, then we continue for further validation
+
+					if len(sender) >= 5:
+						# If the length of the value of the sender parameter specified by the user is more than or equal to 5, then we continue
+
+						pass
+					else:
+						# If the length of the value of the sender parameter specified by the user is not of valid length, then we raise an error with a custom message
+
+						raise('sender value is invalid. The length of the sender parameter is less than 5 characters.')
+				else:
+					# If the value of the sender parameter specified by the user is not of string type, then we raise an error with a custom message
+
+					raise ValueError('sender value is invalid. Requires a string value with proper length, as this parameter is to specify the email address of the sender.')
+
+			# Validating the password parameter's input value (The password of the sender's email)
+			if password == None:
+				# If the value for the password is not specified by the user (default value), then we raise an error with a custom message
+
+				raise SyntaxError('password value not specified. The value is of the sender\'s email password.')
+			else:
+				# If the value of the password is specified by the user, then we continue for further validation
+
+				if type(password) == str:
+					# If the value of the password parameter specified by the user is of string type, then we continue for further validation
+
+					if len(password) >= 5:
+						# If the length of the value of the password parameter specified by the user is more than or equal to 5, then we continue
+
+						pass
+					else:
+						# If the length of the value of the password parameter specified by the user is not of valid length, then we raise an error with a custom message
+
+						raise('password value is invalid. The length of the password parameter is less than 5 characters.')
+				else:
+					# If the value of the password parameter specified by the user is not of string type, then we raise an error with a custom message
+
+					raise ValueError('password value is invalid. Requires a string value, as this parameter is to specify the password of the sender\'s email account.')
+
+			# Validating the receiver paramter's input (The receiver's email address / target's email address)
+			if receiver == None:
+				# If the value for the receiver is not specified by the user (default value), then we raise an error with a custom message
+
+				raise SyntaxError('receiver value not specified. The value is of the receiver\'s email address.')
+			else:
+				# If the value of the receiver is specified by the user, then we continue for further validation
+
+				if type(receiver) == str:
+					# If the value of the receiver parameter specified by the user is of string type, then we continue for further validation
+
+					if len(receiver) >= 5:
+						# If the length of the value of the receiver parameter specified by the user is more than or equal to 5, then we continue
+
+						pass
+					else:
+						# If the length of the value of the receiver parameter specified by the user is not of valid length, then we raise an error with a custom message
+
+						raise('receiver value is invalid. The length of the receiver parameter is less than 5 characters.')
+				else:
+					# If the value of the receiver parameter specified by the user is not of string type, then we raise an error with a custom message
+
+					raise ValueError('receiver value is invalid. Requires a string value with proper length, as this parameter is to specify the email address of the receiver.')
+
+			# Validating the subject parameter's input (The subject of the email to be sent)
+			if subject == None:
+				# If the value for the subject is not specified by the user (default value), then we raise an error with a custom message
+
+				raise SyntaxError('subject value not specified. The value is of the subject of the mail to be sent.')
+			else:
+				# If the value of the subject is specified by the user, then we continue for further validation
+
+				if type(subject) == str:
+					# If the value of the subject parameter specified by the user is of string type, then we continue for further validation
+
+					if len(subject) != 0:
+						# If the length of the value of the subject parameter specified by the user is more than 0, then we continue
+
+						pass
+					else:
+						# If the length of the value of the subject parameter specified by the user is not of valid length, then we raise an error with a custom message
+
+						raise('subject value is invalid. The length of the subject parameter should atleast be of 1 character.')
+				else:
+					# If the value of the subject parameter specified by the user is not of string type, then we raise an error with a custom message
+
+					raise ValueError('subject value is invalid. Requires a string value with atleast length of 1 character, as this parameter is to specify the subject of the email that is to be sent.')
+
+			# Validating the body parameter's input (The body of the email to be sent / The contents of the email)
+			if body == None:
+				# If the value for the body is not specified by the user (default value), then we raise an error with a custom message
+
+				raise SyntaxError('body value not specified. The value is of the body of the mail to be sent.')
+			else:
+				# If the value of the body is specified by the user, then we continue for further validation
+
+				if type(body) == str:
+					# If the value of the body parameter specified by the user is of string type, then we continue for further validation
+
+					if len(body) != 0:
+						# If the length of the value of the body parameter specified by the user is more than 0, then we continue
+
+						pass
+					else:
+						# If the length of the value of the body parameter specified by the user is not of valid length, then we raise an error with a custom message
+
+						raise('body value is invalid. The length of the body parameter should atleast be of 1 character.')
+				else:
+					# If the value of the body parameter specified by the user is not of string type, then we raise an error with a custom message
+
+					raise ValueError('body value is invalid. Requires a string value with length of alteast 1 character, as this parameter is to specify the body of the email that is to be sent.')
+
+			# Validating the SMTP server URL parameter's input (The URL at the which the SMTP server can be accessible)
+			if smtpserver_url == None:
+				# If the value for the smtpserver_url is not specified by the user (default value), then we raise an error with a custom message
+
+				raise SyntaxError('smtpserver_url value not specified. The value is of the URL where the SMTP server is accessible.')
+			else:
+				# If the value of the smtpserver_url is specified by the user, then we continue for further validation
+
+				if type(smtpserver_url) == str:
+					# If the value of the smtpserver_url parameter specified by the user is of string type, then we continue for further validation
+
+					if len(smtpserver_url) > 3:
+						# If the length of the value of the smtpserver_url parameter specified by the user is more than 3, then we continue
+
+						pass
+					else:
+						# If the length of the value of the smtpserver_url parameter specified by the user is not of valid length, then we raise an error with a custom message
+
+						raise('smtpserver_url value is invalid.')
+				else:
+					# If the value of the smtpserver_url parameter specified by the user is not of string type, then we raise an error with a custom message
+
+					raise ValueError('smtpserver_url value is invalid. Requires a string value with proper length.')
+
+			# Validating the SMTP server port parameter's input (The port number at which the SMTP server is running on)
+			if smtpserver_port == None:
+				# If the value for the smtpserver_port is not specified by the user (default value), then we raise an error with a custom message
+
+				raise SyntaxError('smtpserver_port value not specified. The value is of the port where the SMTP server is running.')
+			else:
+				# If the value of the smtpserver_url is specified by the user, then we continue for further validation
+
+				if type(smtpserver_port) == int:
+					# If the value of the smtpserver_port parameter specified by the user is of int type, then we continue for further validation
+
+					pass
+				else:
+					# If the value of the smtpserver_port parameter specified by the user is not of int type, then we raise an error with a custom message
+
+					raise ValueError('smtpserver_port value is invalid. Requires a proper numeric port number.')
+			# ----
+
+			# Setting up the MIME
+			message = MIMEMultipart()
+			message["From"] = sender
+			message["To"] = receiver
+			message["Subject"] = subject
+
+			# Attaching the body of the mail
+			message.attach(MIMEText(body, 'plain'))
+
+			try:
+				# Creating a SMTP session for sending the mail
+
+				# Connecting to the SMTP server with custom url and port as per specified by the user
+				session = smtplib.SMTP(smtpserver_url, smtpserver_port)
+				session.starttls()
+				session.login(sender, password)  # Logging into the SMTP session using the user provided username and password combination
+
+				# Sending the mail
+				message = message.as_string()
+				session.sendmail(sender, receiver, message)
+				session.quit()
+			except Exception as e:
+				# If there are any errors encountered during the process, then we display the error message on the console screen
+
+				print(f'[ Error : {e} ]')
+				return 0
+			else:
+				# If there are no errors encountered during the process, then we display the mail sent message on the console screen
+
+				print('[ Mail sent ]')
+				return 0
