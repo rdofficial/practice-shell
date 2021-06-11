@@ -7,11 +7,10 @@ Author : Rishav Das (https://github.com/rdofficial/)
 Created on : June 1, 2021
 
 Last modified by : Rishav Das (https://github.com/rdofficial/)
-Last modified on : June 10, 2021
+Last modified on : June 11, 2021
 
 Changes made in the last modifications :
-1. Added protonmail support to the 'Mail' class (Created a new method Mail.protonmail()).
-2. Created the method Mail.custommail(), which serves the functionality of sending emails via a custom / different SMTP server.
+1. Added commented docs (__doc__) to the custommail() method of the 'Mail' class.
 
 Authors contributed to this script (Add your name below if you have contributed) :
 1. Rishav Das (github:https://github.com/rdofficial/, email:rdofficial192@gmail.com)
@@ -911,9 +910,9 @@ class HttpRequest:
 class Mail:
 	""" This class serves the functionality of the mail command of the shell. This class is defined with some methods and functins that make the proper sending of emails via the web. The class requires the smtplib library in order to work properly. The class can send emails using the following web services : gmail (google), yahoo.
 
-	Currently, only the simple text based emails can be sent. The functiosn of email sending with file attachement and mutlimedia support is still in developement. 
+	Currently, only the simple text based emails can be sent. The functions of email sending with file attachement and mutlimedia support is still in developement. 
 
-	This class objects takes two types of inputs in order to send emails :
+	This class object takes two types of inputs in order to send emails :
 	1. Arguments parsing
 
 		In this mode, the arguments parsed at the shell after the user enters a command are passed to this class object. The syntax is below
@@ -1304,7 +1303,60 @@ class Mail:
 
 	@staticmethod
 	def custommail(sender = None, password = None, receiver = None, subject = None, body = None, smtpserver_url = None, smtpserver_port = None, arguments = None):
-		""" """
+		""" This method / function serves the functionality of sending emails through a custom / different SMTP server. This is a static method, thus this particular method of the Mail class can be used directly even without specifying the class variables.
+
+		This method uses different parameters than the class object. This method requires its own parameters, and thus there are also two ways to specify the parameters in this function.
+		First of all, the parameters are 
+		
+		sender -> The email address of the sender
+		password -> The password of the sender's email account (Required in order to login into the SMTP server)
+		receiver -> The email address of the receiver
+		subject -> The subject of the email which is to be sent
+		body -> The body of the email which is to be sent (The body means the message / contents of the email)
+		smtpserver_url -> The URL at which the SMTP server is accessible
+		smtpserver_port -> The port at which the SMTP server is running on the specified URL
+
+		* All the paramters are requried to be specified in order for the email to be successfully sent.
+
+		This function takes two types of inputs in order to send emails :
+		1. Arguments parsing
+
+			In this mode, the arguments parsed at the shell after the user enters a command are passed to this class object. The syntax is below
+			Mail(arguments = <parsed arguments list>)
+			
+			The arguments that are recongized by this class object are listed below
+			--sender        Used to specify the sender's username
+			--password      Used to specify the sender's password
+			--receiver      Used to specify the receiver's email address (target email address)
+			--subject       Used to specify the subject of the mail
+			--body          Used to specify the file location which contains the contents of the body of the mail
+			--server-url    Used to specify the URL at which the SMTP server is accessible
+			--server-port   Used to specify the port at which the STMP server is running (accessible)
+
+			As we all know that the argument token are parsed on the basis of whitespaces, therefore if the any of the input argument requires whitespaces between them. Then, we will use the whitespace character escape sequence in order to use the whitespace values in our parameters. Example of such is shown below.
+			mail --sender <username> --password <password> --receiver <target-email-address> --subject Subject\ with\ whitespace --body <content file> --service google
+
+		2. Parameters passed directly
+
+			In this mode, the values are directly passed as parameters to the class object. The rules are same, except the fact that the whitespace escape sequence is not used here. As the values are passed directly as strings.
+			Below is an example syntax.
+
+			Mail(
+				sender = <username>,
+				password = <password>,
+				receiver = <receiver email adddress>,
+				subject = <subject of the mail>,
+				body = <body contents of the mail>,
+				smtpserver_url = <url of the smtp server>,
+				smtpserver_port = <port of the smtp server>,
+			)
+
+			Note that the body parameter here takes the body contents directly instead of taking a file location as an input, from which the contents of the body is to be read.
+
+		How can we use this function :
+		1. We can use this custommail() function in order to send emails from privately owned domains and else.
+		2. We can also use this custommail() function in order to send emails from a custom made email server (SMTP server).
+		"""
 
 		# Checking if arguments provided or just the parameters directly
 		if arguments == None:
