@@ -10,7 +10,7 @@ Last modified by : Rishav Das (https://github.com/rdofficial/)
 Last modified on : June 11, 2021
 
 Changes made in the last modifications :
-1. Added commented docs (__doc__) to the custommail() method of the 'Mail' class.
+1. Created the 'encryptedmail()' static method in the 'Mail' class for sending emails with their body contents being encrypted with a key.
 
 Authors contributed to this script (Add your name below if you have contributed) :
 1. Rishav Das (github:https://github.com/rdofficial/, email:rdofficial192@gmail.com)
@@ -1670,3 +1670,7 @@ class Mail:
 
 				print('[ Mail sent ]')
 				return 0
+
+	@staticmethod
+	def encryptedmail(sender = None, password = None, receiver = None, subject = None, body = None, encryption_key = None, webservice = None, arguments = None):
+		pass
