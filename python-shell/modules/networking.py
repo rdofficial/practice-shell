@@ -10,7 +10,7 @@ Last modified by : Rishav Das (https://github.com/rdofficial/)
 Last modified on : June 10, 2021
 
 Changes made in the last modifications :
-1. Added the functionality of parsing the arguments (entered in the shell as a commands) in the class of 'Mail'.
+1. Added the code to serve the functionality of the method 'Mail.yahoomail()'.
 
 Authors contributed to this script (Add your name below if you have contributed) :
 1. Rishav Das (github:https://github.com/rdofficial/, email:rdofficial192@gmail.com)
@@ -914,7 +914,7 @@ class Mail:
 
 	def __init__(self, sender = None, password = None, receiver = None, subject = None, body = None, webservice = None, arguments = None):
 		# Checking if arguments provided or just the parameters directly
-		if argument == None:
+		if arguments == None:
 			# If the arguments are not passed to this class object by the user, then we continue to use the default provided values
 
 			# Setting the user provided parameters as the class variables
@@ -973,7 +973,7 @@ class Mail:
 					# If the argument is for specifying the subject of the mail, then we continue to parse the next argument as the entered value
 
 					try:
-						self.password = arguments[index + 1]
+						self.subject = arguments[index + 1]
 					except IndexError:
 						# If the next argument is out of the list index (i.e., it does not exists), then we continue for the next iteration
 
@@ -983,13 +983,9 @@ class Mail:
 
 					try:
 						# Reading the data of the file location specified
-						data = open(arguments[index + 1], 'r').open()
+						data = open(arguments[index + 1], 'r').read()
 					except IndexError:
 						# If the next argument is out of the list index (i.e., it does not exists), then we continue for the next iteration
-
-						continue
-					except FileNotFoundError:
-						# If the file location specified by the very next argument does not exists, then we continue without specifying the self.body
 
 						continue
 					else:
@@ -1181,4 +1177,24 @@ class Mail:
 		print('[ Mail sent ]')
 
 	def yahoomail(self):
-		pass
+		"""This method / function serves the functionality for sending the email through yahoo mail. This function uses the value stored in the class variables self.sender, self.password, self.receiver, self.subject, self.body. The function requires the google account to have enabled third-party application access. Otherwise the function will result in error. """
+
+		# Setting up the MIME
+		message = MIMEMultipart()
+		message["From"] = f'{self.sender}@yahoo.com'
+		message["To"] = self.receiver
+		message["Subject"] = self.subject
+
+		# Attaching the body of the mail
+		message.attach(MIMEText(self.body, 'plain'))
+
+		# Creating a SMTP session for sending the mail
+		session = smtplib.SMTP('smtp.mail.yahoo.com', 587)
+		session.starttls()
+		session.login(f'{self.sender}@yahool.com', self.password)  # Logging into the SMTP session using the user provided username and password combination
+
+		# Sending the mail
+		message = message.as_string()
+		session.sendmail(self.sender, self.receiver, message)
+		session.quit()
+		print('[ Mail sent ]')
