@@ -10,7 +10,7 @@ Last modified by : Rishav Das (https://github.com/rdofficial/)
 Last modified on : June 12, 2021
 
 Changes made in the last modifications :
-1. Added the help section text / contents to the method Mail.custommail().
+1. Added the code to serve the functionality of the sending emails with encryption body messages (half completed).
 
 Authors contributed to this script (Add your name below if you have contributed) :
 1. Rishav Das (github:https://github.com/rdofficial/, email:rdofficial192@gmail.com)
@@ -34,6 +34,7 @@ try:
 	from os import chdir, path
 	from json import loads
 	from sys import stdout
+	from base64 impot b64encode, b64decode
 except Exception as e:
 	# If there are any errors during the importing of the modules, then we display the error on the console screen
 
@@ -1677,4 +1678,336 @@ class Mail:
 
 	@staticmethod
 	def encryptedmail(sender = None, password = None, receiver = None, subject = None, body = None, encryption_key = None, webservice = None, arguments = None):
-		pass
+		""" This method / function serves the functionality of sending encrypted emails. The task of encryption is done using a password / encryption key. """
+
+		# Checking if arguments provided or just the parameters directly
+		if arguments == None:
+			# If the arguments are not passed to this function by the user, then we continue to use the default provided values
+
+			pass
+		else:
+			# If the arguments are passed to this function by the user, then we continue to parse the arguments
+
+			# Parsing the arguments entered to this function
+			# ----
+			# Setting the default value of the variables to None
+			sender = None
+			password = None
+			receiver = None
+			subject = None
+			body = None
+			encryption_key = None
+			webservice = None
+			documentation = True
+
+			# Iterating through each argument to filter out the values
+			for index, argument in enumerate(arguments):
+				# Iterating through each argument item
+
+				if argument == '--sender':
+					# If the argument is for specifying the sender's username, then we continue to parse the next argument as the entered value
+
+					try:
+						sender = arguments[index + 1]
+					except IndexError:
+						# If the next argument is out of the list index (i.e., it does not exists), then we continue for the next iteration
+
+						continue
+				elif argument == '--password':
+					# If the argument is for specifying the user's password, then we continue to parse the next argument as the entered value
+
+					try:
+						password = arguments[index + 1]
+					except IndexError:
+						# If the next argument is out of the list index (i.e., it does not exists), then we continue for the next iteration
+
+						continue
+				elif argument == '--receiver':
+					# If the argument is for specifying the receiver's email address, then we continue to parse the next argument as the entered value
+
+					try:
+						receiver = arguments[index + 1]
+					except IndexError:
+						# If the next argument is out of the list index (i.e., it does not exists), then we continue for the next iteration
+
+						continue
+				elif argument == '--subject':
+					# If the argument is for specifying the subject of the mail, then we continue to parse the next argument as the entered value
+
+					try:
+						subject = arguments[index + 1]
+					except IndexError:
+						# If the next argument is out of the list index (i.e., it does not exists), then we continue for the next iteration
+
+						continue
+				elif argument == '--body':
+					# If the argument is for specifying the body of the mail, then we continue to parse the next argument as the entered value (The value would be of a text file which will contain the entire contents of the body of the mail)
+
+					try:
+						# Reading the data of the file location specified
+						data = open(arguments[index + 1], 'r').read()
+					except IndexError:
+						# If the next argument is out of the list index (i.e., it does not exists), then we continue for the next iteration
+
+						continue
+					else:
+						# If there are not errors encountered during the process, then we set the contents of the specified file as the body of the email
+
+						body = data
+						del data
+				elif argument == '--encryption-key':
+					# If the argument is for specifying the encryption key of the email, then we continue to parse the next argument as the entered value
+
+					try:
+						encryption_key = arguments[index + 1]
+					except IndexError:
+						# If the next argument is out of the list index (i.e., it does not exists), then we continue for the next iteration
+
+						continue
+				elif argument == '--service':
+					# If the argument is for specifying the email service, then we continue to parse the next argument as the entered value
+
+					try:
+						webservice = arguments[index + 1]
+					except IndexError:
+						# If the next argument is out of the list index (i.e., it does not exists), then we continue for the next iteration
+
+						continue
+				elif argument == '--help':
+					# If the argument is for displaying the help information, then we mark the self.documentation as True
+
+					documentation = True
+				else:
+					# If the currently iterated argument is not recognized, then we skip the current iteration
+
+					continue
+			# ----
+
+		# Checking whether the user requested the documentation mode or the execution mode
+		if documentation:
+			# If the user specified the documentation mode, then we display the entire help text on the console screen
+
+			print('<--Help for encrypted mail-->')
+			return 0
+		else:
+			# If the user specified the execution mode, then we continue
+
+			# Validating the user specified inputs
+			# ----
+			# Validating the sender parameter's input value (The sender's email address - complete email addresss)
+			if sender == None:
+				# If the value for the sender is not specified by the user (default value), then we raise an error with a custom message
+
+				raise SyntaxError('sender value not specified. The value is of the sender\'s email address.')
+			else:
+				# If the value of the sender is specified by the user, then we continue for further validation
+
+				if type(sender) == str:
+					# If the value of the sender parameter specified by the user is of string type, then we continue for further validation
+
+					if len(sender) >= 5:
+						# If the length of the value of the sender parameter specified by the user is more than or equal to 5, then we continue
+
+						pass
+					else:
+						# If the length of the value of the sender parameter specified by the user is not of valid length, then we raise an error with a custom message
+
+						raise('sender value is invalid. The length of the sender parameter is less than 5 characters.')
+				else:
+					# If the value of the sender parameter specified by the user is not of string type, then we raise an error with a custom message
+
+					raise ValueError('sender value is invalid. Requires a string value with proper length, as this parameter is to specify the email address of the sender.')
+
+			# Validating the password parameter's input value (The password of the sender's email)
+			if password == None:
+				# If the value for the password is not specified by the user (default value), then we raise an error with a custom message
+
+				raise SyntaxError('password value not specified. The value is of the sender\'s email password.')
+			else:
+				# If the value of the password is specified by the user, then we continue for further validation
+
+				if type(password) == str:
+					# If the value of the password parameter specified by the user is of string type, then we continue for further validation
+
+					if len(password) >= 5:
+						# If the length of the value of the password parameter specified by the user is more than or equal to 5, then we continue
+
+						pass
+					else:
+						# If the length of the value of the password parameter specified by the user is not of valid length, then we raise an error with a custom message
+
+						raise('password value is invalid. The length of the password parameter is less than 5 characters.')
+				else:
+					# If the value of the password parameter specified by the user is not of string type, then we raise an error with a custom message
+
+					raise ValueError('password value is invalid. Requires a string value, as this parameter is to specify the password of the sender\'s email account.')
+
+			# Validating the receiver paramter's input (The receiver's email address / target's email address)
+			if receiver == None:
+				# If the value for the receiver is not specified by the user (default value), then we raise an error with a custom message
+
+				raise SyntaxError('receiver value not specified. The value is of the receiver\'s email address.')
+			else:
+				# If the value of the receiver is specified by the user, then we continue for further validation
+
+				if type(receiver) == str:
+					# If the value of the receiver parameter specified by the user is of string type, then we continue for further validation
+
+					if len(receiver) >= 5:
+						# If the length of the value of the receiver parameter specified by the user is more than or equal to 5, then we continue
+
+						pass
+					else:
+						# If the length of the value of the receiver parameter specified by the user is not of valid length, then we raise an error with a custom message
+
+						raise('receiver value is invalid. The length of the receiver parameter is less than 5 characters.')
+				else:
+					# If the value of the receiver parameter specified by the user is not of string type, then we raise an error with a custom message
+
+					raise ValueError('receiver value is invalid. Requires a string value with proper length, as this parameter is to specify the email address of the receiver.')
+
+			# Validating the subject parameter's input (The subject of the email to be sent)
+			if subject == None:
+				# If the value for the subject is not specified by the user (default value), then we raise an error with a custom message
+
+				raise SyntaxError('subject value not specified. The value is of the subject of the mail to be sent.')
+			else:
+				# If the value of the subject is specified by the user, then we continue for further validation
+
+				if type(subject) == str:
+					# If the value of the subject parameter specified by the user is of string type, then we continue for further validation
+
+					if len(subject) != 0:
+						# If the length of the value of the subject parameter specified by the user is more than 0, then we continue
+
+						pass
+					else:
+						# If the length of the value of the subject parameter specified by the user is not of valid length, then we raise an error with a custom message
+
+						raise('subject value is invalid. The length of the subject parameter should atleast be of 1 character.')
+				else:
+					# If the value of the subject parameter specified by the user is not of string type, then we raise an error with a custom message
+
+					raise ValueError('subject value is invalid. Requires a string value with atleast length of 1 character, as this parameter is to specify the subject of the email that is to be sent.')
+
+			# Validating the body parameter's input (The body of the email to be sent / The contents of the email)
+			if body == None:
+				# If the value for the body is not specified by the user (default value), then we raise an error with a custom message
+
+				raise SyntaxError('body value not specified. The value is of the body of the mail to be sent.')
+			else:
+				# If the value of the body is specified by the user, then we continue for further validation
+
+				if type(body) == str:
+					# If the value of the body parameter specified by the user is of string type, then we continue for further validation
+
+					if len(body) != 0:
+						# If the length of the value of the body parameter specified by the user is more than 0, then we continue
+
+						pass
+					else:
+						# If the length of the value of the body parameter specified by the user is not of valid length, then we raise an error with a custom message
+
+						raise('body value is invalid. The length of the body parameter should atleast be of 1 character.')
+				else:
+					# If the value of the body parameter specified by the user is not of string type, then we raise an error with a custom message
+
+					raise ValueError('body value is invalid. Requires a string value with length of alteast 1 character, as this parameter is to specify the body of the email that is to be sent.')
+
+			# Validating the encryption key (The password for encrypting / decrypting the body contents of the email to be sent)
+			if encryption_key == None:
+				# If the value for the encryption key is not specified by the user (default value), then we raise an error with a custom message
+
+				raise SyntaxError('Encryption key value not specified. The key for encrypting / decrypting the contents of the email.')
+			else:
+				# If the value of the encryption key is specified by the user, then we continue for further validation
+
+				if type(encryption_key) == str:
+					# If the value of the encryption key parameter specified by the user is of string type, then we continue for further validation
+
+					if len(encryption_key) > 5:
+						# If the length of the value of the encryption key parameter specified by the user is more than 3, then we continue
+
+						pass
+					else:
+						# If the length of the value of the encryption key parameter specified by the user is not of valid length, then we raise an error with a custom message
+
+						raise('Encryption key value is invalid. Requires a string value with proper length of 6 characters.')
+				else:
+					# If the value of the encryption key parameter specified by the user is not of string type, then we raise an error with a custom message
+
+					raise ValueError('Encryption key is invalid. Requires a string value with proper length of 6 characters.')
+
+			# Validating the webservice parameter's input (The email providing service used by the sender to send the emails)
+			if webservice == None:
+				# If the value for the email service is not specified by the user (default value), then we raise an error with a custom message
+
+				raise SyntaxError('Email service value not specified. The email providing service from which the sender will send the emails.')
+			else:
+				# If the value of the email service is specified by the user, then we continue for further validation
+
+				if type(webservice) == str:
+					# If the value of the email service parameter specified by the user is of string type, then we continue for further validation
+
+					if len(webservice) > 3:
+						# If the length of the value of the email service parameter specified by the user is more than 3, then we continue
+
+						pass
+					else:
+						# If the length of the value of the email service parameter specified by the user is not of valid length, then we raise an error with a custom message
+
+						raise('Email service value is invalid. Requires a string value with proper length.')
+				else:
+					# If the value of the email service parameter specified by the user is not of string type, then we raise an error with a custom message
+
+					raise ValueError('Email service value is invalid. Requires a string value with proper length.')
+			# ----
+
+			# Encrypting the contents / body / message of the email
+			# ----
+			# Generating the key from the encryption using the user entered password for encryption / decryption
+			key = 0
+			isEven = True
+
+			for i in encryption_key:
+				# Iterating over each character in the encrypted key entered by the user
+				
+				if isEven:
+					# If the current iteration is even number, then we add the char code value
+
+					key += ord(i)
+				else:
+					# If the current iteration is odd number (not even), then we subtract the char code value
+
+					key -= ord(i)
+
+			# Making the key possitive
+			if key < 0:
+				key *= (-1)
+
+			# Adding the length of the password to itself
+			key += len(encryption_key)
+			encryption_key = key
+			del key, isEven
+
+			# Converting the plain text of the message / body of the email to cipher format
+			encryptedText = ''
+			for character in body:
+				# Iterating through each character in the body of the email
+
+				encryptedText += String.fromCharCode((element.charCodeAt() + key) % 256);
+				encryptedText += chr((prd(character) + key) % 256)
+
+			# Encoding the cipher text into base64 algorithm / format / encoding
+			body = b64encode(encryptedText.encode()).decode()
+			del encryptedText
+			# ----
+
+			# Setting up the MIME
+			message = MIMEMultipart()
+			message["From"] = sender
+			message["To"] = receiver
+			message["Subject"] = subject
+
+			# Attaching the body of the mail
+			message.attach(MIMEText(body, 'plain'))
