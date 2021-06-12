@@ -7,10 +7,10 @@ Author : Rishav Das (https://github.com/rdofficial/)
 Created on : June 1, 2021
 
 Last modified by : Rishav Das (https://github.com/rdofficial/)
-Last modified on : June 11, 2021
+Last modified on : June 12, 2021
 
 Changes made in the last modifications :
-1. Created the 'encryptedmail()' static method in the 'Mail' class for sending emails with their body contents being encrypted with a key.
+1. Added the help section text for the 'Mail' class.
 
 Authors contributed to this script (Add your name below if you have contributed) :
 1. Rishav Das (github:https://github.com/rdofficial/, email:rdofficial192@gmail.com)
@@ -1054,7 +1054,7 @@ class Mail:
 		if self.documentation:
 			# If the user specified to be run in documentation mode, then we continue displaying the help text on the console screen
 
-			print('<--help for mail -->')
+			print('mail\nUsage : mail <arguments>\n\n\'mail\' is a tool which serves the feature of sending emails. The tool requires the user login credentials for a particular email service (SMTP server). The email can be send by specifying the particular web service. Currently supported web services are : google (gmail), yahoo mail, protonmail. The arguments are used by this tool / command in order to get the user inputs required for the email to be sent properly.\n\nArguments that can be used are :\n--sender        Used to specify the username of the sender\'s email address (e.g., user12345 from user12345@gmail.com)\n--password      Used to specify the password of the sender\'s email address\n--receiver      Used to specify the receiver\'s email address\n--subject       Used to specify the subject of the email (to be sent)\n--body          Used to specify the file which contains the body of the email (to be sent)\n--service       Used to specify the web service by which the email is to be sent (e.g., google, yahoo)\n\nRead the below steps for proper usage :\n1. Example of sending an email using a gmail account. [Google account should allow access to third party apps]\n\nmail --sender user12345 --password <password> --receiver <receiver email address> --subject <subject> --body /file/body/contents.txt --webservice google\nOR\nmail --sender user12345 --password <password> --receiver <receiver email address> --subject <subject> --body /file/body/contents.txt --webservice gmail\n\n2. Example of sending an email using a yahoo mail account. [Yahoo account should allow access to third party apps]\n\nmail --sender user12345 --password <password> --receiver <receiver email address> --subject <subject> --body /file/body/contents.txt --webservice yahoo\nOR\nmail --sender user12345 --password <password> --receiver <receiver email address> --subject <subject> --body /file/body/contents.txt --webservice yahoomail\n\n3. Example of sending an email using a proton mail account. Sending emails using protonmail requires a protonmail bridge to be running on the local machine (at address: localhost). First launch the protonmail bridge on the local machine, then run the below specified command. Make sure you enter the proper port number here.\n\nmail --sender user12345 --password <password> --receiver <receiver email address> --subject <subject> --body /file/body/contents.txt --webservice proton\nOR\nmail --sender user12345 --password <password> --receiver <receiver email address> --subject <subject> --body /file/body/contents.txt --webservice protonmail\n\nFor more detailed information, check out the docs.')
 		else:
 			# If the user specified to be run in execution mode (not in documentation mode), then we continue
 
