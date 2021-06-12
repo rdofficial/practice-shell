@@ -10,7 +10,7 @@ Last modified by : Rishav Das (https://github.com/rdofficial/)
 Last modified on : June 12, 2021
 
 Changes made in the last modifications :
-1. Added the help section text for the 'Mail' class.
+1. Added the code to serve the functionality of detecting and sending emails from ProtonMail service.
 
 Authors contributed to this script (Add your name below if you have contributed) :
 1. Rishav Das (github:https://github.com/rdofficial/, email:rdofficial192@gmail.com)
@@ -1185,6 +1185,10 @@ class Mail:
 				# If the web service for sending the mail is yahoo / yahoomail, then we continue
 
 				self.yahoomail()
+			elif self.webservice.lower() == 'proton' or self.webservice.lower() == 'protonmail':
+				# If the web service for sending the mail is proton / protonmail, then we continue
+
+				self.protonmail()
 			else:
 				# If the web service specified by the user is not specified, then we raise an error with a custom message
 
