@@ -10,7 +10,7 @@ Last modified by : Rishav Das (https://github.com/rdofficial/)
 Last modified on : June 12, 2021
 
 Changes made in the last modifications :
-1. Added the code to serve the functionality of detecting and sending emails from ProtonMail service.
+1. Added the help section text / contents to the method Mail.custommail().
 
 Authors contributed to this script (Add your name below if you have contributed) :
 1. Rishav Das (github:https://github.com/rdofficial/, email:rdofficial192@gmail.com)
@@ -1474,7 +1474,7 @@ class Mail:
 		if documentation:
 			# If the user specified the documentation mode, then we display the entire help text on the console screen
 
-			print('<-- help for custom mail - Mail -->')
+			print('mail-custom\nUsage : mail-custom <arguments>\n\n\'mail-custom\' is a tool which serves the feature of sending emails from a custom SMTP server / email service. The tool requires the URL and port at which the SMTP server is running, as well as the login credentials of the user account from which the email is to be sent.\n\nThis tool / command can be used for these tasks :\n1. Sending emails from a custom SMTP server (A server either made by user, or someone).\n2. Sending emails from a email service that is not supported directly by the mail tool.\n\nArguments that can be used are :\n--sender        Used to specify the username of the sender\'s email address (e.g., user12345 from user12345@custom.com)\n--password      Used to specify the password of the sender\'s email address\n--receiver      Used to specify the receiver\'s email address\n--subject       Used to specify the subject of the email (to be sent)\n--body          Used to specify the file which contains the body of the email (to be sent)\n--server        Used to specify the URL at which the SMTP server is running\n--port          Used to specify the port at which the SMTP server is running\n\nExample of command (syntax) :\n\nmail-custom --sender <username> --password <password> --receiver <receiver\'s email address> --subject <subject> --body /file/body/contents.txt --server https://custom.mail.com/ --port 0000\n\nFor more detailed information, check out the docs.')
 			return 0
 		else:
 			# If the user specified the execution mode, then we continue
