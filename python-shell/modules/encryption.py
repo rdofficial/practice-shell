@@ -10,7 +10,7 @@ Last modified by : Rishav Das (https://github.com/rdofficial/)
 Last modified on : June 13, 2021
 
 Changes made in the last modification :
-1. Added the commented docs (__doc__) to the class 'StringEncrypter'.
+1. Added the code which serve the functionality of argument parsing, task executing, etc to the class 'StringEncrypter'.
 
 Authors contributed to this script (Add your name below if you have contributed) :
 1. Rishav Das (github:https://github.com/rdofficial/, email:rdofficial192@gmail.com)
@@ -68,10 +68,94 @@ class StringEncrypter:
 	* After encryption or decryption, the class variable self.text is replaced with the output text.
 	"""
 
-	def __init__(self, text = None, password = None):
-		# Setting the user entered arguments to this function as the default arguments
-		self.text = text
-		self.password = password
+	def __init__(self, text = None, password = None, arguments = None):
+		# Checking if arguments provided or just the parameters directly
+		if arguments == None:
+			# If the arguments are not passed to this function by the user, then we continue to use the default provided values
+
+			self.text = text
+			self.password = password
+		else:
+			# If the arguments are passed to this function by the user, then we continue to parse the arguments
+
+			# Parsing the arguments entered to this function
+			# ----
+			# Setting the default value of the variables to None
+			self.text = None
+			self.password = None
+			self.documentation = False
+			self.task = None
+
+			# Iterating through each argument to filter out the values
+			for index, argument in enumerate(arguments):
+				# Iterating through each argument item
+
+				if argument == '--password':
+					# If the argument is for specifying the password, then we continue to parse the next argument as the entered value
+
+					try:
+						self.password = arguments[index + 1]
+					except IndexError:
+						# If the next argument is out of the list index (i.e., it does not exists), then we continue for the next iteration
+
+						continue
+
+				if argument == '--task':
+					# If the argument is for specifying the task (encryption / decryption), then we continue to parse the next argument as the entered value
+
+					try:
+						self.task = arguments[index + 1]
+					except IndexError:
+						# If the next argument is out of the list index (i.e., it does not exists), then we continue for the next iteration
+
+						continue
+
+				if argument == '--help':
+					# If the argument is for specifying the help, then we continue to mark the documentation mode to be true
+
+					self.documentation = True
+			# ----
+
+			# Validating the user entered password
+			# ----
+			# Checking the password input type
+			if type(self.password) == str:
+				# If the password's value as per entered by the user is a string type variable, then we continue for further validation
+
+				# Checking for string length
+				if len(self.password) > 4:
+					# If the user specified password has character length more than 4, then we continue
+
+					pass
+				else:
+					# If the user specified password has character length less than 4 charcters, then we raise an error with a custom message
+
+					raise SyntaxError('Password input is invalid. Requires to be an alphanumeric string with length atleast 5.')
+			else:
+				# If the user entered password's value is a non string variable, then we raise an error with a custom message
+
+				raise SyntaxError('Password input is invalid. Requires to be an alphanumeric string with length atleast 5.')
+			# ----
+
+			# Checking the task specified and then continuing to execute the task
+			if self.task == None:
+				# If the task to be done is not specified by the user (default value), then we raise an error with a custom message
+
+				raise SyntaxError('Task not specified. The task is needed to be specified whether encrypt / decrypt.')
+			elif self.task.lower() == 'encrypt' or self.task.lower() == 'encryption':
+				# If the task specified is for encryption, then we continue to encrypt
+
+				self.encrypt()
+				print(f'Output :\n{self.text}')
+			elif self.task.lower() == 'decrypt' or self.task.lower() == 'decryption':
+				# If the task specified is for decryption, then we continue to decrypt
+
+				self.decrypt()
+				print(f'Output :\n{self.text}')
+			else:
+				# If the task specified is not recognized, then we raise an error with a custom message
+
+				raise ReferenceError('Task not recognized. Encrypt / decrypt are the two recognizable terms.')
 
 	def generatekey(self):
 		""" This method / function serves the purpose of generating a special key for the encryption and decryption using the user entered password. This function takes the value of the user entered password from the class variable self.password.
