@@ -116,6 +116,14 @@ class StringEncrypter:
 					self.documentation = True
 			# ----
 
+			# Checking whether the task is to be in documentation mode or execution mode
+			if self.documentation:
+				# If the user specified the documentation mode, then we continue to display the help text on the console screen
+
+				print('<-- help for StringEncrypter -->')
+			else:
+				# If the user specified the execution mode, then we continue to execute the task
+
 			# Validating the user entered password
 			# ----
 			# Checking the password input type
