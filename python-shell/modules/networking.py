@@ -1339,7 +1339,7 @@ class Mail:
 			--server-port   Used to specify the port at which the STMP server is running (accessible)
 
 			As we all know that the argument token are parsed on the basis of whitespaces, therefore if the any of the input argument requires whitespaces between them. Then, we will use the whitespace character escape sequence in order to use the whitespace values in our parameters. Example of such is shown below.
-			mail --sender <username> --password <password> --receiver <target-email-address> --subject Subject\ with\ whitespace --body <content file> --service google
+			mail custom --sender <username> --password <password> --receiver <target-email-address> --subject Subject\ with\ whitespace --body <content file> --service google
 
 		2. Parameters passed directly
 
@@ -1699,7 +1699,7 @@ class Mail:
 
 			Below is a syntax / example of this way of usage of this encryptedmail tool
 
-			mail-encrypted --sender <sender email address> --password <password> --receiver <receiver email address> --subject <subject of the mail> --body /file/email/body.txt --encryption-key <encryption password> --service <email service to be used>
+			mail encrypted --sender <sender email address> --password <password> --receiver <receiver email address> --subject <subject of the mail> --body /file/email/body.txt --encryption-key <encryption password> --service <email service to be used>
 
 		2. Directly from parameters :
 

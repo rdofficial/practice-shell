@@ -10,7 +10,7 @@ Last modified by : Rishav Das (https://github.com/rdofficial/)
 Last modified on : June 13, 2021
 
 Changes made in the last modification :
-1. Added the code for serving the functionality of encryption as well as decryption in the class 'StringEncrypter'.
+1. Added the commented docs (__doc__) to the class 'StringEncrypter'.
 
 Authors contributed to this script (Add your name below if you have contributed) :
 1. Rishav Das (github:https://github.com/rdofficial/, email:rdofficial192@gmail.com)
@@ -27,7 +27,46 @@ except Exception as e:
 	exit()
 
 class StringEncrypter:
-	""" """
+	""" This class serves the features / functionality of encryption as well as decryption of the strings. The encryption / decryption is carried out with a password (encryption key). The class uses its own seperate ways of encryption. Thus if any text / plain string is encrypted using this class (tool), then it can be only decrypted using the decrypt() method of this class.
+
+	This class takes parameter inputs from the user in two ways :
+	1. From parsing arguments
+
+		In this mode, the arguments parsed at the shell after the user enters a command are passed to this class object. The syntax is below.
+
+		StringEncrypter(arguments = <parsed arguments list>)
+
+		--password			Used to specify the password for encryption / decryption
+		--task              Used to specify the task whether encryption / decryption
+
+		The text / string for encryption is then asked to the user to enter manually.
+		Example of a command for encrypting a string is shown below.
+		encrypt string --password somehardpassword123 --task encryption
+
+		Example of a command for decrypting a string is shown below.
+		encrypt string --password somehardpassword123 --task decryption
+
+	2. From parameters directly
+
+		In this mode, the parameters are defined directly to the class object. All the paramters that are acceptable are listed below in the syntax of this class.
+
+		StringEncrypter(
+			text = 'Some random string',
+			password = 'Some hard password',
+		)
+
+		In this mode, the text that is to be encrypted is specified directly and there are no parameters to specify the task of encryption or decryption. The encryption and decryption can be done by calling the encrypt() and decrypt() method directly.
+		Example is shown below.
+
+		enc = StringEncrypter(text = 'Some random text to be processed.', password = 'somehardpassword123')
+
+		enc.encrypt()
+		enc.decrypt()
+
+	Some points to be noted about this StringEncrypter are listed below :
+	* Any text encrypted using this tool can be decrypted using only this class / tool and the encryption password only.
+	* After encryption or decryption, the class variable self.text is replaced with the output text.
+	"""
 
 	def __init__(self, text = None, password = None):
 		# Setting the user entered arguments to this function as the default arguments
