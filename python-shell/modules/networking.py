@@ -7,10 +7,10 @@ Author : Rishav Das (https://github.com/rdofficial/)
 Created on : June 1, 2021
 
 Last modified by : Rishav Das (https://github.com/rdofficial/)
-Last modified on : June 12, 2021
+Last modified on : June 13, 2021
 
 Changes made in the last modifications :
-1. Added the code to serve the functionality of the sending emails with encryption body messages (half completed).
+1. Added the code to serve the functionality of the sending emails with encryption body messages (full completed). Available at Mail.encryptedmail().
 
 Authors contributed to this script (Add your name below if you have contributed) :
 1. Rishav Das (github:https://github.com/rdofficial/, email:rdofficial192@gmail.com)
@@ -34,7 +34,7 @@ try:
 	from os import chdir, path
 	from json import loads
 	from sys import stdout
-	from base64 impot b64encode, b64decode
+	from base64 import b64encode, b64decode
 except Exception as e:
 	# If there are any errors during the importing of the modules, then we display the error on the console screen
 
@@ -1677,7 +1677,7 @@ class Mail:
 				return 0
 
 	@staticmethod
-	def encryptedmail(sender = None, password = None, receiver = None, subject = None, body = None, encryption_key = None, webservice = None, arguments = None):
+	def encryptedmail(sender = None, password = None, receiver = None, subject = None, body = None, encryption_key = None, webservice = None, documentation = False, arguments = None):
 		""" This method / function serves the functionality of sending encrypted emails. The task of encryption is done using a password / encryption key. """
 
 		# Checking if arguments provided or just the parameters directly
@@ -1995,19 +1995,166 @@ class Mail:
 			for character in body:
 				# Iterating through each character in the body of the email
 
-				encryptedText += String.fromCharCode((element.charCodeAt() + key) % 256);
-				encryptedText += chr((prd(character) + key) % 256)
+				encryptedText += chr((ord(character) + encryption_key) % 256)
 
 			# Encoding the cipher text into base64 algorithm / format / encoding
 			body = b64encode(encryptedText.encode()).decode()
-			del encryptedText
+			del encryptedText, encryption_key
 			# ----
 
-			# Setting up the MIME
-			message = MIMEMultipart()
-			message["From"] = sender
-			message["To"] = receiver
-			message["Subject"] = subject
+			# Sending the email
+			# ----
+			# Checking the emailing service as mentioned by the user
+			if webservice.lower() == 'google' or webservice.lower() == 'gmail':
+				# If the emailing service specified by the user is google / gmail, then we continue
 
-			# Attaching the body of the mail
-			message.attach(MIMEText(body, 'plain'))
+				try:
+					# Setting up the MIME
+					message = MIMEMultipart()
+					message["From"] = f'{sender}@gmail.com'
+					message["To"] = receiver
+					message["Subject"] = subject
+
+					# Attaching the body of the mail
+					message.attach(MIMEText(body, 'plain'))
+
+					# Creating a SMTP session for sending the mail
+					# Connecting to the SMTP server of google mail (gmail)
+					session = smtplib.SMTP('smtp.gmail.com', 587)
+					session.starttls()
+					session.login(sender, password)  # Logging into the SMTP session using the user provided username and password combination
+
+					# Sending the mail
+					message = message.as_string()
+					session.sendmail(sender, receiver, message)
+					session.quit()
+				except Exception as e:
+					# If there are any errors encountered during the process, then we display the error message on the console screen
+
+					print(f'[ Error : {e} ]')
+					return 0
+				else:
+					# If there are no errors encountered during the process, then we display the mail sent message on the console screen
+
+					print('[ Mail sent. Remember the encryption key. ]')
+					return 0
+			elif webservice.lower() == 'yahoo' or webservice.lower() == 'yahoomail':
+				# If the emailing service specified by the user is yahoo / yahoomail, then we continue
+
+				try:
+					# Setting up the MIME
+					message = MIMEMultipart()
+					message["From"] = f'{sender}@yahoo.com'
+					message["To"] = receiver
+					message["Subject"] = subject
+
+					# Attaching the body of the mail
+					message.attach(MIMEText(body, 'plain'))
+
+					# Creating a SMTP session for sending the mail
+					# Connecting to the SMTP server of yahoo mail
+					session = smtplib.SMTP('smtp.mail.yahoo.com', 587)
+					session.starttls()
+					session.login(f'{sender}@yahoo.com', password)  # Logging into the SMTP session using the user provided username and password combination
+
+					# Sending the mail
+					message = message.as_string()
+					session.sendmail(sender, receiver, message)
+					session.quit()
+				except Exception as e:
+					# If there are any errors encountered during the process, then we display the error message on the console screen
+
+					print(f'[ Error : {e} ]')
+					return 0
+				else:
+					# If there are no errors encountered during the process, then we display the mail sent message on the console screen
+
+					print('[ Mail sent. Remember the encryption key. ]')
+					return 0
+			elif webservice.lower() == 'proton' or webservice.lower() == 'protonmail':
+				# If the emailing service specified by the user is proton mail, then we continue
+
+				try:
+					# Setting up the MIME
+					message = MIMEMultipart()
+					message["From"] = f'{sender}@protonmail.com'
+					message["To"] = receiver
+					message["Subject"] = subject
+
+					# Attaching the body of the mail
+					message.attach(MIMEText(body, 'plain'))
+
+					# Asking the user for the URL and the port where the ProtonMail bridge is running on the local machine / local network
+					url = input('Enter the URL where the ProtonMail bridge is runnning (leave blank for localhost) : ')
+					if len(url) == 0 or url == ' ':
+						# If the URL input is left blank, then we mark the url as the localhost
+
+						url = 'localhost'
+					port = int(input('Enter the port at which the ProtonMail bridge is running : '))
+
+					# Creating a SMTP session for sending the mail
+					# Connecting to the SMTP server of proton mail
+					session = smtplib.SMTP(url, port)
+					session.starttls()
+					session.login(f'{sender}@protonmail.com', password)  # Logging into the SMTP session using the user provided username and password combination
+
+					# Sending the mail
+					message = message.as_string()
+					session.sendmail(sender, receiver, message)
+					session.quit()
+				except Exception as e:
+					# If there are any errors encountered during the process, then we display the error message on the console screen
+
+					print(f'[ Error : {e} ]')
+					return 0
+				else:
+					# If there are no errors encountered during the process, then we display the mail sent message on the console screen
+
+					print('[ Mail sent. Remember the encryption key. ]')
+					return 0
+			elif webservice.lower() == 'custom':
+				# If the emailing service specified by the user is custom, then we continue
+
+				try:
+					# Setting up the MIME
+					message = MIMEMultipart()
+					message["From"] = sender
+					message["To"] = receiver
+					message["Subject"] = subject
+
+					# Attaching the body of the mail
+					message.attach(MIMEText(body, 'plain'))
+
+					# Asking the user for the URL and the port where the ProtonMail bridge is running on the local machine / local network
+					url = input('Enter the URL of the SMTP server (leave blank for localhost) : ')
+					if len(url) == 0 or url == ' ':
+						# If the URL input is left blank, then we mark the url as the localhost
+
+						url = 'localhost'
+					port = int(input('Enter the port at which the SMTP server is available : '))
+
+					# Creating a SMTP session for sending the mail
+					# Connecting to the SMTP server with the user specified url and port
+					session = smtplib.SMTP(url, port)
+					session.starttls()
+					session.login(sender, password)  # Logging into the SMTP session using the user provided username and password combination
+
+					# Sending the mail
+					message = message.as_string()
+					session.sendmail(sender, receiver, message)
+					session.quit()
+				except Exception as e:
+					# If there are any errors encountered during the process, then we display the error message on the console screen
+
+					print(f'[ Error : {e} ]')
+					return 0
+				else:
+					# If there are no errors encountered during the process, then we display the mail sent message on the console screen
+
+					print('[ Mail sent. Remember the encryption key. ]')
+					return 0
+			else:
+				# If the emailing service specified by the user is not recognized, then we raise an error with a custom message
+
+				raise TypeError(f'Specified web service "{self.webservice}" is not recognized.')
+			# ----
