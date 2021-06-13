@@ -10,7 +10,7 @@ Last modified by : Rishav Das (https://github.com/rdofficial/)
 Last modified on : June 13, 2021
 
 Changes made in the last modifications :
-1. Added the code to serve the functionality of the sending emails with encryption body messages (full completed). Available at Mail.encryptedmail().
+1. Updated the entire commented docs (__doc__) of the Mail.encryptedmail() method.
 
 Authors contributed to this script (Add your name below if you have contributed) :
 1. Rishav Das (github:https://github.com/rdofficial/, email:rdofficial192@gmail.com)
@@ -1678,7 +1678,60 @@ class Mail:
 
 	@staticmethod
 	def encryptedmail(sender = None, password = None, receiver = None, subject = None, body = None, encryption_key = None, webservice = None, documentation = False, arguments = None):
-		""" This method / function serves the functionality of sending encrypted emails. The task of encryption is done using a password / encryption key. """
+		""" This method / function serves the functionality of sending encrypted emails. The task of encryption is done using a password / encryption key. This method is a static method that can be called directly without passing the other parameters to the main class objects. Just like
+
+		Mail.encryptedmail(<parameters>)
+
+		This function takes the parameters in two formats :
+		1. Parsing arguments :
+
+			Here, the parsed tokens from the arguments entered by the user at the command line / shell are used to extract the parameters for the function to run properly. The arguments that are parsed via this function are listed below.
+
+			--sender            Used to specify the sender's username / email address
+			--password          Used to specify the password of the sender
+			--receiver          Used to specify the receiver's email address
+			--subject           Used to specify the subject of the email to be sent
+			--body              Used to specify the body of the email to be sent
+			--encryption-key    Used to specify the key / password for encrypting / decrypting the email contents
+			--service           Used to specify the email service to be used for sending the email
+
+			The way of parsing argument tokens uses the whitespace method, thus we cannot specify the entire body contents here. And, instead we are just taking the input of a text file which contains the body contents / the contents of the message in the mail. The file location specified after the --body tag / argument is then used to read the file and extract the complete file contents. The extracted file contents are then used as the message of the email to be sent.
+
+			Below is a syntax / example of this way of usage of this encryptedmail tool
+
+			mail-encrypted --sender <sender email address> --password <password> --receiver <receiver email address> --subject <subject of the mail> --body /file/email/body.txt --encryption-key <encryption password> --service <email service to be used>
+
+		2. Directly from parameters :
+
+			Here, the parameters are directly specified to the function. The parameters used / accepted by this function are listed below.
+
+			sender -> Parameter to specify the sender's username / email address
+			password -> Parameter to specify the password of the sender
+			receiver -> Parameter to specify the receiver's email address
+			subject -> Paramter to specify the subject of the email that is to be sent
+			body -> Parameter to specify the body of the email that is to be sent
+			encryption_key -> Parameter to specify the key / password for encrypting / decrypting the email contents
+			webservice -> Parameter to specify the email service to be used for sending the email
+
+			Here, the contents of the body file is to be specified directly, instead of reading from a file. The user is meant to write / type in the complete body content of the email in the parameter of 'body'. An example for the executing the function in this way is shown below.
+
+			Mail.encryptedmail(
+				sender = 'test123'
+				password = 'somerandompassword123',
+				receiver = 'somerandomuser@gmail.com',
+				subject = 'Testing our encrypted mail feature',
+				body = 'The contents of the body of the email. This piece of text is encrypted with password that the user provides.',
+				encryption_key = 'somerandompassword098',
+				webservice = 'google',
+			)
+
+		There are some points to be noted while using this function. These are :
+		* The sender parameter is used to specify the sender's username as well as email address. Here is the rule : When using google (gmail), yahoo, or proton mail service, then just mention the username of the sender. And, when using any custom mailing service or any service other than the ones mentioned, then specify the full email address in the sender parameter.
+
+		* The password parameter is the password for the sender's email account, this is required as we are gonna need it to authenticate ourselves into the SMTP server.
+
+		* The encrypted mails can be decrypted using the StringEncrypter.decrypt() method which is defined in the encryption.py module file.
+		"""
 
 		# Checking if arguments provided or just the parameters directly
 		if arguments == None:
