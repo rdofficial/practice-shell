@@ -6,8 +6,11 @@ A module created for supplying the required functions to the shell application. 
 Author : Rishav Das (https://github.com/rdofficial/)
 Created on : June 13, 2021
 
-Last modified by : -
-Last modified on : -
+Last modified by : Rishav Das (https://github.com/rdofficial/)
+Last modified on : June 13, 2021
+
+Changes made in the last modification :
+1. Added the code for serving the functionality of encryption as well as decryption in the class 'StringEncrypter'.
 
 Authors contributed to this script (Add your name below if you have contributed) :
 1. Rishav Das (github:https://github.com/rdofficial/, email:rdofficial192@gmail.com)
@@ -29,7 +32,7 @@ class StringEncrypter:
 	def __init__(self, text = None, password = None):
 		# Setting the user entered arguments to this function as the default arguments
 		self.text = text
-		self.password = text
+		self.password = password
 
 	def generatekey(self):
 		""" This method / function serves the purpose of generating a special key for the encryption and decryption using the user entered password. This function takes the value of the user entered password from the class variable self.password.
@@ -69,9 +72,41 @@ class StringEncrypter:
 	def encrypt(self):
 		""" This method / function serves the functionality of encrypting the user specified string / text using the user specified password. This function uses the value of text and password stored in the class variables self.text, self.password. """
 
-		pass
+		# Generating the key for the encryption
+		key = self.generatekey()
+
+		# Converting each character in the user entered text to cipher format
+		text = ''
+		for character in self.text:
+			# Iterating through each character
+
+			text += chr((ord(character) + key) % 256)
+
+		# Encoding the cipher text into base64 format
+		text = b64encode(text.encode()).decode()
+
+		# Setting the encrypted text as the class variable self.text
+		self.text = text
+		del key, text
+		return self.text
 
 	def decrypt(self):
 		""" This method / function serves the functionality of decrypting the user specified string / text using the user specified password. This function uses the value of text and password stored in the class variables self.text, self.password. """
 
-		pass
+		# Generating the key for the encryption
+		key = self.generatekey()
+
+		# Decoding from the base64 format to cipher format
+		self.text = b64decode(self.text.encode()).decode()
+
+		# Converting each character from cipher text to plain format
+		text = ''
+		for character in self.text:
+			# Iterating through each character
+
+			text += chr((ord(character) - key) % 256)
+
+		# Setting the decrypted text as the class variable self.text
+		self.text = text
+		del text, key
+		return self.text
