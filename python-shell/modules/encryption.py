@@ -10,11 +10,7 @@ Last modified by : Rishav Das (https://github.com/rdofficial/)
 Last modified on : June 14, 2021
 
 Changes made in the last modification :
-<<<<<<< HEAD
 1. Added the code to serve the functionality to check password of the encryption / decryption in the 'FileEncrypter' class.
-=======
-1. Created the class 'FileEncrypter' which serves the feature of encrypting text files, and other r+w files too.
->>>>>>> fdd6b572e45618d5127462aaa4f8476769900282
 
 Authors contributed to this script (Add your name below if you have contributed) :
 1. Rishav Das (github:https://github.com/rdofficial/, email:rdofficial192@gmail.com)
@@ -24,10 +20,7 @@ Authors contributed to this script (Add your name below if you have contributed)
 try:
 	from base64 import b64encode, b64decode
 	from io import TextIOWrapper
-<<<<<<< HEAD
 	from os import path
-=======
->>>>>>> fdd6b572e45618d5127462aaa4f8476769900282
 	import hashlib
 except Exception as e:
 	# If there are any errors during the importing of the modules, then we display the error on the console screen
@@ -138,7 +131,6 @@ class StringEncrypter:
 				# Checking the password input type
 				if type(self.password) == str:
 					# If the password's value as per entered by the user is a string type variable, then we continue for further validation
-<<<<<<< HEAD
 
 					# Checking for string length
 					if len(self.password) > 4:
@@ -148,17 +140,6 @@ class StringEncrypter:
 					else:
 						# If the user specified password has character length less than 4 charcters, then we raise an error with a custom message
 
-=======
-
-					# Checking for string length
-					if len(self.password) > 4:
-						# If the user specified password has character length more than 4, then we continue
-
-						pass
-					else:
-						# If the user specified password has character length less than 4 charcters, then we raise an error with a custom message
-
->>>>>>> fdd6b572e45618d5127462aaa4f8476769900282
 						raise SyntaxError('Password input is invalid. Requires to be an alphanumeric string with length atleast 5.')
 				else:
 					# If the user entered password's value is a non string variable, then we raise an error with a custom message
@@ -185,10 +166,7 @@ class StringEncrypter:
 					# If the task specified is not recognized, then we raise an error with a custom message
 
 					raise ReferenceError('Task not recognized. Encrypt / decrypt are the two recognizable terms.')
-<<<<<<< HEAD
 				del self.task
-=======
->>>>>>> fdd6b572e45618d5127462aaa4f8476769900282
 
 	def generatekey(self):
 		""" This method / function serves the purpose of generating a special key for the encryption and decryption using the user entered password. This function takes the value of the user entered password from the class variable self.password.
@@ -270,7 +248,6 @@ class StringEncrypter:
 class FileEncrypter:
 	""" """
 
-<<<<<<< HEAD
 	def __init__(self, filename = None, password = None, arguments = None):
 		# Checking if arguments provided or just the parameters directly
 		if arguments == None:
@@ -420,53 +397,6 @@ class FileEncrypter:
 
 					raise ReferenceError('Task not recognized. Encrypt / decrypt are the two recognizable terms.')
 				del self.task
-=======
-	def __init__(self, filename = None, password = None):
-		# Validating the user entered parameters
-		# ----
-		# Validating the filename parameter input (The name / location of the file that is to be encrypted using this tool)
-		if filename == None:
-			# If the filename parameter is not specified by the user (default), then we raise an error with a custom message
-
-			raise SyntaxError('File name not specified.')
-		else:
-			# If the filename parameter is specified by the user, then we continue for further validation
-
-			if type(filename) == str:
-				# If the filename parameter input specified by the user is of str type, then we continue
-
-				self.contents = open(filename, 'r').read()
-				self.contents = self.contents.decode()
-			else:
-				# If the filename parameter input specified by the user is not of str type, then we raise an error on the console screen
-
-				raise TypeError('File name parameter should be in str format.')
-
-		# Validating the password parameter entered by the user
-		if self.password == None:
-			# If the password parameter is not specified by the user (default), then we raise an error with a custom message
-
-			raise SyntaxError('Password not specified.')
-		else:
-			# If the password parameter is specified by the user, then we continue for further validation
-
-			if type(self.password) == str:
-				# If the password parameter input specified by the user is of str type, then we continue to validate further
-
-				if len(self.password) > 4:
-					# If the password parameter input specified by the user is more than 4 character length, then we continue
-
-					pass
-				else:
-					# If the password parameter input specified by the user is less than 4 character length, then we raise an error with a custom message
-
-					raise SyntaxError('Password invalid. The password input should be a string with atleast 5 character length.')
-			else:
-				# If the password parameter input specified by the user is not of str type, then we raise an error on the console screen
-
-				raise TypeError('Password invalid. Password parameter should be in str format.')
-		# ----
->>>>>>> fdd6b572e45618d5127462aaa4f8476769900282
 
 	def generatekey(self):
 		""" This method / function serves the purpose of generating a special key for the encryption and decryption using the user entered password. This function takes the value of the user entered password from the class variable self.password.
@@ -503,7 +433,6 @@ class FileEncrypter:
 		# Returning the generating key
 		return key
 
-<<<<<<< HEAD
 	def checkpassword(self):
 		""" This method / function serves the functionality of checking the user entered password against the original password stored in the file. This function uses the value of password from the class variable self.password.
 
@@ -599,10 +528,3 @@ class FileEncrypter:
 
 			print(f'[ Incorrect password ]')
 			return 403
-=======
-	def encrypt(self):
-		pass
-
-	def decrypt(self):
-		pass
->>>>>>> fdd6b572e45618d5127462aaa4f8476769900282
