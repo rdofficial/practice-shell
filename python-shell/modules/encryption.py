@@ -10,7 +10,7 @@ Last modified by : Rishav Das (https://github.com/rdofficial/)
 Last modified on : June 14, 2021
 
 Changes made in the last modification :
-1. Created the class 'FileEncrypter' which serves the feature of encrypting text files, and other r+w files too.
+1. Added the code for serving the functionality of encryption and decryption of files in the 'FileEncrypter' class.
 
 Authors contributed to this script (Add your name below if you have contributed) :
 1. Rishav Das (github:https://github.com/rdofficial/, email:rdofficial192@gmail.com)
@@ -20,6 +20,7 @@ Authors contributed to this script (Add your name below if you have contributed)
 try:
 	from base64 import b64encode, b64decode
 	from io import TextIOWrapper
+	from os import path
 	import hashlib
 except Exception as e:
 	# If there are any errors during the importing of the modules, then we display the error on the console screen
@@ -165,6 +166,7 @@ class StringEncrypter:
 					# If the task specified is not recognized, then we raise an error with a custom message
 
 					raise ReferenceError('Task not recognized. Encrypt / decrypt are the two recognizable terms.')
+				del self.task
 
 	def generatekey(self):
 		""" This method / function serves the purpose of generating a special key for the encryption and decryption using the user entered password. This function takes the value of the user entered password from the class variable self.password.
@@ -246,51 +248,155 @@ class StringEncrypter:
 class FileEncrypter:
 	""" """
 
-	def __init__(self, filename = None, password = None):
-		# Validating the user entered parameters
-		# ----
-		# Validating the filename parameter input (The name / location of the file that is to be encrypted using this tool)
-		if filename == None:
-			# If the filename parameter is not specified by the user (default), then we raise an error with a custom message
+	def __init__(self, filename = None, password = None, arguments = None):
+		# Checking if arguments provided or just the parameters directly
+		if arguments == None:
+			# If the arguments are not passed to this function by the user, then we continue to use the default provided values
 
-			raise SyntaxError('File name not specified.')
+			self.filename = filename
+			self.password = password
 		else:
-			# If the filename parameter is specified by the user, then we continue for further validation
+			# If the arguments are passed to this function by the user, then we continue to parse the arguments
 
-			if type(filename) == str:
-				# If the filename parameter input specified by the user is of str type, then we continue
+			# Parsing the arguments entered to this function
+			# ----
+			# Setting the default value of the variables to None
+			self.filename = None
+			self.password = None
+			self.task = None
+			self.documentation = False  # Setting the documentation flag class variable to False by default
 
-				self.contents = open(filename, 'r').read()
-				self.contents = self.contents.decode()
+			# Iterating through each argument to filter out the values
+			for index, argument in enumerate(arguments):
+				# Iterating through each argument item
+
+				if argument == '--password':
+					# If the argument is for specifying the password, then we continue to parse the next argument as the entered value
+
+					try:
+						self.password = arguments[index + 1]
+					except IndexError:
+						# If the next argument is out of the list index (i.e., it does not exists), then we continue for the next iteration
+
+						continue
+
+				if argument == '--file':
+					# If the argument is for specifying the file, then we continue to parse the next argument as the entered value
+
+					try:
+						self.filename = arguments[index + 1]
+					except IndexError:
+						# If the next argument is out of the list index (i.e., it does not exists), then we continue for the next iteration
+
+						continue
+
+				if argument == '--task':
+					# If the argument is for specifying the task (encryption / decryption), then we continue to parse the next argument as the entered value
+
+					try:
+						self.task = arguments[index + 1]
+					except IndexError:
+						# If the next argument is out of the list index (i.e., it does not exists), then we continue for the next iteration
+
+						continue
+
+				if argument == '--help':
+					# If the argument is for specifying the help, then we continue to mark the documentation mode to be true
+
+					self.documentation = True
+			# ----
+
+			# Checking whether the task is to be in documentation mode or execution mode
+			if self.documentation:
+				# If the user specified the documentation mode, then we continue to display the help text on the console screen
+
+				print('<-- help for StringEncrypter -->')
 			else:
-				# If the filename parameter input specified by the user is not of str type, then we raise an error on the console screen
+				# If the user specified the execution mode, then we continue to execute the task
 
-				raise TypeError('File name parameter should be in str format.')
+				# Validating the user entered parameters
+				# ----
+				# Validating the filename parameter input (The name / location of the file that is to be encrypted using this tool)
+				if self.filename == None:
+					# If the filename parameter is not specified by the user (default), then we raise an error with a custom message
 
-		# Validating the password parameter entered by the user
-		if self.password == None:
-			# If the password parameter is not specified by the user (default), then we raise an error with a custom message
-
-			raise SyntaxError('Password not specified.')
-		else:
-			# If the password parameter is specified by the user, then we continue for further validation
-
-			if type(self.password) == str:
-				# If the password parameter input specified by the user is of str type, then we continue to validate further
-
-				if len(self.password) > 4:
-					# If the password parameter input specified by the user is more than 4 character length, then we continue
-
-					pass
+					raise SyntaxError('File name not specified.')
 				else:
-					# If the password parameter input specified by the user is less than 4 character length, then we raise an error with a custom message
+					# If the filename parameter is specified by the user, then we continue for further validation
 
-					raise SyntaxError('Password invalid. The password input should be a string with atleast 5 character length.')
-			else:
-				# If the password parameter input specified by the user is not of str type, then we raise an error on the console screen
+					if type(self.filename) == str:
+						# If the filename parameter input specified by the user is of str type, then we continue
 
-				raise TypeError('Password invalid. Password parameter should be in str format.')
-		# ----
+						if path.isfile(self.filename):
+							# If the file specified by the user does exists, then we continue
+
+							pass
+						else:
+							# If the file specified by the user does not exists, then we raise an error with a custom message
+
+							raise FileNotFoundError('Specified file does not exists.')
+					else:
+						# If the filename parameter input specified by the user is not of str type, then we raise an error on the console screen
+
+						raise TypeError('File name parameter should be in str format.')
+
+				# Validating the password parameter entered by the user
+				if self.password == None:
+					# If the password parameter is not specified by the user (default), then we raise an error with a custom message
+
+					raise SyntaxError('Password not specified.')
+				else:
+					# If the password parameter is specified by the user, then we continue for further validation
+
+					if type(self.password) == str:
+						# If the password parameter input specified by the user is of str type, then we continue to validate further
+
+						if len(self.password) > 4:
+							# If the password parameter input specified by the user is more than 4 character length, then we continue
+
+							pass
+						else:
+							# If the password parameter input specified by the user is less than 4 character length, then we raise an error with a custom message
+
+							raise SyntaxError('Password invalid. The password input should be a string with atleast 5 character length.')
+					else:
+						# If the password parameter input specified by the user is not of str type, then we raise an error on the console screen
+
+						raise TypeError('Password invalid. Password parameter should be in str format.')
+				# ----
+
+				# Checking the task specified and then continuing to execute the task
+				if self.task == None:
+					# If the task to be done is not specified by the user (default value), then we raise an error with a custom message
+
+					raise SyntaxError('Task not specified. The task is needed to be specified whether encrypt / decrypt.')
+				elif self.task.lower() == 'encrypt' or self.task.lower() == 'encryption':
+					# If the task specified is for encryption, then we continue to encrypt
+
+					if self.encrypt() == 0:
+						# If the encrypt() method returns 0, then the file has been encrypted successfully and we display the success message on the console screen
+
+						print(f'[ File encrypted : {self.filename} ]')
+					else:
+						# If the encrypt() method does not returns 0, then the file has been failed to encrypt and we display the failure message on the console screen
+
+						print(f'[ File failed to encrypt : {self.filename} ]')
+				elif self.task.lower() == 'decrypt' or self.task.lower() == 'decryption':
+					# If the task specified is for decryption, then we continue to decrypt
+
+					if self.decrypt() == 0:
+						# If the decrypt() method returns 0, then the file has been decrypted successfully and we display the success message on the console screen
+
+						print(f'[ File decrypted : {self.filename} ]')
+					else:
+						# If the decrypt() method does not returns 0, then the file has been failed to decrypt and we display the failure message on the console screen
+
+						print(f'[ File failed to decrypt : {self.filename} ]')
+				else:
+					# If the task specified is not recognized, then we raise an error with a custom message
+
+					raise ReferenceError('Task not recognized. Encrypt / decrypt are the two recognizable terms.')
+				del self.task
 
 	def generatekey(self):
 		""" This method / function serves the purpose of generating a special key for the encryption and decryption using the user entered password. This function takes the value of the user entered password from the class variable self.password.
@@ -328,7 +434,58 @@ class FileEncrypter:
 		return key
 
 	def encrypt(self):
-		pass
+		""" This method / function serves the feature of encrypting the contents of the file. This function reads the filename location input stored in the class variable self.filename. """
+
+		# Reading the contents of the file specified by the user
+		contents = open(self.filename, 'rb').read()
+		contents = contents.decode()
+
+		# Generating the encryption key
+		key = self.generatekey()
+
+		# Converting the plain text to cipher text
+		text = ''
+		for character in contents:
+			# Iterating through each character
+
+			text += chr((ord(character) + key) % 256)
+
+		# Changing the encoding of the content to base64 format
+		text = b64encode(text.encode())
+
+		# Saving the encrypted content back to the file
+		open(self.filename, 'wb').write(text)
+
+		# Deleting some of the variables declared within this function
+		del text, key, contents
+
+		# Returning 0 code (It will indicate that the function executed in success)
+		return 0
 
 	def decrypt(self):
-		pass
+		""" This method / function serves the feature of decrypting the contents of the file. This function reads the filename location input stored in the class variable self.filename. """
+
+		# Reading the contents of the file specified by the user
+		contents = open(self.filename, 'rb').read()
+
+		# Converting the base64 format text to plain text
+		contents = b64decode(contents).decode()
+
+		# Generating the encryption key
+		key = self.generatekey()
+
+		# Converting the cipher text to plain text
+		text = ''
+		for character in contents:
+			# Iterating through each character
+
+			text += chr((ord(character) - key) % 256)
+
+		# Saving the decrypted content back to the file
+		open(self.filename, 'wb').write(text.encode())
+
+		# Deleting some of the variables declared within this function
+		del text, key, contents
+
+		# Returning 0 code (It will indicate that the function executed in success)
+		return 0
