@@ -10,7 +10,7 @@ Last modified by : Rishav Das (https://github.com/rdofficial/)
 Last modified on : June 14, 2021
 
 Changes made in the last modification :
-1. Added the code for serving the functionality of encryption and decryption of files in the 'FileEncrypter' class.
+1. Added the code to serve the functionality to check password of the encryption / decryption in the 'FileEncrypter' class.
 
 Authors contributed to this script (Add your name below if you have contributed) :
 1. Rishav Das (github:https://github.com/rdofficial/, email:rdofficial192@gmail.com)
@@ -433,6 +433,29 @@ class FileEncrypter:
 		# Returning the generating key
 		return key
 
+	def checkpassword(self):
+		""" This method / function serves the functionality of checking the user entered password against the original password stored in the file. This function uses the value of password from the class variable self.password.
+
+		When a file is encrypted, the original password is also saved along with the encrypted contents of the file. Thus, we can verify the password of the file before decrypting the file. The function returns True if the password matches, and returns False if the password does not matches. """
+
+		# Reading the contents of the file
+		contents = open(self.filename, 'rb').read()
+		contents = contents.decode()
+
+		# Reading the password stored in the first line
+		password = contents.split('\n')[0]
+		del contents
+
+		# Checking the user entered password against the original password stored in the file
+		if hashlib.md5(self.password.encode()).hexdigest() == password:
+			# If the hashes of user entered password and the original password matches, then we return True
+
+			return True
+		else:
+			# If the hashes of user entered password and the original password matches, then we return False
+
+			return False
+
 	def encrypt(self):
 		""" This method / function serves the feature of encrypting the contents of the file. This function reads the filename location input stored in the class variable self.filename. """
 
@@ -451,10 +474,13 @@ class FileEncrypter:
 			text += chr((ord(character) + key) % 256)
 
 		# Changing the encoding of the content to base64 format
-		text = b64encode(text.encode())
+		text = b64encode(text.encode()).decode()
+
+		# Adding the password to the contents of the file
+		text = hashlib.md5(self.password.encode()).hexdigest() + '\n' + text
 
 		# Saving the encrypted content back to the file
-		open(self.filename, 'wb').write(text)
+		open(self.filename, 'wb').write(text.encode())
 
 		# Deleting some of the variables declared within this function
 		del text, key, contents
@@ -465,27 +491,40 @@ class FileEncrypter:
 	def decrypt(self):
 		""" This method / function serves the feature of decrypting the contents of the file. This function reads the filename location input stored in the class variable self.filename. """
 
-		# Reading the contents of the file specified by the user
-		contents = open(self.filename, 'rb').read()
+		# Validating the password before decrypting
+		if self.checkpassword():
+			# If the password matches, then we continue
 
-		# Converting the base64 format text to plain text
-		contents = b64decode(contents).decode()
+			# Reading the contents of the file specified by the user
+			contents = open(self.filename, 'rb').read()
 
-		# Generating the encryption key
-		key = self.generatekey()
+			# Removing the password part from the file
+			contents = contents.decode()
+			contents = ' '.join(contents.split('\n')[1:])
 
-		# Converting the cipher text to plain text
-		text = ''
-		for character in contents:
-			# Iterating through each character
+			# Converting the base64 format text to plain text
+			contents = b64decode(contents.encode()).decode()
 
-			text += chr((ord(character) - key) % 256)
+			# Generating the encryption key
+			key = self.generatekey()
 
-		# Saving the decrypted content back to the file
-		open(self.filename, 'wb').write(text.encode())
+			# Converting the cipher text to plain text
+			text = ''
+			for character in contents:
+				# Iterating through each character
 
-		# Deleting some of the variables declared within this function
-		del text, key, contents
+				text += chr((ord(character) - key) % 256)
 
-		# Returning 0 code (It will indicate that the function executed in success)
-		return 0
+			# Saving the decrypted content back to the file
+			open(self.filename, 'wb').write(text.encode())
+
+			# Deleting some of the variables declared within this function
+			del text, key, contents
+
+			# Returning 0 code (It will indicate that the function executed in success)
+			return 0
+		else:
+			# If the password does not matches, then we display the error message on the console screen
+
+			print(f'[ Incorrect password ]')
+			return 403
