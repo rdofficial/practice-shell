@@ -7,10 +7,10 @@ Author : Rishav Das (https://github.com/rdofficial/)
 Created on : June 13, 2021
 
 Last modified by : Rishav Das (https://github.com/rdofficial/)
-Last modified on : June 14, 2021
+Last modified on : June 15, 2021
 
 Changes made in the last modification :
-1. Added the code to serve the functionality to check password of the encryption / decryption in the 'FileEncrypter' class.
+1. Added the commented docs (__doc__) and the help section text to the 'FileEncrypter' class.
 
 Authors contributed to this script (Add your name below if you have contributed) :
 1. Rishav Das (github:https://github.com/rdofficial/, email:rdofficial192@gmail.com)
@@ -246,7 +246,43 @@ class StringEncrypter:
 		return self.text
 
 class FileEncrypter:
-	""" """
+	""" This class serves the functionality of encryption and decryption of files (text files and other readable files). The encryption is aided with a password, which is required whenever we want to encrypt / decrypt the file.
+
+	This class object takes input from the user in two ways :
+	1. Parsing the argument tokens
+
+		In this mode, the user entered arguments at the shell / terminal are passed to this class object at the parameter 'arguments'. The arguments that are parsed are listed below.
+
+		--file            Used to specify the filename
+		--password        Used to specify the password for encryption / decryption
+		--task            Used to specify the task whether encryption / decryption
+
+		The file name should be proper and valid. Below are some points listed for the input of the file parameter :
+		* If there are whitespaces within the filename, then use the whitespace escape sequence '\ ' in order to make sure the filename is properly accepted into the class object.
+		* The file should exists on the local machine as well as proper permission for the current user.
+
+		There is also another flag for documentation mode (printing the help section text for the class object / tool). The flag / argument is --help.
+
+		Example and syntax of the command is shown below.
+
+		encrypt file --password somehardpassword123 --file /location/to/file.txt --task encrypt
+		encrypt file --password somehardpassword123 --file /location/to/file.txt --task decrypt
+
+	2. Directly from specified parameters
+
+		In this mode, the user enters the parameters directly into the class object. Example as well as syntax is shown below.
+
+		FileEncrypter(
+			filename = '/location/to/file.txt',
+			password = 'somehardpassword123',
+		)
+
+		Here, there are no needs to use the whitespace escape sequence in order to input the filenames with whitespaces.
+
+	There are some points to be noted about this class :
+	1. This class / tool uses the same encryption algorithm as used by the basic StringEncrypter.
+	2. This class before decrypting the file, verifies the user entered password for encryption-decryption. If the password matches, then the process to decrypt the file. If the password does not matches, then an error message is displayed on the console screen.
+	"""
 
 	def __init__(self, filename = None, password = None, arguments = None):
 		# Checking if arguments provided or just the parameters directly
@@ -310,7 +346,7 @@ class FileEncrypter:
 			if self.documentation:
 				# If the user specified the documentation mode, then we continue to display the help text on the console screen
 
-				print('<-- help for StringEncrypter -->')
+				print('encrypt file\nUsage : encrypt file <arguments>\n\n"encrypt file" is a tool which serves the functionality of encryption and decryption of text files (also other readable files). The encryption is done using a password, also the same password will be required for the decryption of the file. This tool uses the same encryption algorithm as used by the rest of the encryption tools. This tool also provides the feature of checking the passwords before decryption.\n\nArguments are :\n--file            Used to specify the filename\n--password        Used to specify the password for encryption / decryption\n--task            Used to specify the task whether encryption / decryption\n--help            Used to display this help text\n\nThe file name should be proper and valid. Below are some points listed for the input of the file parameter :\n* If there are whitespaces within the filename, then use the whitespace escape sequence \'\\ \' in order to make sure the filename is properly accepted into the class object.\n* The file should exists on the local machine as well as proper permission for the current user.\n\nCheck out the docs for more info.')
 			else:
 				# If the user specified the execution mode, then we continue to execute the task
 
