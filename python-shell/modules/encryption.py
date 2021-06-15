@@ -10,7 +10,7 @@ Last modified by : Rishav Das (https://github.com/rdofficial/)
 Last modified on : June 15, 2021
 
 Changes made in the last modification :
-1. Added the commented docs (__doc__) and the help section text to the 'FileEncrypter' class.
+1. Created the 'ImageEncrypter' and the 'VideoEncrypter' class.
 
 Authors contributed to this script (Add your name below if you have contributed) :
 1. Rishav Das (github:https://github.com/rdofficial/, email:rdofficial192@gmail.com)
@@ -564,3 +564,39 @@ class FileEncrypter:
 
 			print(f'[ Incorrect password ]')
 			return 403
+
+class ImageEncrypter:
+	""" """
+
+	def __init__(self):
+		pass
+
+	def generatekey(self):
+		pass
+
+	def checkpassword(self):
+		pass
+
+	def encrypt(self):
+		pass
+
+	def decrypt(self):
+		pass
+
+class VideoEncrypter:
+	""" """
+
+	def __init__(self):
+		pass
+
+	def generatekey(self):
+		pass
+
+	def checkpassword(self):
+		pass
+
+	def encrypt(self):
+		pass
+
+	def decrypt(self):
+		pass
