@@ -10,7 +10,7 @@ Last modified by : Rishav Das (https://github.com/rdofficial/)
 Last modified on : June 16, 2021
 
 Changes made in the last modification :
-1. Added help text that will be displayed on the console screen for the documentation mode in the 'ImageEncrypter' class.
+1. Added help text that will be displayed on the console screen for the documentation mode in the 'StringEncrypter' class.
 
 Authors contributed to this script (Add your name below if you have contributed) :
 1. Rishav Das (github:https://github.com/rdofficial/, email:rdofficial192@gmail.com)
@@ -122,7 +122,7 @@ class StringEncrypter:
 			if self.documentation:
 				# If the user specified the documentation mode, then we continue to display the help text on the console screen
 
-				print('<-- help for StringEncrypter -->')
+				print('encrypt string\nUsage : encrypt string <arguments>\n\n"encrypt string" is a tool which serves the functionality of encryption and decryption of strings. The encryption is done using a password, also the same password will be required for the decryption of the file. This tool uses the same encryption algorithm as used by the rest of the encryption tools. Any string encrypted with this tool, can only be decrypted using this tool only.\n\nArguments are :\n--password        Used to specify the password for encryption / decryption\n--task            Used to specify the task whether encryption / decryption\n--help            Used to display this help text\n\nCheck out the docs for more info.')
 			else:
 				# If the user specified the execution mode, then we continue to execute the task
 
