@@ -10,7 +10,7 @@ Last modified by : Rishav Das (https://github.com/rdofficial/)
 Last modified on : June 16, 2021
 
 Changes made in the last modifications :
-1. Added the help section text for the documentation mode of the Mail.encryptedmail() method.
+1. Updated some minor errors.
 
 Authors contributed to this script (Add your name below if you have contributed) :
 1. Rishav Das (github:https://github.com/rdofficial/, email:rdofficial192@gmail.com)
@@ -852,7 +852,7 @@ class HttpRequest:
 		if self.url != None:
 			# If the URL is not left default, then we continue
 
-			if self.data != None:
+			if self.data == None:
 				# If the data is not defined for this GET request, then we continue without specifying the data
 
 				# Sending the GET request

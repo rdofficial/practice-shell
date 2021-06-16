@@ -7,10 +7,10 @@ Author : Rishav Das (https://github.com/rdofficial/)
 Created on : May 9, 2021
 
 Last modified by : Rishav Das (https://github.com/rdofficial/)
-Last modified on : June 6, 2021
+Last modified on : June 16, 2021
 
 Changes made in the last modification :
-1. Added the code for serving the functionality of the command 'connections' to the shell.
+1. Added the code for serving the functionality of the command 'http get' and 'http post' to the shell.
 
 Authors contributed to this script (Add your name below if you have contributed) :
 1. Rishav Das (github:https://github.com/rdofficial/, email:rdofficial192@gmail.com)
@@ -29,9 +29,7 @@ try:
 	from modules import directory as DirectoryTools
 	from modules.regular import TerminalCommands
 	from modules.characters import NumberDetails
-	from modules.networking import IP
-	from modules.networking import HttpServer
-	from modules.networking import Connections
+	from modules.networking import IP, HttpServer, HttpRequest, Connections
 except Exception as e:
 	# If there are any errors during the importing of the modules, then we display the error on the console screen
 
@@ -448,6 +446,36 @@ class Shell:
 
 					# Passing all the arguments and launching the HttpServer
 					HttpServer(arguments = token["arguments"])
+				elif token["arguments"][0] == 'get':
+					# If the argument entered by the user is for executing a HTTP GET request, then we continue to execute it with the user provided configs
+
+					# Passing all the parsed arguments and executing the HttpRequest
+					request = HttpRequest(arguments = token["arguments"])
+					request = request.get()
+					if request.status == 200:
+						# If the HTTP request return code states no failure (200), then we continue
+
+						print('Output :\n', request.text)
+						filelocation = input('\nEnter the file location to save the response (blank for skipping) : ')
+						if len(filelocation) == 0:
+							# If the user left the file location input blank, then we skip the process
+
+							return 0
+						else:
+							# If the user entered some input for the file location to save the response of the GET request, then we continue to save it
+
+							open(filelocation, 'w+').write(request.text)
+							print(f'[ Response of the HTTP GET request is saved at {filelocation} ]')
+
+						# Deleting some of the variables declared in this scope
+						del filelocation, request
+						return 0
+					else:
+						# If the HTTP request retrun code states failure (not 200), then we display the error message on the console screen
+
+						print(f'[ Error : Failed to pull out the HTTP GET request. Response code - {request.status} ]')
+						del request
+						return 0
 				else:
 					# If the argument entered by the user is not recognized, then we display the error message on the console screen
 
