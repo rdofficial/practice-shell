@@ -10,7 +10,7 @@ Last modified by : Rishav Das (https://github.com/rdofficial/)
 Last modified on : June 16, 2021
 
 Changes made in the last modification :
-1. Added the code for complete functionality of the 'ImageEncrypter' class.
+1. Added commented docs (__doc__) the 'ImageEncrypter' class.
 
 Authors contributed to this script (Add your name below if you have contributed) :
 1. Rishav Das (github:https://github.com/rdofficial/, email:rdofficial192@gmail.com)
@@ -566,7 +566,44 @@ class FileEncrypter:
 			return 403
 
 class ImageEncrypter:
-	""" """
+	""" This class serves the functionality of encryption and decryption of image files (JPG and PNG). The encryption is aided with a password, which is required whenever we want to encrypt / decrypt the file.
+
+	This class object takes input from the user in two ways :
+	1. Parsing the argument tokens
+
+		In this mode, the user entered arguments at the shell / terminal are passed to this class object at the parameter 'arguments'. The arguments that are parsed are listed below.
+
+		--file            Used to specify the image file
+		--password        Used to specify the password for encryption / decryption
+		--task            Used to specify the task whether encryption / decryption
+
+		The image file name should be proper and valid. Below are some points listed for the input of the file parameter :
+		* If there are whitespaces within the filename, then use the whitespace escape sequence '\ ' in order to make sure the filename is properly accepted into the class object.
+		* The image file should exists on the local machine as well as proper permission for the current user.
+
+		There is also another flag for documentation mode (printing the help section text for the class object / tool). The flag / argument is --help.
+
+		Example and syntax of the command is shown below.
+
+		encrypt image --password somehardpassword123 --file /location/to/image.jpg --task encrypt
+		encrypt image --password somehardpassword123 --file /location/to/image.jpg --task decrypt
+
+	2. Directly from specified parameters
+
+		In this mode, the user enters the parameters directly into the class object. Example as well as syntax is shown below.
+
+		ImageEncrypter(
+			filename = '/location/to/image.jpg',
+			password = 'somehardpassword123',
+		)
+
+		Here, there are no needs to use the whitespace escape sequence in order to input the filenames with whitespaces.
+
+	There are some points to be noted about this class :
+	1. This class / tool uses the same encryption algorithm as used by the basic StringEncrypter.
+	2. This class before decrypting the file, verifies the user entered password for encryption-decryption. If the password matches, then the process to decrypt the file. If the password does not matches, then an error message is displayed on the console screen.
+	3. The size of the image file will get a little increased after the encryption as well as the image would be unviewable graphically due to encrypted bytes.
+	"""
 
 	def __init__(self,filename = None, password = None, arguments = None):
 		# Checking if arguments provided or just the parameters directly
