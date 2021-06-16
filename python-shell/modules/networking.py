@@ -7,10 +7,10 @@ Author : Rishav Das (https://github.com/rdofficial/)
 Created on : June 1, 2021
 
 Last modified by : Rishav Das (https://github.com/rdofficial/)
-Last modified on : June 13, 2021
+Last modified on : June 16, 2021
 
 Changes made in the last modifications :
-1. Updated the entire commented docs (__doc__) of the Mail.encryptedmail() method.
+1. Added the help section text for the documentation mode of the Mail.encryptedmail() method.
 
 Authors contributed to this script (Add your name below if you have contributed) :
 1. Rishav Das (github:https://github.com/rdofficial/, email:rdofficial192@gmail.com)
@@ -1475,7 +1475,7 @@ class Mail:
 		if documentation:
 			# If the user specified the documentation mode, then we display the entire help text on the console screen
 
-			print('mail-custom\nUsage : mail-custom <arguments>\n\n\'mail-custom\' is a tool which serves the feature of sending emails from a custom SMTP server / email service. The tool requires the URL and port at which the SMTP server is running, as well as the login credentials of the user account from which the email is to be sent.\n\nThis tool / command can be used for these tasks :\n1. Sending emails from a custom SMTP server (A server either made by user, or someone).\n2. Sending emails from a email service that is not supported directly by the mail tool.\n\nArguments that can be used are :\n--sender        Used to specify the username of the sender\'s email address (e.g., user12345 from user12345@custom.com)\n--password      Used to specify the password of the sender\'s email address\n--receiver      Used to specify the receiver\'s email address\n--subject       Used to specify the subject of the email (to be sent)\n--body          Used to specify the file which contains the body of the email (to be sent)\n--server        Used to specify the URL at which the SMTP server is running\n--port          Used to specify the port at which the SMTP server is running\n\nExample of command (syntax) :\n\nmail-custom --sender <username> --password <password> --receiver <receiver\'s email address> --subject <subject> --body /file/body/contents.txt --server https://custom.mail.com/ --port 0000\n\nFor more detailed information, check out the docs.')
+			print('mail custom\nUsage : mail custom <arguments>\n\n\'mail custom\' is a tool which serves the feature of sending emails from a custom SMTP server / email service. The tool requires the URL and port at which the SMTP server is running, as well as the login credentials of the user account from which the email is to be sent.\n\nThis tool / command can be used for these tasks :\n1. Sending emails from a custom SMTP server (A server either made by user, or someone).\n2. Sending emails from a email service that is not supported directly by the mail tool.\n\nArguments that can be used are :\n--sender        Used to specify the username of the sender\'s email address (e.g., user12345 from user12345@custom.com)\n--password      Used to specify the password of the sender\'s email address\n--receiver      Used to specify the receiver\'s email address\n--subject       Used to specify the subject of the email (to be sent)\n--body          Used to specify the file which contains the body of the email (to be sent)\n--server        Used to specify the URL at which the SMTP server is running\n--port          Used to specify the port at which the SMTP server is running\n\nExample of command (syntax) :\n\nmail custom --sender <username> --password <password> --receiver <receiver\'s email address> --subject <subject> --body /file/body/contents.txt --server https://custom.mail.com/ --port 0000\n\nFor more detailed information, check out the docs.')
 			return 0
 		else:
 			# If the user specified the execution mode, then we continue
@@ -1840,7 +1840,7 @@ class Mail:
 		if documentation:
 			# If the user specified the documentation mode, then we display the entire help text on the console screen
 
-			print('<--Help for encrypted mail-->')
+			print('mail encrypted\nUsage : mail encrypted <arguments>\n\n"mail encrypted" is a tool for sending emails with encrypted body contents. The emails can be send either using fixed email services (like, gmail, yahoo mail, proton mail) or via using custom SMTP servers. The encryption of the body of the email is carried out using a user specified password. The password will be also required when decrypting the email. All the required information and input are made using arguments to this command.\n\nArguments are :\n--sender            Used to specify the sender\'s username / email address\n--password          Used to specify the password of the sender\n--receiver          Used to specify the receiver\'s email address\n--subject           Used to specify the subject of the email to be sent\n--body              Used to specify the body of the email to be sent (file)\n--encryption-key    Used to specify the key / password for encrypting / decrypting the email contents\n--service           Used to specify the email service to be used for sending the email\n\nPoints to be noted :\n1. The body argument is to be specified with a location of a file containing the contents / message to be sent via the email.\n2. The encryption key / password should be a string input without any whitespace character. If there are whitespace characters required, then use the escape sequence \'\\ \' for it.\n\nCheck out the docs for more info.')
 			return 0
 		else:
 			# If the user specified the execution mode, then we continue
