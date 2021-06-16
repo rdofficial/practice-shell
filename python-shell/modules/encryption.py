@@ -10,7 +10,7 @@ Last modified by : Rishav Das (https://github.com/rdofficial/)
 Last modified on : June 16, 2021
 
 Changes made in the last modification :
-1. Added commented docs (__doc__) the 'ImageEncrypter' class.
+1. Added help text that will be displayed on the console screen for the documentation mode in the 'ImageEncrypter' class.
 
 Authors contributed to this script (Add your name below if you have contributed) :
 1. Rishav Das (github:https://github.com/rdofficial/, email:rdofficial192@gmail.com)
@@ -667,7 +667,7 @@ class ImageEncrypter:
 			if self.documentation:
 				# If the user specified the documentation mode, then we continue to display the help text on the console screen
 
-				print('<-- Help for ImageEncrypter -->')
+				print('encrypt image\nUsage : encrypt image <arguments>\n\n"encrypt image" is a tool which serves the functionality of encryption and decryption of image files (JPG and PNG). The encryption is done using a password, also the same password will be required for the decryption of the file. This tool uses the same encryption algorithm as used by the rest of the encryption tools. This tool also provides the feature of checking the passwords before decryption.\n\nArguments are :\n--file            Used to specify the image file\n--password        Used to specify the password for encryption / decryption\n--task            Used to specify the task whether encryption / decryption\n--help            Used to display this help text\n\nThe image file name should be proper and valid. Below are some points listed for the input of the file parameter :\n* If there are whitespaces within the filename, then use the whitespace escape sequence \'\\ \' in order to make sure the filename is properly accepted into the class object.\n* The file should exists on the local machine as well as proper permission for the current user.\n\nCheck out the docs for more info.')
 			else:
 				# If the user specified the execution mode, then we continue to execute the task
 
