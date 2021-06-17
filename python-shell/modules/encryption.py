@@ -10,11 +10,7 @@ Last modified by : Rishav Das (https://github.com/rdofficial/)
 Last modified on : June 17, 2021
 
 Changes made in the last modification :
-<<<<<<< HEAD
-1. Updated the string input from the user part in the 'StringEncrypter' class.
-=======
-1.Updated the string input from the user part in the 'StringEncrypter' class.
->>>>>>> 2a7a2d88fe666aa536b3fe11d7702079429e2dda
+1.
 
 Authors contributed to this script (Add your name below if you have contributed) :
 1. Rishav Das (github:https://github.com/rdofficial/, email:rdofficial192@gmail.com)
@@ -24,7 +20,7 @@ Authors contributed to this script (Add your name below if you have contributed)
 try:
 	from base64 import b64encode, b64decode, decodebytes
 	from io import TextIOWrapper
-	from os import path
+	from os import path, listdir, remove, rename
 	import hashlib
 except Exception as e:
 	# If there are any errors during the importing of the modules, then we display the error on the console screen
@@ -914,6 +910,27 @@ class VideoEncrypter:
 		pass
 
 	def checkpassword(self):
+		pass
+
+	def encrypt(self):
+		pass
+
+	def decrypt(self):
+		pass
+
+class DirectoryEncrypter:
+	""" """
+
+	def __init__(self):
+		pass
+
+	def generatekey(self):
+		pass
+
+	def config(self):
+		pass
+
+	def check(self):
 		pass
 
 	def encrypt(self):
