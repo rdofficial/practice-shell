@@ -7,10 +7,10 @@ Author : Rishav Das (https://github.com/rdofficial/)
 Created on : May 9, 2021
 
 Last modified by : Rishav Das (https://github.com/rdofficial/)
-Last modified on : June 16, 2021
+Last modified on : June 17, 2021
 
 Changes made in the last modification :
-1. Added the code for serving the functionality of the command 'http get' and 'http post' to the shell.
+1. Added the code for serving the functionality of the command 'mail' and all its sub-tasks to the shell.
 
 Authors contributed to this script (Add your name below if you have contributed) :
 1. Rishav Das (github:https://github.com/rdofficial/, email:rdofficial192@gmail.com)
@@ -29,7 +29,7 @@ try:
 	from modules import directory as DirectoryTools
 	from modules.regular import TerminalCommands
 	from modules.characters import NumberDetails
-	from modules.networking import IP, HttpServer, HttpRequest, Connections
+	from modules.networking import IP, HttpServer, HttpRequest, Connections, Mail
 except Exception as e:
 	# If there are any errors during the importing of the modules, then we display the error on the console screen
 
@@ -544,6 +544,36 @@ class Shell:
 					# If the argument entered by the user is not recognized, then we display the error message on the console screen
 
 					print(f'[ Error : Unrecognized argument "{token["arguments"][0]}" for the command connections. Use connections --help command for more information. ]')
+		# ----
+
+		# MAIL RELATED COMMANDS
+		# ----
+		elif token["command"] == 'mail':
+			# If the user entered command is mail related tasks, then we continue
+
+			# Checking for the arguments if exists
+			if len(token["arguments"]) == 0:
+				# If there are no arguments entered by the user
+
+				print('[ mail : requires arguments, use mail --help for more info ]')
+			else:
+				# If there are atleast more than 0 arguments entered by the user
+
+				if token["arguments"][0] == 'custom':
+					# If the argument entered by the user is to send an email from custom SMTP server, then we continue
+
+					# Launching the Mail.custommail() function with passing all the parsed argument tokens into it
+					Mail.custommail(arguments = token["arguments"])
+				elif token["arguments"][0] == 'encrypted':
+					# If the argument entered by the user is to send an encrypted email, then we continue
+
+					# Launching the Mail.encryptedmail() function with passing all the parsed argument tokens into it
+					Mail.encryptedmail(arguments = token["arguments"])
+				elif token["arguments"][0][0:2] == '--':
+					# If the argument entered by the user is not a task, then we continue to send a basic email
+
+					# Launching the Mail() object with passing all the parsed argument tokens into it
+					Mail(arguments = token["arguments"])
 		# ----
 
 		# ARITHMETIC COMMANDS
