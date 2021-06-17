@@ -10,7 +10,7 @@ Last modified by : Rishav Das (https://github.com/rdofficial/)
 Last modified on : June 16, 2021
 
 Changes made in the last modification :
-1. Added help text that will be displayed on the console screen for the documentation mode in the 'StringEncrypter' class.
+1.Updated the string input from the user part in the 'StringEncrypter' class.
 
 Authors contributed to this script (Add your name below if you have contributed) :
 1. Rishav Das (github:https://github.com/rdofficial/, email:rdofficial192@gmail.com)
@@ -146,6 +146,9 @@ class StringEncrypter:
 
 					raise SyntaxError('Password input is invalid. Requires to be an alphanumeric string with length atleast 5.')
 				# ----
+
+				# Asking the user to enter the string for the encryption / decryption
+				self.text = input('Type >>')
 
 				# Checking the task specified and then continuing to execute the task
 				if self.task == None:
