@@ -10,7 +10,7 @@ Last modified by : Rishav Das (https://github.com/rdofficial/)
 Last modified on : June 17, 2021
 
 Changes made in the last modification :
-1. Added the code for serving the functionality of the command 'mail' and all its sub-tasks to the shell.
+1. Added the code for serving the functionality of the command 'encrypt' and all its sub-tasks to the shell.
 
 Authors contributed to this script (Add your name below if you have contributed) :
 1. Rishav Das (github:https://github.com/rdofficial/, email:rdofficial192@gmail.com)
@@ -30,6 +30,7 @@ try:
 	from modules.regular import TerminalCommands
 	from modules.characters import NumberDetails
 	from modules.networking import IP, HttpServer, HttpRequest, Connections, Mail
+	from modules import encryption
 except Exception as e:
 	# If there are any errors during the importing of the modules, then we display the error on the console screen
 
@@ -574,6 +575,41 @@ class Shell:
 
 					# Launching the Mail() object with passing all the parsed argument tokens into it
 					Mail(arguments = token["arguments"])
+		# ----
+
+		# ENCRYPTED RELATED COMMANDS
+		# ----
+		elif token["command"] == 'encrypt':
+			# If the user entered command is encryption related tasks, then we continue
+
+			# Checking for the arguments if exists
+			if len(token["arguments"]) == 0:
+				# If there are no arguments entered by the user
+
+				print('[ encrypt : requires arguments, use encrypt --help for more info ]')
+			else:
+				# If there are atleast more than 0 arguments entered by the user
+
+				if token["arguments"][0] == 'string':
+					# If the argument entered by the user is for encryption / decryption of a string, then we continue
+
+					# Launching the encryption.StringEncrypter class object passing all the parsed argument tokens
+					encryption.StringEncrypter(arguments = token["arguments"])
+				elif token["arguments"][0] == 'file':
+					# If the argument entered by the user is for encryption / decryption of a file (text file or any plain readable file), then we continue
+
+					# Launching the encryption.FileEncrypter class object passing all the parsed argument tokens
+					encryption.FileEncrypter(arguments = token["arguments"])
+				elif token["arguments"][0] == 'image':
+					# If the argument entered by the user is for encryption / decryption of an image file, then we continue
+
+					# Launching the encryption.ImageEncrypter class object passing all the parsed argument tokens
+					encryption.ImageEncrypter(arguments = token["arguments"])
+				else:
+					# If the argument entered by the user is not recognized, then we display the error message on the console screen
+
+					print(f'[ Error : Unrecognized argument "{token["arguments"][0]}" for the command encrypt. Use encrypt --help command for more information. ]')
+					return 0
 		# ----
 
 		# ARITHMETIC COMMANDS
