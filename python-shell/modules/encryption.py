@@ -10,7 +10,7 @@ Last modified by : Rishav Das (https://github.com/rdofficial/)
 Last modified on : June 17, 2021
 
 Changes made in the last modification :
-1.
+1. Half written the code for the method DirectoryEncrypter.config().
 
 Authors contributed to this script (Add your name below if you have contributed) :
 1. Rishav Das (github:https://github.com/rdofficial/, email:rdofficial192@gmail.com)
@@ -22,6 +22,8 @@ try:
 	from io import TextIOWrapper
 	from os import path, listdir, remove, rename
 	import hashlib
+	from json import loads, dumps
+	from datetime import datetime
 except Exception as e:
 	# If there are any errors during the importing of the modules, then we display the error on the console screen
 
@@ -925,10 +927,136 @@ class DirectoryEncrypter:
 		pass
 
 	def generatekey(self):
-		pass
+		""" This method / function serves the purpose of generating a special key for the encryption and decryption using the user entered password. This function reads the encryption password value from the class variable self.password.
+
+		This function returns the int format key back after the generation. """
+
+		# Generating the key from the encryption using the user entered password for encryption / decryption
+		key = 0
+		isEven = True
+
+		for i in self.password:
+			# Iterating over each character in the encrypted key entered by the user
+				
+			if isEven:
+				# If the current iteration is even number, then we add the char code value
+
+				key += ord(i)
+			else:
+				# If the current iteration is odd number (not even), then we subtract the char code value
+
+				key -= ord(i)
+		del isEven
+
+		# Making the key possitive
+		if key < 0:
+			# If the key value is less than 0, then we change the negative sign to possitive by simply multiplying it with -1
+
+			key *= (-1)
+
+		# Adding the length of the password to itself
+		key += len(self.password)
+
+		# Returning the generating key
+		return key
 
 	def config(self):
-		pass
+		"""
+		This method / function serves the functionability of checking the config file and loading all the details of the config file into the class object. This function reads the .encryption_config file at the specified folder and loads the details into class variables like
+
+		self.password_hash			-> stores the password hash
+		self.ignorefiles   			-> stores the list of files to be ignored during the encryption / decryption
+		self.originalfilenames      -> stores the list of original names of the file before encryption
+		self.created_on             -> stores the timestamp when the first encryption was applied on this directory
+		self.last_modified           -> stores the timestamp when the encryption / decryption was executed latest
+		
+		The .encryption_config is a JSON file. The structure of the .encryption_config file is given below.
+		{
+			"password" : "...",
+			"ignorefiles" : [],
+			"originalfilenames" : [],
+			"created_on" : ...,
+			"last_modified" : ...,
+		}
+		"""
+
+		# Reading the contents of the .encryption_config file
+		# ----
+		# Checking whether the config file exists or not in the user specified directory
+		if path.isfile(self.directory + '.encryption_config'):
+			# If the config file exist in the user specified directory, then we continue for further checking
+
+			# Reading the contents of the config file
+			contents = loads(open(f'{self.directory}.encryption_config', 'r').open())
+
+			# Setting the information extracted from the config file to the class variables
+			self.password_hash = contents["password"]
+			self.ignorefiles = contents["ignorefiles"]
+			self.originalfilenames = contents["originalfilenames"]
+			self.created_on = contents["created_on"]
+			self.last_modified = contents["last_modified"]
+
+			# Validating the information extracted
+			if type(self.password_hash) == str and len(self.password_hash) > 5:
+				# If the hash of the password is of proper length, then we continue
+
+				pass
+			else:
+				# If the hash of the password is not of proper length, then we display the error message on the console screen
+
+				print(f'password hash is invalid in the config file.')
+				return 0
+
+			if type(self.ignorefiles) == list:
+				# If the data type of the ignorefiles parameter is of a list, then we continue
+
+				pass
+			else:
+				# If the data type of the ignorefiles parameter is not a list, then we display the error message on the console screen
+
+				print(f'ignorefiles is invalid in the config file. Required to be a list / array.')
+				return 0
+
+			if type(self.originalfilenames) == list:
+				# If the data type of the originalfilenames parameter is of a list, then we continue
+
+				pass
+			else:
+				# If the data type of the originalfilenames parameter is not a list, then we display the error message on the console screen
+
+				print(f'originalfilenames is invalid in the config file. Required to be a list / array.')
+				return 0
+
+			if type(self.created_on) == float or type(self.created_on) == int:
+				# If the data type of the created_on parameter is either int or float, then we continue
+
+				self.created_on = datetime.fromtimestamp(self.created_on).ctime()
+			else:
+				# If the data type of the created_on parameter is neither int nor float, then we display the error message on the console screen
+
+				print(f'created_on is invalid. Required to be a timestamp.')
+
+			if type(self.last_modified) == float or type(self.last_modified) == int:
+				# If the data type of the last_modified parameter is either int or float, then we continue
+
+				if self.last_modified == 0.0:
+					# If the last_modified parameter is 0.0 i.e., it is not defined, then we define the self.last_modified variable as an empty string
+
+					self.last_modified = ''
+				else:
+					# If the last_modified parameter is not 0.0, then we continue to store the ctime value in the self.last_modified class variable
+
+					self.last_modified = datetime.fromtimestamp(self.last_modified).ctime()
+			else:
+				# If the data type of the last_modified parameter is neither int or float, then we display the error message on the console screen
+
+				print(f'last_modified is invalid. Required to be a timestamp.')
+		else:
+			# If the config file does not exists in the user specified directory, then we display the error message on the console screen
+
+			print(f'config file not found in the specified directory "{self.directory}".')
+			return 0
+		# ----
 
 	def check(self):
 		pass
