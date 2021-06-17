@@ -476,6 +476,36 @@ class Shell:
 						print(f'[ Error : Failed to pull out the HTTP GET request. Response code - {request.status} ]')
 						del request
 						return 0
+				elif token["arguments"][0] == 'post':
+					# If the argument entered by the user is for executing a HTTP POST request, then we continue to execute it with the user provided configs
+
+					# Passing all the parsed arguments and executing the HttpRequest
+					request = HttpRequest(arguments = token["arguments"])
+					request = request.post()
+					if request.status == 200:
+						# If the HTTP request return code states no failure (200), then we continue
+
+						print('Output :\n', request.text)
+						filelocation = input('\nEnter the file location to save the response (blank for skipping) : ')
+						if len(filelocation) == 0:
+							# If the user left the file location input blank, then we skip the process
+
+							return 0
+						else:
+							# If the user entered some input for the file location to save the response of the GET request, then we continue to save it
+
+							open(filelocation, 'w+').write(request.text)
+							print(f'[ Response of the HTTP POST request is saved at {filelocation} ]')
+
+						# Deleting some of the variables declared in this scope
+						del filelocation, request
+						return 0
+					else:
+						# If the HTTP request retrun code states failure (not 200), then we display the error message on the console screen
+
+						print(f'[ Error : Failed to pull out the HTTP POST request. Response code - {request.status} ]')
+						del request
+						return 0
 				else:
 					# If the argument entered by the user is not recognized, then we display the error message on the console screen
 
