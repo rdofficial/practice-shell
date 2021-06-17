@@ -10,7 +10,11 @@ Last modified by : Rishav Das (https://github.com/rdofficial/)
 Last modified on : June 17, 2021
 
 Changes made in the last modification :
+<<<<<<< HEAD
 1. Updated the string input from the user part in the 'StringEncrypter' class.
+=======
+1.Updated the string input from the user part in the 'StringEncrypter' class.
+>>>>>>> 2a7a2d88fe666aa536b3fe11d7702079429e2dda
 
 Authors contributed to this script (Add your name below if you have contributed) :
 1. Rishav Das (github:https://github.com/rdofficial/, email:rdofficial192@gmail.com)
