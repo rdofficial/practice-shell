@@ -7,10 +7,10 @@ Author : Rishav Das (https://github.com/rdofficial/)
 Created on : June 13, 2021
 
 Last modified by : Rishav Das (https://github.com/rdofficial/)
-Last modified on : June 17, 2021
+Last modified on : June 18, 2021
 
 Changes made in the last modification :
-1. Half written the code for the method DirectoryEncrypter.config().
+1. Added the code for loading config information as well as config file verification in the class 'DirectoryEncrypter()'.
 
 Authors contributed to this script (Add your name below if you have contributed) :
 1. Rishav Das (github:https://github.com/rdofficial/, email:rdofficial192@gmail.com)
@@ -960,7 +960,7 @@ class DirectoryEncrypter:
 		# Returning the generating key
 		return key
 
-	def config(self):
+	def config(self. display = False):
 		"""
 		This method / function serves the functionability of checking the config file and loading all the details of the config file into the class object. This function reads the .encryption_config file at the specified folder and loads the details into class variables like
 
@@ -978,16 +978,19 @@ class DirectoryEncrypter:
 			"created_on" : ...,
 			"last_modified" : ...,
 		}
+
+		This function also takes one argument 'display'. This display argument determines whether to print the config information on the console screen. If the display argument is marked true, then the config information is printed on the console screen, else nothing happens. The display argument is by default False.
 		"""
 
-		# Reading the contents of the .encryption_config file
+		# Fetching the contents of the .encryption_config file
 		# ----
 		# Checking whether the config file exists or not in the user specified directory
 		if path.isfile(self.directory + '.encryption_config'):
 			# If the config file exist in the user specified directory, then we continue for further checking
 
 			# Reading the contents of the config file
-			contents = loads(open(f'{self.directory}.encryption_config', 'r').open())
+			contents = loads(open(f'{self.directory}.encryption_config', 'rb').open())
+			contents = b64decode(contents).decode()
 
 			# Setting the information extracted from the config file to the class variables
 			self.password_hash = contents["password"]
@@ -1058,8 +1061,57 @@ class DirectoryEncrypter:
 			return 0
 		# ----
 
-	def check(self):
-		pass
+		# Displaying the configs on the console screen
+		# ----
+		# Checking the display argument passed to this function
+		if display:
+			# If the display argument is marked true, then we continue to display the config information
+
+			print(f'\nConfig for encryption on this directory ({self.directory}) : ')
+			print('[#] Files to ignore : ')
+			for i in self.ignorefiles:
+				print(i, end = ', ')
+			print('[#] Original filenames : ')
+			for i in self.originalfilenames:
+				print(f'{i["original_name"]} -> {i["encrypted_name"]}', end = ', ')
+			print(f'[#] Created on : {self.created_on}')
+			print(f'[#] Last modified : {self.last_modified}')
+		# ----
+
+	def check(self, password = False, overall = False):
+		""" This method / function serves the functionalibility of checking the password and other required details of the directory. This function gets the value of the password from the class variable self.password. """
+
+		# Running the config method in order to extract the information stored in the .encryption_config file
+		self.config()
+
+		# Checking for the task to be done (using the arguments specified for this function)
+		if password:
+			# If the password argument is marked true, then we continue to check for the password verification
+
+			# Checking the password specified by the user against the hash of the password stored in the config file
+			if type(self.password) == str:
+				# If the password specified by the user is of str type, then we continue
+
+				if hashlib.md5(self.password.encode()).hexdigest() == self.password_hash:
+					# If the hash of the password specified by the user matches with the original password hash, then we return True
+
+					return True
+				else:
+					# If the hash of the password specified by the user does not matches with the original password hash, then we return False
+
+					return False
+			else:
+				# If the password specified by the user is not of str type, then we raise an error with a custom message
+
+				raise TypeError('Password is invalid. Password specified by the user should be a string.')
+		elif overall:
+			# If the overall argument is marked true, then we continue to check for the overall config information verification
+
+			pass
+		else:
+			# If neither the password argument not the overall argument are marked true, then we pass
+
+			pass
 
 	def encrypt(self):
 		pass
