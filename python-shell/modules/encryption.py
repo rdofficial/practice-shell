@@ -10,7 +10,7 @@ Last modified by : Rishav Das (https://github.com/rdofficial/)
 Last modified on : June 18, 2021
 
 Changes made in the last modification :
-1. Added the code for loading config information as well as config file verification in the class 'DirectoryEncrypter()'.
+1. Added the code for overall config information verification in the class 'DirectoryEncrypter()'.
 
 Authors contributed to this script (Add your name below if you have contributed) :
 1. Rishav Das (github:https://github.com/rdofficial/, email:rdofficial192@gmail.com)
@@ -1107,7 +1107,35 @@ class DirectoryEncrypter:
 		elif overall:
 			# If the overall argument is marked true, then we continue to check for the overall config information verification
 
-			pass
+			# Checking for the password by matching the hashes
+			if type(self.password) == str:
+				# If the password specified by the user is of str type, then we continue
+
+				if hashlib.md5(self.password.encode()).hexdigest() == self.password_hash:
+					# If the hash of the password specified by the user matches with the original password hash, then we pass
+
+					pass
+				else:
+					# If the hash of the password specified by the user does not matches with the original password hash, then we return False
+
+					return False
+			else:
+				# If the password specified by the user is not of str type, then we raise an error with a custom message
+
+				raise TypeError('Password is invalid. Password specified by the user should be a string.')
+
+			# Checking for the ignorefiles and originalfilenames fields in the config informatin
+			if type(self.ignorefiles) == list and type(self.originalfilenames) == list:
+				# If the data type of both the ignorefiles and originalfilenames are of list, then we pass
+
+				pass
+			else:
+				# If the data type of either ignorefiles or originalfilenames is not list, then we return False
+
+				return False
+
+			# If the code execution reached upto here, then we return True as all the validation of the config information has been passed without any errors
+			return True
 		else:
 			# If neither the password argument not the overall argument are marked true, then we pass
 
