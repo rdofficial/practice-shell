@@ -10,7 +10,7 @@ Last modified by : Rishav Das (https://github.com/rdofficial/)
 Last modified on : June 18, 2021
 
 Changes made in the last modification :
-1. Added the code for overall config information verification in the class 'DirectoryEncrypter()'.
+1. Added the code for encryption of text files and plain files in the class 'DirectoryEncrypter()'.
 
 Authors contributed to this script (Add your name below if you have contributed) :
 1. Rishav Das (github:https://github.com/rdofficial/, email:rdofficial192@gmail.com)
@@ -923,8 +923,9 @@ class VideoEncrypter:
 class DirectoryEncrypter:
 	""" """
 
-	def __init__(self):
-		pass
+	def __init__(self, directory = None, password = None, arguments = None):
+		self.directory = directory
+		self.password = password
 
 	def generatekey(self):
 		""" This method / function serves the purpose of generating a special key for the encryption and decryption using the user entered password. This function reads the encryption password value from the class variable self.password.
@@ -960,7 +961,7 @@ class DirectoryEncrypter:
 		# Returning the generating key
 		return key
 
-	def config(self. display = False):
+	def config(self, display = False):
 		"""
 		This method / function serves the functionability of checking the config file and loading all the details of the config file into the class object. This function reads the .encryption_config file at the specified folder and loads the details into class variables like
 
@@ -1142,7 +1143,111 @@ class DirectoryEncrypter:
 			pass
 
 	def encrypt(self):
-		pass
+		""" This method / function serves the functionability of encrypting the files in the user specified directory. This function reads the directory location input from the class variable self.directory. The process of the encryption / the steps of encryption are listed below :
+		1. Generate the encryption key
+		2. Encrypt each files in the directory one by one.
+		3. Rename the filenames with the encrypted version of filenames.
+		4. Create the config file in the directory.
+
+		Some points to be noted :
+		1. Each file in the directory should be properly listed as per their extensions. For no extensions, it would be considered a text file (all source code files, config files, script files are included here). The binary files with different data inside them (executable files, etc) will not be encrypted by this function, they will be marked in the ignorefiles list.
+		"""
+
+		# Creating the class variables that are not defined before encryption
+		self.ignorefiles = []
+		self.originalfilenames = []
+		self.created_on = datetime.now().timestamp()
+		self.last_modified = 0.0
+
+		# Generating the key for the encryption
+		key = self.generatekey()
+
+		# Getting the list of the files in the user specified directory
+		files = listdir(self.directory)
+
+		# Encrypting the contents of each file
+		# ----
+		for file in files:
+			# Iterating over the list of the files
+
+			if file.lower()[len(file)-4:] == '.jpg' or file.lower()[len(file)-4:] == '.png' or file.lower()[len(file)-5:] == '.jpeg' or file.lower()[len(file)-4:] == '.gif':
+				# If the extension of the file states that the file is a type of image, then we continue to encrypt the image file
+
+				pass
+			elif file.lower()[len(file)-4:] == '.mp4' or file.lower()[len(file)-4:] == '.mkv' or file.lower()[len(file)-4:] == '.3gp':
+				# If the extension of the file states that the file is a type of video, then we continue to encrypt the video file
+
+				pass
+			else:
+				# If the extension of the file is not recognized, then we consider the file being just a text document or else and encrypt it in that way
+
+				try:
+					# Reading the contents of the file
+					contents = open(self.directory + file, 'rb').read()
+					contents = contents.decode()
+
+					# Encrypting the contents of the file
+					text = ''
+					for character in contents:
+						# Iterating through each character in the plain text
+
+						text += chr((ord(character) + key) % 256)
+
+					# Changing the encoding of the cipher text
+					contents = b64encode(text.encode())
+
+					# Saving the contents back to the file
+					open(self.directory + file, 'wb').write(contents)
+
+					# Renaming the file with a new encrypted name
+					encryptedfilename = ''
+					for character in file:
+						# Iterating through each character in the file's original name
+
+						encryptedfilename += chr((ord(character) + key) % 256)
+					encryptedfilename = b64encode(encryptedfilename.encode()).decode()
+					rename(self.directory + file, self.directory + encryptedfilename)
+
+					# Adding the changed name and the original name in the self.originalnames list
+					self.originalfilenames.append({
+						"original_name" : file,
+						"encrypted_name" : encryptedfilename,
+					})
+
+					# Deleting some of variables defined under this scope
+					del contents, encryptedfilename
+				except Exception as e:
+					# If there are any errors encountered during the process, then we skip the current file from being encrypted
+
+					self.ignorefiles.append(file)
+					print(file, e)
+					print(f'[!] Skipping {file}')
+					continue
+				else:
+					# if there are no errors encountered during the process, then we display the 'encrypted' message on the console screen
+
+					print(f'[$] {file} : encrypted')
+		# ----
+
+		# Creating the config file in the directory
+		try:
+			open(self.directory + '.encryption_config', 'w+').write(dumps({
+				"password" : hashlib.md5(self.password.encode()).hexdigest(),
+				"ignorefiles" : self.ignorefiles,
+				"originalfilenames" : self.originalfilenames,
+				"created_on" : self.created_on,
+				"last_modified" : self.last_modified,
+				}))
+		except Exception as e:
+			# If there are any errors encountered during the generation of the encryption config file, then we display the error message on the console screen
+
+			print(f'[ Error : Failed to generate the config file at {self.directory}. {e} ]')
+			return 0
+		else:
+			# If there are no errors encountered during the generation of the encryption config file, then we display the success message on the console screen
+
+			print(f'[ Encryption config file created at {self.directory} ]')
+			return 0
 
 	def decrypt(self):
 		pass
