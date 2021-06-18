@@ -10,7 +10,7 @@ Last modified by : Rishav Das (https://github.com/rdofficial/)
 Last modified on : June 18, 2021
 
 Changes made in the last modification :
-1. Added the code for encryption of text files and plain files in the class 'DirectoryEncrypter()'.
+1. Updated the minor string user input error in the 'StringEncrypter' class.
 
 Authors contributed to this script (Add your name below if you have contributed) :
 1. Rishav Das (github:https://github.com/rdofficial/, email:rdofficial192@gmail.com)
@@ -149,9 +149,6 @@ class StringEncrypter:
 					raise SyntaxError('Password input is invalid. Requires to be an alphanumeric string with length atleast 5.')
 				# ----
 
-				# Asking the user to enter the string for the encryption / decryption
-				self.text = input('Type >>')
-
 				# Checking the task specified and then continuing to execute the task
 				if self.task == None:
 					# If the task to be done is not specified by the user (default value), then we raise an error with a custom message
@@ -160,11 +157,19 @@ class StringEncrypter:
 				elif self.task.lower() == 'encrypt' or self.task.lower() == 'encryption':
 					# If the task specified is for encryption, then we continue to encrypt
 
+					# Asking the user to enter the string for the encryption / decryption
+					self.text = input('Type>> ')
+
+					# Launching the encrypt method in order to encrypt the user string entered by the user
 					self.encrypt()
 					print(f'Output :\n{self.text}')
 				elif self.task.lower() == 'decrypt' or self.task.lower() == 'decryption':
 					# If the task specified is for decryption, then we continue to decrypt
 
+					# Asking the user to enter the string for the encryption / decryption
+					self.text = input('Type>> ')
+
+					# Launching the decrypt method in order to decrypt the user string entered by the user
 					self.decrypt()
 					print(f'Output :\n{self.text}')
 				else:
