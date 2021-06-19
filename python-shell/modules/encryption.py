@@ -7,10 +7,10 @@ Author : Rishav Das (https://github.com/rdofficial/)
 Created on : June 13, 2021
 
 Last modified by : Rishav Das (https://github.com/rdofficial/)
-Last modified on : June 18, 2021
+Last modified on : June 1, 2021
 
 Changes made in the last modification :
-1. Updated the minor string user input error in the 'StringEncrypter' class.
+1. Added the code for encryption of the image files in the 'DirectoryEncrypter' class.
 
 Authors contributed to this script (Add your name below if you have contributed) :
 1. Rishav Das (github:https://github.com/rdofficial/, email:rdofficial192@gmail.com)
@@ -1178,11 +1178,62 @@ class DirectoryEncrypter:
 			if file.lower()[len(file)-4:] == '.jpg' or file.lower()[len(file)-4:] == '.png' or file.lower()[len(file)-5:] == '.jpeg' or file.lower()[len(file)-4:] == '.gif':
 				# If the extension of the file states that the file is a type of image, then we continue to encrypt the image file
 
-				pass
-			elif file.lower()[len(file)-4:] == '.mp4' or file.lower()[len(file)-4:] == '.mkv' or file.lower()[len(file)-4:] == '.3gp':
+				try:
+					# Reading the contents of the file
+					contents = open(self.directory + file, 'rb').read()
+					contents = b64encode(contents).decode()
+
+					# Encrypting the contents of the file
+					text = ''
+					for character in contents:
+						# Iterating through each character in the plain text
+
+						text += chr((ord(character) + key) % 256)
+
+					# Changing the encoding of the cipher text
+					contents = b64encode(text.encode())
+
+					# Saving the contents back to the file
+					open(self.directory + file, 'wb').write(contents)
+
+					# Renaming the file with a new encrypted name
+					encryptedfilename = ''
+					for character in file:
+						# Iterating through each character in the file's original name
+
+						encryptedfilename += chr((ord(character) + key) % 256)
+					encryptedfilename = b64encode(encryptedfilename.encode()).decode()
+					rename(self.directory + file, self.directory + encryptedfilename)
+
+					# Adding the changed name and the original name in the self.originalnames list
+					self.originalfilenames.append({
+						"original_name" : file,
+						"encrypted_name" : encryptedfilename,
+					})
+
+					# Deleting some of variables defined under this scope
+					del contents, encryptedfilename
+				except Exception as e:
+					# If there are any errors encountered during the process, then we skip the current image file from being encrypted
+
+					self.ignorefiles.append(file)
+					print(f'[!] Skipping {file}')
+					continue
+				else:
+					# if there are no errors encountered during the process, then we display the 'encrypted' message on the console screen
+
+					print(f'[$] {file} : encrypted')
+			elif file.lower()[len(file)-4:] == '.mp4' or file.lower()[len(file)-4:] == '.mkv' or file.lower()[len(file)-4:] == '.3gp' or file.lower()[len(file)-5:] == '.mpeg':
 				# If the extension of the file states that the file is a type of video, then we continue to encrypt the video file
 
-				pass
+				# ----
+				# 1. This part of the encryption does not works currently, as the video encryption is not developed yet.
+				# 2. If any files are with mp4, mkv, 3gp extensions (video file extensions), then we mark the files in the ignorefiles list and skip the encryption process for this file.
+				# ----
+
+				self.ignorefiles.append(file)
+				print(f'[!] Skipping {file} [Video files not supported]')
+				continue
 			else:
 				# If the extension of the file is not recognized, then we consider the file being just a text document or else and encrypt it in that way
 
@@ -1225,7 +1276,6 @@ class DirectoryEncrypter:
 					# If there are any errors encountered during the process, then we skip the current file from being encrypted
 
 					self.ignorefiles.append(file)
-					print(file, e)
 					print(f'[!] Skipping {file}')
 					continue
 				else:
