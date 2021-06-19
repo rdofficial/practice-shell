@@ -1149,7 +1149,7 @@ class DirectoryEncrypter:
 
 	def encrypt(self):
 		""" This method / function serves the functionability of encrypting the files in the user specified directory. This function reads the directory location input from the class variable self.directory. The process of the encryption / the steps of encryption are listed below :
-		1. Generate the encryption key
+		1. Generate the encryption key.
 		2. Encrypt each files in the directory one by one.
 		3. Rename the filenames with the encrypted version of filenames.
 		4. Create the config file in the directory.
@@ -1240,4 +1240,87 @@ class DirectoryEncrypter:
 			return 0
 
 	def decrypt(self):
-		pass
+		""" This method / function serves the functionability of decrypting the files in the user specified directory. This function reads the directory location input from the class variable self.directory. The process of the decryption / the steps of decryption are listed below :
+		1. Check the password specified by the user against the original password hash.
+		2. Generate the decryption key.
+		3. Decrypt all the files except the ones which are listed in the ignorefiles list.
+		4. Delete the .encryption_config file present in the user specified directory.
+		"""
+
+		# Printing the decryption message on the console screen
+		print(f'\n[ Decrypting {self.directory} ]\n')
+
+		# Launching the check() method in order to read the config file as well as check the password as well
+		self.check(overall = True)
+
+		# Generating the key for the encryption
+		key = self.generatekey()
+
+		# Getting the list of the files in the user specified directory
+		files = listdir(self.directory)
+
+		# Decrypting the contents of each file
+		# ----
+		for file in files:
+			# Iterating over the list of files
+
+			try:
+				# Checking whether the file is mentioned in the ignorefiles list or not
+				if file in self.ignorefiles:
+					# If the currently iterated file is mentioned in the ignorefile list, then we skip the current iteration
+
+					print(f'[#] Ignored : {file}')
+
+				# Decrypting the file names
+				filename = b64decode(file.encode()).decode()
+				decryptedfilename = ''
+				for character in filename:
+					# Iterating over each characters in the filename
+
+					decryptedfilename += chr((ord(character) - key) % 256)
+
+				# Renaming the currently iterated file with their decrypted version
+				rename(self.directory + file, self.directory + decryptedfilename)
+				file = decryptedfilename
+
+				# Reading the contents of the file
+				contents = open(self.directory + file, 'rb').read()
+				contents = b64decode(contents).decode()
+
+				# Converting the contents of the file from cipher code to plain text
+				text = ''
+				for character in contents:
+					# Iterating over each character in the file contents
+
+					text += chr((ord(character) - key) % 256)
+
+				# Saving the contents back to the file
+				contents = decodebytes(contents.encode())
+				open(self.directory + file, 'wb').write(contents)
+
+				# Deleting the variables declared under this scope
+				del filename, decryptedfilename, contents, text
+			except Exception as e:
+				# If there are any errors encountered during the process, then we skip the current image file from being decrypted
+
+				print(f'[!] Skipping {file}')
+				continue
+			else:
+				# if there are no errors encountered during the process, then we display the 'decrypted' message on the console screen
+
+				print(f'[$] {file} : decrypted')
+		# ----
+
+		# Removing the config file from the directory after confirming from the user
+		choice = input('\nRemove the config file? (y/n) : ')
+		if choice.lower() == 'yes' or chocie.lower() == 'y':
+			# If the user entered the choice to delete the config file at the directory, then we continue to do so
+
+			remove(self.directory + '.encryption_config')
+		else:
+			# If the user entered the choice to not delete the config file at the directory, then we skip the process
+
+			pass
+
+		# Printing the message of the decryption completion on the console screen
+		print(f'[$] Decryption process completed')
