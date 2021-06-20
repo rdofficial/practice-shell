@@ -10,8 +10,7 @@ Last modified by : Rishav Das (https://github.com/rdofficial/)
 Last modified on : June 19, 2021
 
 Changes made in the last modification :
-1. Added the code for the decryption in the 'DirectoryEncrypter' class. Added the code to the method DirectoryEncrypter.decrypt().
-2. Updated some errors and removed the original files list property from the encryption config file in the class 'DirectoryEncrypter'.
+1. Added the code in the __init__ method in the 'DirectoryEncrypter' class for parsing user entered argument token, validating the user entered information, etc.
 
 Authors contributed to this script (Add your name below if you have contributed) :
 1. Rishav Das (github:https://github.com/rdofficial/, email:rdofficial192@gmail.com)
@@ -930,8 +929,151 @@ class DirectoryEncrypter:
 	""" """
 
 	def __init__(self, directory = None, password = None, arguments = None):
-		self.directory = directory
-		self.password = password
+		# Checking if arguments provided or just the parameters directly
+		if arguments == None:
+			# If the arguments are not passed to this function by the user, then we continue to use the default provided values
+
+			self.directory = directory
+			self.password = password
+		else:
+			# If the arguments are passed to this function by the user, then we continue to parse the arguments
+
+			# Parsing the arguments entered to this function
+			# ----
+			# Setting the default value of the variables to None
+			self.directory = None
+			self.password = None
+			self.documentation = False
+			self.task = None
+
+			# Iterating through each argument to filter out the values
+			for index, argument in enumerate(arguments):
+				# Iterating through each argument item
+
+				if argument == '--password':
+					# If the argument is for specifying the password, then we continue to parse the next argument as the entered value
+
+					try:
+						self.password = arguments[index + 1]
+					except IndexError:
+						# If the next argument is out of the list index (i.e., it does not exists), then we continue for the next iteration
+
+						continue
+
+				if argument == '--directory':
+					# If the argument is for specifying the directory for encryption, then we continue to parse the next argument as the entered value
+
+					try:
+						self.directory = arguments[index + 1]
+					except IndexError:
+						# If the next argument is out of the list index (i.e., it does not exists), then we continue for the next iteration
+
+						continue
+
+				if argument == '--task':
+					# If the argument is for specifying the task (encryption / decryption), then we continue to parse the next argument as the entered value
+
+					try:
+						self.task = arguments[index + 1]
+					except IndexError:
+						# If the next argument is out of the list index (i.e., it does not exists), then we continue for the next iteration
+
+						continue
+
+				if argument == '--help':
+					# If the argument is for specifying the help, then we continue to mark the documentation mode to be true
+
+					self.documentation = True
+			# ----
+
+			# Checking whether the task is to be in documentation mode or execution mode
+			if self.documentation:
+				# If the user specified the documentation mode, then we continue to display the help text on the console screen
+
+				print('<-- help for directory encrypte -->')
+			else:
+				# If the user specified the execution mode, then we continue to execute the task
+
+				# Validating the user entered directory location
+				# ----
+				# Checking the directory location input type
+				if type(self.directory) == str:
+					# If the directory's value as per entered by the user is a string type variable, then we continue for further validation
+
+					# Checking whether the directory exists or not
+					if path.isdir(self.directory):
+						# If the user specified directory exists in the local machine, then we continue for further validation
+
+						# Adding a / at the end of the directory location (path) if not present
+						if self.directory[len(self.directory)-1] != '/':
+							# If the '/' is not present at the end of the directory location (path), then we continue to add it
+
+							self.directory += '/'
+					else:
+						# If the user specified directory does not exists in the local machine, then we raise an error with a custom message
+
+						raise ValueError(f'No such directory found "{self.directory}".')
+				else:
+					# If the user entered directory's value is a non string variable, then we raise an error with a custom message
+
+					raise SyntaxError('Directory input is invalid. Requires to be an alphanumeric string.')
+				# ----
+
+				# Validating the user entered password
+				# ----
+				# Checking the password input type
+				if type(self.password) == str:
+					# If the password's value as per entered by the user is a string type variable, then we continue for further validation
+
+					# Checking for string length
+					if len(self.password) > 4:
+						# If the user specified password has character length more than 4, then we continue
+
+						pass
+					else:
+						# If the user specified password has character length less than 4 charcters, then we raise an error with a custom message
+
+						raise SyntaxError('Password input is invalid. Requires to be an alphanumeric string with length atleast 5.')
+				else:
+					# If the user entered password's value is a non string variable, then we raise an error with a custom message
+
+					raise SyntaxError('Password input is invalid. Requires to be an alphanumeric string with length atleast 5.')
+				# ----
+
+				# Checking the task specified and then continuing to execute the task
+				if self.task == None:
+					# If the task to be done is not specified by the user (default value), then we raise an error with a custom message
+
+					raise SyntaxError('Task not specified. The task is needed to be specified whether encrypt / decrypt.')
+				elif self.task.lower() == 'encrypt' or self.task.lower() == 'encryption':
+					# If the task specified is for encryption, then we continue to encrypt
+
+					# Launching the encrypt() method in order to start the encryption process
+					if self.encrypt() == 0:
+						# If the encrypt() method returns 0, it means that the encryption proces is completed and thus we display the message on the console screen
+
+						print(f'\n[$] Encryption process completed')
+					else:
+						# If the encrypt() method does not returns 0, it means there are some errors in the encryption process and thus we display the message on the console screen
+
+						print(f'\n[!] Encryption process might have encountered some errors, please check the directory for finding them out.')
+				elif self.task.lower() == 'decrypt' or self.task.lower() == 'decryption':
+					# If the task specified is for decryption, then we continue to decrypt
+
+					# Launching the decrypt() method in order to start the decryption process
+					if self.decrypt() == 0:
+						# If the decrypt() method returns 0, it means that the decryption proces is completed and thus we display the message on the console screen
+
+						print(f'\n[$] Decryption process completed')
+					else:
+						# If the decrypt() method does not returns 0, it means there are some errors in the decryption process and thus we display the message on the console screen
+
+						print(f'\n[!] Decryption process might have encountered some errors, please check the directory for finding them out.')
+				else:
+					# If the task specified is not recognized, then we raise an error with a custom message
+
+					raise ReferenceError('Task not recognized. Encrypt / decrypt are the two recognizable terms.')
+				del self.task
 
 	def generatekey(self):
 		""" This method / function serves the purpose of generating a special key for the encryption and decryption using the user entered password. This function reads the encryption password value from the class variable self.password.
@@ -1226,9 +1368,6 @@ class DirectoryEncrypter:
 			print(f'[ Encryption config file created at {self.directory} ]')
 			return 0
 
-		# Displaying the message of the encryption completion on the console screen
-		print(f'[$] Encryption process completed')
-
 	def decrypt(self):
 		""" This method / function serves the functionability of decrypting the files in the user specified directory. This function reads the directory location input from the class variable self.directory. The process of the decryption / the steps of decryption are listed below :
 		1. Check the password specified by the user against the original password hash.
@@ -1248,6 +1387,9 @@ class DirectoryEncrypter:
 
 		# Getting the list of the files in the user specified directory
 		files = listdir(self.directory)
+
+		# Removing the config file from the list (ignoring it by default)
+		files.remove('.encryption_config')
 
 		# Decrypting the contents of each file
 		# ----
@@ -1307,10 +1449,11 @@ class DirectoryEncrypter:
 			# If the user entered the choice to delete the config file at the directory, then we continue to do so
 
 			remove(self.directory + '.encryption_config')
+			print(f'[$] Removed config file')
+			del choice
+			return 0
 		else:
 			# If the user entered the choice to not delete the config file at the directory, then we skip the process
 
-			pass
-
-		# Displaying the message of the decryption completion on the console screen
-		print(f'[$] Decryption process completed')
+			del choice
+			return 0
