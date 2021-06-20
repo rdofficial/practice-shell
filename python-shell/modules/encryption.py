@@ -7,10 +7,10 @@ Author : Rishav Das (https://github.com/rdofficial/)
 Created on : June 13, 2021
 
 Last modified by : Rishav Das (https://github.com/rdofficial/)
-Last modified on : June 19, 2021
+Last modified on : June 20, 2021
 
 Changes made in the last modification :
-1. Added the code in the __init__ method in the 'DirectoryEncrypter' class for parsing user entered argument token, validating the user entered information, etc.
+1. In the 'DirectoryEncrypter' class, added the code for loading the information from already existing encryption config file at the user specified directory as well as ignoring the files for encryption which are listed in the ignorefiles list.
 
 Authors contributed to this script (Add your name below if you have contributed) :
 1. Rishav Das (github:https://github.com/rdofficial/, email:rdofficial192@gmail.com)
@@ -1297,12 +1297,53 @@ class DirectoryEncrypter:
 		# Getting the list of the files in the user specified directory
 		files = listdir(self.directory)
 
+		# Checking whether the encryption config file is already present in the user specified directory or not
+		if '.encryption_config' in files:
+			# If the encryption_config is already present in the directory, then we continue to ask the user whether to parse information from the config file or not
+
+			choice = input('A config file is already present at {self.directory}. Should we parse information from it? (y/n) : ')
+			if choice.lower() == 'y' or choice.lower() == 'yes':
+				# If the user choosed the option for loading the information from the existsing config file, then we continue
+
+				# Reading the contents of the encryption config
+				contents = open('.encryption_config', 'rb').read()
+				contents = b64decode(contents).decode()
+				contents = loads(contents)
+
+				# Setting the information extracted from the config file to the class variables
+				self.password_hash = contents["password"]
+				self.ignorefiles = contents["ignorefiles"]
+				self.created_on = contents["created_on"]
+				self.last_modified = contents["last_modified"]
+
+				# Checking the user entered password against the password hash extracted from the config file
+				if hashlib.md5(self.password.encode()).hexdigest() == self.password_hash:
+					# If the user entered password matches with the original password hash, then we continue
+
+					pass
+				else:
+					# If the user entered password does not matches with the original password hash, then we display the warning to the user about the password discontinuity
+
+					print(f'[!] Password match failed with the original password hash')
+			else:
+				# If the user choosed the option for skipping the loading process, then we continue to delete the config file present at the directory
+
+				remove(self.directory + '.encryption_config')
+			del choice
+
 		# Encrypting the contents of each file
 		# ----
 		for file in files:
 			# Iterating over the list of the files
 
 			try:
+				# Ignoring the file if marked in the ignorefiles list
+				if file in self.ignorefiles:
+					# If the file is marked at the ignore file list, then we skip the encryption part for the currently iterated file
+
+					print(f'[#] Ignored : {file}')
+					continue
+
 				# Reading the contents of the file
 				contents = open(self.directory + file, 'rb').read()
 				contents = b64encode(contents).decode()
@@ -1341,12 +1382,12 @@ class DirectoryEncrypter:
 				# If there are any errors encountered during the process, then we skip the current image file from being encrypted
 
 				self.ignorefiles.append(file)
-				print(f'[!] Skipping {file}')
+				print(f'[!] Skipping : {file}')
 				continue
 			else:
 				# if there are no errors encountered during the process, then we display the 'encrypted' message on the console screen
 
-				print(f'[$] {file} : encrypted')
+				print(f'[$] Encrypted : {file}')
 		# ----
 
 		# Creating the config file in the directory
@@ -1435,12 +1476,12 @@ class DirectoryEncrypter:
 			except Exception as e:
 				# If there are any errors encountered during the process, then we skip the current image file from being decrypted
 
-				print(f'[!] Skipping {file}')
+				print(f'[!] Skipping : {file}')
 				continue
 			else:
 				# if there are no errors encountered during the process, then we display the 'decrypted' message on the console screen
 
-				print(f'[$] {file} : decrypted')
+				print(f'[$] Decrypted : {file}')
 		# ----
 
 		# Removing the config file from the directory after confirming from the user
