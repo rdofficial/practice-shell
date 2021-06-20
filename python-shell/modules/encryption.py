@@ -10,7 +10,7 @@ Last modified by : Rishav Das (https://github.com/rdofficial/)
 Last modified on : June 20, 2021
 
 Changes made in the last modification :
-1. In the 'DirectoryEncrypter' class, added the code for serving the feature of asking the user for the files to be ignored during the process of the encryption / decryption.
+1. In the 'DirectoryEncrypter' class, fixed the code for checking the config file and user specified password during the decryption process.
 
 Authors contributed to this script (Add your name below if you have contributed) :
 1. Rishav Das (github:https://github.com/rdofficial/, email:rdofficial192@gmail.com)
@@ -1459,7 +1459,15 @@ class DirectoryEncrypter:
 		print(f'\n[ Decrypting {self.directory} ]\n')
 
 		# Launching the check() method in order to read the config file as well as check the password as well
-		self.check(overall = True)
+		if self.check(overall = True):
+			# If the check() methods returns True, then we continue
+
+			pass
+		else:
+			# If the check() method returns False, then we assume password error or config file error, we display the error message on the console screen
+
+			print(f'[ Error : Either incorrect password or errors in the config file. ]')
+			return 1
 
 		# Generating the key for the encryption
 		key = self.generatekey()
