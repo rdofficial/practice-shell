@@ -10,7 +10,7 @@ Last modified by : Rishav Das (https://github.com/rdofficial/)
 Last modified on : June 20, 2021
 
 Changes made in the last modification :
-1. In the 'DirectoryEncrypter' class, added the code for loading the information from already existing encryption config file at the user specified directory as well as ignoring the files for encryption which are listed in the ignorefiles list.
+1. In the 'DirectoryEncrypter' class, added the code for serving the feature of asking the user for the files to be ignored during the process of the encryption / decryption.
 
 Authors contributed to this script (Add your name below if you have contributed) :
 1. Rishav Das (github:https://github.com/rdofficial/, email:rdofficial192@gmail.com)
@@ -943,6 +943,7 @@ class DirectoryEncrypter:
 			# Setting the default value of the variables to None
 			self.directory = None
 			self.password = None
+			self.ignore = None
 			self.documentation = False
 			self.task = None
 
@@ -979,6 +980,11 @@ class DirectoryEncrypter:
 						# If the next argument is out of the list index (i.e., it does not exists), then we continue for the next iteration
 
 						continue
+
+				if argument == '--ignore':
+					# If the argument is for specifying the ignore flag, then we continue to mark the ignore mode to true in order to ask the user for the files to be ignored
+
+					self.ignore = True
 
 				if argument == '--help':
 					# If the argument is for specifying the help, then we continue to mark the documentation mode to be true
@@ -1047,6 +1053,30 @@ class DirectoryEncrypter:
 					raise SyntaxError('Task not specified. The task is needed to be specified whether encrypt / decrypt.')
 				elif self.task.lower() == 'encrypt' or self.task.lower() == 'encryption':
 					# If the task specified is for encryption, then we continue to encrypt
+
+					# Creating the class variable self.ignorefiles before starting the process of the encryption
+					self.ignorefiles = []
+
+					# Checking the user whether ignore flag is marked True or not
+					if self.ignore:
+						# If the ignore flag is marked true, then we continue to ask the user for the files for ignoring
+
+						files = input('\nEnter the files to be ignored during the encryption (seperate with ;)\n> ')
+						files = files.split(';')
+
+						# Inserting all the files into the ignorefiles list after validating each one of them
+						for file in files:
+							# Iterating through each file specified by the user
+
+							if path.isfile(self.directory + file):
+								# If the currently iterated file does exists, then we continue to append it to the ignorefile list
+
+								self.ignorefiles.append(file)
+							else:
+								# If the currently iterated file does not exists, then we skip it after displaying the not found message on the console screen
+
+								print(f'[!] File skipped, not found : {file}')
+								continue
 
 					# Launching the encrypt() method in order to start the encryption process
 					if self.encrypt() == 0:
@@ -1286,8 +1316,10 @@ class DirectoryEncrypter:
 		4. Create the config file in the directory.
 		"""
 
+		# Printing the encryption message on the console screen
+		print(f'\n[ Encrypting {self.directory} ]\n')
+
 		# Creating the class variables that are not defined before encryption
-		self.ignorefiles = []
 		self.created_on = datetime.now().timestamp()
 		self.last_modified = 0.0
 
@@ -1312,9 +1344,15 @@ class DirectoryEncrypter:
 
 				# Setting the information extracted from the config file to the class variables
 				self.password_hash = contents["password"]
-				self.ignorefiles = contents["ignorefiles"]
 				self.created_on = contents["created_on"]
 				self.last_modified = contents["last_modified"]
+				
+				# Adding the ignorefiles item from the config file to class variable list
+				for file in self.ignorefiles:
+					if file not in self.ignorefiles:
+						# If the file is not already listed on the ignorefile list, then we continue to append it
+
+						self.ignorefiles.append(contents["ignorefiles"])
 
 				# Checking the user entered password against the password hash extracted from the config file
 				if hashlib.md5(self.password.encode()).hexdigest() == self.password_hash:
