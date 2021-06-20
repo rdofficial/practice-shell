@@ -10,7 +10,8 @@ Last modified by : Rishav Das (https://github.com/rdofficial/)
 Last modified on : June 19, 2021
 
 Changes made in the last modification :
-1. Updated the algorithm of encryption in the 'DirectoryEncrypter' class.
+1. Added the code for the decryption in the 'DirectoryEncrypter' class. Added the code to the method DirectoryEncrypter.decrypt().
+2. Updated some errors and removed the original files list property from the encryption config file in the class 'DirectoryEncrypter'.
 
 Authors contributed to this script (Add your name below if you have contributed) :
 1. Rishav Das (github:https://github.com/rdofficial/, email:rdofficial192@gmail.com)
@@ -972,7 +973,6 @@ class DirectoryEncrypter:
 
 		self.password_hash			-> stores the password hash
 		self.ignorefiles   			-> stores the list of files to be ignored during the encryption / decryption
-		self.originalfilenames      -> stores the list of original names of the file before encryption
 		self.created_on             -> stores the timestamp when the first encryption was applied on this directory
 		self.last_modified           -> stores the timestamp when the encryption / decryption was executed latest
 		
@@ -980,7 +980,6 @@ class DirectoryEncrypter:
 		{
 			"password" : "...",
 			"ignorefiles" : [],
-			"originalfilenames" : [],
 			"created_on" : ...,
 			"last_modified" : ...,
 		}
@@ -995,13 +994,13 @@ class DirectoryEncrypter:
 			# If the config file exist in the user specified directory, then we continue for further checking
 
 			# Reading the contents of the config file
-			contents = loads(open(f'{self.directory}.encryption_config', 'rb').open())
+			contents = open(f'{self.directory}.encryption_config', 'rb').read()
 			contents = b64decode(contents).decode()
+			contents = loads(contents)
 
 			# Setting the information extracted from the config file to the class variables
 			self.password_hash = contents["password"]
 			self.ignorefiles = contents["ignorefiles"]
-			self.originalfilenames = contents["originalfilenames"]
 			self.created_on = contents["created_on"]
 			self.last_modified = contents["last_modified"]
 
@@ -1024,16 +1023,6 @@ class DirectoryEncrypter:
 				# If the data type of the ignorefiles parameter is not a list, then we display the error message on the console screen
 
 				print(f'ignorefiles is invalid in the config file. Required to be a list / array.')
-				return 0
-
-			if type(self.originalfilenames) == list:
-				# If the data type of the originalfilenames parameter is of a list, then we continue
-
-				pass
-			else:
-				# If the data type of the originalfilenames parameter is not a list, then we display the error message on the console screen
-
-				print(f'originalfilenames is invalid in the config file. Required to be a list / array.')
 				return 0
 
 			if type(self.created_on) == float or type(self.created_on) == int:
@@ -1131,7 +1120,7 @@ class DirectoryEncrypter:
 				raise TypeError('Password is invalid. Password specified by the user should be a string.')
 
 			# Checking for the ignorefiles and originalfilenames fields in the config informatin
-			if type(self.ignorefiles) == list and type(self.originalfilenames) == list:
+			if type(self.ignorefiles) == list:
 				# If the data type of both the ignorefiles and originalfilenames are of list, then we pass
 
 				pass
@@ -1157,7 +1146,6 @@ class DirectoryEncrypter:
 
 		# Creating the class variables that are not defined before encryption
 		self.ignorefiles = []
-		self.originalfilenames = []
 		self.created_on = datetime.now().timestamp()
 		self.last_modified = 0.0
 
@@ -1221,13 +1209,12 @@ class DirectoryEncrypter:
 
 		# Creating the config file in the directory
 		try:
-			open(self.directory + '.encryption_config', 'w+').write(dumps({
+			open(self.directory + '.encryption_config', 'wb').write(b64encode(dumps({
 				"password" : hashlib.md5(self.password.encode()).hexdigest(),
 				"ignorefiles" : self.ignorefiles,
-				"originalfilenames" : self.originalfilenames,
 				"created_on" : self.created_on,
 				"last_modified" : self.last_modified,
-				}))
+				}).encode()))
 		except Exception as e:
 			# If there are any errors encountered during the generation of the encryption config file, then we display the error message on the console screen
 
@@ -1238,6 +1225,9 @@ class DirectoryEncrypter:
 
 			print(f'[ Encryption config file created at {self.directory} ]')
 			return 0
+
+		# Displaying the message of the encryption completion on the console screen
+		print(f'[$] Encryption process completed')
 
 	def decrypt(self):
 		""" This method / function serves the functionability of decrypting the files in the user specified directory. This function reads the directory location input from the class variable self.directory. The process of the decryption / the steps of decryption are listed below :
@@ -1295,7 +1285,7 @@ class DirectoryEncrypter:
 					text += chr((ord(character) - key) % 256)
 
 				# Saving the contents back to the file
-				contents = decodebytes(contents.encode())
+				contents = decodebytes(text.encode())
 				open(self.directory + file, 'wb').write(contents)
 
 				# Deleting the variables declared under this scope
@@ -1313,7 +1303,7 @@ class DirectoryEncrypter:
 
 		# Removing the config file from the directory after confirming from the user
 		choice = input('\nRemove the config file? (y/n) : ')
-		if choice.lower() == 'yes' or chocie.lower() == 'y':
+		if choice.lower() == 'yes' or choice.lower() == 'y':
 			# If the user entered the choice to delete the config file at the directory, then we continue to do so
 
 			remove(self.directory + '.encryption_config')
@@ -1322,5 +1312,5 @@ class DirectoryEncrypter:
 
 			pass
 
-		# Printing the message of the decryption completion on the console screen
+		# Displaying the message of the decryption completion on the console screen
 		print(f'[$] Decryption process completed')
