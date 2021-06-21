@@ -7,10 +7,10 @@ Author : Rishav Das (https://github.com/rdofficial/)
 Created on : June 13, 2021
 
 Last modified by : Rishav Das (https://github.com/rdofficial/)
-Last modified on : June 20, 2021
+Last modified on : June 21, 2021
 
 Changes made in the last modification :
-1. In the 'DirectoryEncrypter' class, fixed the code for checking the config file and user specified password during the decryption process.
+1. In the 'DirectoryEncrypter' class, added the commented docs (__doc__).
 
 Authors contributed to this script (Add your name below if you have contributed) :
 1. Rishav Das (github:https://github.com/rdofficial/, email:rdofficial192@gmail.com)
@@ -926,7 +926,94 @@ class VideoEncrypter:
 		pass
 
 class DirectoryEncrypter:
-	""" """
+	"""
+	This class serves the funcionality of encryption / decryption of user specified directory. The process of encryption is done using the user specified password. The same password which was used for encryption is used for decryption as well. The encryption algorithm used by this class is close to same as other encryption classes defined in this module file.
+
+	The encryption process here is a bit long and more organised. Each files of the user specified directory are encrypted one by one. Also, there are options for ignoring specific files during the encryption / decryption. The structure and information related to the encryption of a directory are stored in a config file in the user specified directory. The file is named '.encryption_config'.
+
+	The structure of the config file is shown below.
+	{
+		"password" : "...",
+		"ignorefiles" : [],
+		"created_on" : ...,
+		"last_modified" : ...,
+	}
+
+	The config file stores the password hash, thus when the user decrypts the directory, the password verification process is done. The user entered password is verified against the original password hash stored in the config file. There are also information stored there like, date of creation, last modfiied, etc.
+
+	The class object when created, some of the information are required to be entered by the user. There are two ways of entering the information by the user. The ways are listed below.
+
+	1. Via argument tokens
+
+		In this mode,
+		The argument tokens entered by the user at the shell (command line) are passed to this class object at the 'arguments' parameters. The syntax is shown below.
+
+		DirectoryEncrypter(arguments = [<argument-list>])
+
+		The arguments that are recognized by this class / tool are listed below.
+		--password            Used to specify the password for the encryption / decryption
+		--directory           Used to specify the directory for the encryption / decryption
+		--task                Used to specify whether to encrypt / decrypt
+		--ignore              Used to launch the ignore files mode (the user can mention the files to ignore)
+		--help                Used to launch the documentation mode (the help section is displayed on the console screen)
+
+		If there are any whitespaces in the inputs, then use the backslash (\). Below are some examples for the usage of this tool.
+
+		# Command for encryption of a directory with password 'somehardpassword123'
+		encrypt directory --directory /location/to/directory --password somehardpassword123 --task encrypt
+
+		# Command for decryption of a directory with password 'somehardpassword123'
+		encrypt directory --directory /location/to/directory --password somehardpassword123 --task decrypt
+
+		# Command for encryption of a directory + ignoring some specific files
+		encrypt directory --directory /location/to/directory --password somehardpassword123 --task encrypt --ignore
+
+		# Command for displaying the help section for the tool
+		encrypt directory --help
+
+	2. Directly passing parameters
+
+		In this mode,
+		The parameters are passed directly into the class object. The syntax for the usage is listed below.
+
+		DirectoryEncrypter(
+			directory = '/location/to/directory',
+			password = '<password>',
+		)
+
+		There are two parameters to be specified when launching the class object / declaring the class object. The parameters are : directory, password.
+		The 'directory' parameter is used to specify the location of the directory which is needed to be encrypted / decrypted.
+		The 'password' parameter is used to specify the password for the encryption / decryption.
+
+		Further processes are listed below in the form of examples.
+
+		# Declaring the class object
+		enc = DirectoryEncrypter(directory = '/location/to/directory', password = 'somehardpassword123')
+
+		# Specifying the ignorefiles (The files to be ignored while encryption / decryption)
+		enc.ignorefiles = ['filename1.txt', 'filename2.docx', 'filename3.jpeg']
+
+		# Encrypting the directory
+		enc.encrypt()
+
+		# Checking the password before decryption
+		enc.check(password = True)
+
+		# Checking the complete configuration of the encrypted directory before decrypting
+		enc.check(all = True)
+
+		# Decrypting the encrypted directory
+		enc.decrypt()
+
+	Some of the points to be noted about this class are listed below :
+	* The sub-folders in the specified directory are skipped, just the files are encrypted.
+
+	* The complete process of encryption and decryption might have some flaws. There might occur some errors related to key generation, discontinuity, etc, that could lead to serious loss of the data.
+
+	* Security is not ensured by us. If there are situations like the data is completly corrupted during the process, then the authors are not responsible for the loss of the data. The authors are responsible for the bugs, not the mistakes commited by the users / clients. Thus, use this tool / class object safely and with your own risk.
+
+	* For any bugs and errors, kindly create an issue on the github mirror of this repository or contact the author of this module file (Contact address / email addres listed at the top of the document).
+	"""
 
 	def __init__(self, directory = None, password = None, arguments = None):
 		# Checking if arguments provided or just the parameters directly
@@ -1141,7 +1228,7 @@ class DirectoryEncrypter:
 
 	def config(self, display = False):
 		"""
-		This method / function serves the functionability of checking the config file and loading all the details of the config file into the class object. This function reads the .encryption_config file at the specified folder and loads the details into class variables like
+		This method / function serves the funcionality of checking the config file and loading all the details of the config file into the class object. This function reads the .encryption_config file at the specified folder and loads the details into class variables like
 
 		self.password_hash			-> stores the password hash
 		self.ignorefiles   			-> stores the list of files to be ignored during the encryption / decryption
@@ -1246,7 +1333,7 @@ class DirectoryEncrypter:
 		# ----
 
 	def check(self, password = False, overall = False):
-		""" This method / function serves the functionalibility of checking the password and other required details of the directory. This function gets the value of the password from the class variable self.password. """
+		""" This method / function serves the funcionality of checking the password and other required details of the directory. This function gets the value of the password from the class variable self.password. """
 
 		# Running the config method in order to extract the information stored in the .encryption_config file
 		self.config()
@@ -1309,7 +1396,7 @@ class DirectoryEncrypter:
 			pass
 
 	def encrypt(self):
-		""" This method / function serves the functionability of encrypting the files in the user specified directory. This function reads the directory location input from the class variable self.directory. The process of the encryption / the steps of encryption are listed below :
+		""" This method / function serves the funcionality of encrypting the files in the user specified directory. This function reads the directory location input from the class variable self.directory. The process of the encryption / the steps of encryption are listed below :
 		1. Generate the encryption key.
 		2. Encrypt each files in the directory one by one.
 		3. Rename the filenames with the encrypted version of filenames.
@@ -1448,7 +1535,7 @@ class DirectoryEncrypter:
 			return 0
 
 	def decrypt(self):
-		""" This method / function serves the functionability of decrypting the files in the user specified directory. This function reads the directory location input from the class variable self.directory. The process of the decryption / the steps of decryption are listed below :
+		""" This method / function serves the funcionality of decrypting the files in the user specified directory. This function reads the directory location input from the class variable self.directory. The process of the decryption / the steps of decryption are listed below :
 		1. Check the password specified by the user against the original password hash.
 		2. Generate the decryption key.
 		3. Decrypt all the files except the ones which are listed in the ignorefiles list.
