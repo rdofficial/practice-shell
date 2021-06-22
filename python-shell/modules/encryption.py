@@ -10,7 +10,7 @@ Last modified by : Rishav Das (https://github.com/rdofficial/)
 Last modified on : June 22, 2021
 
 Changes made in the last modification :
-1. In the 'DirectoryEncrypter' class, added the code for serving the functionality of fetching custom config file information before encryption / decryption of a particular directory.
+1. In the 'DirectoryEncrypter' class, updated the commented docs (__doc__) for the main class object as well some of the defined methods under this class.
 
 Authors contributed to this script (Add your name below if you have contributed) :
 1. Rishav Das (github:https://github.com/rdofficial/, email:rdofficial192@gmail.com)
@@ -1013,6 +1013,27 @@ class DirectoryEncrypter:
 	* Security is not ensured by us. If there are situations like the data is completly corrupted during the process, then the authors are not responsible for the loss of the data. The authors are responsible for the bugs, not the mistakes commited by the users / clients. Thus, use this tool / class object safely and with your own risk.
 
 	* For any bugs and errors, kindly create an issue on the github mirror of this repository or contact the author of this module file (Contact address / email addres listed at the top of the document).
+
+	CUSTOM CONFIG
+
+	This class also accepts custom configuration from the user. Using the --use-config flag while launching the command for this, we command this tool to use a custom config file that too is specified by the user. Before encryption / decryption, we then ask the user for entering custom config in two different ways. The ways are listed below.
+	1. .encryption_config at the directory
+
+		In this mode, if there exists a file named '.encryption_config' already present in the user specified directory. Then, the tool loads the config file information from that file only. If the user wants to load information from any other way then there must not exists any file in that directory. This file is loaded in the same way the default config file is loaded in this tool (class object).
+
+	2. Custom config file location
+
+		In this mode, the user is asked to enter the file location which directs the tool to a file which contains the contents of the configuration of the encrypted directory. The file that the user will specify should have proper read permissions and the contents should be valid.
+
+	3. Custom config hash
+
+		In this mode, the user is asked to enter the hash code of the config file. Entering the complete string will be used to extract the configuration of the encrypted directory. The hash code looks something like this, as shown below.
+
+		eyJwYXNzd29yZCI6ICJiOGU5NDZlNmY2NWU3M2Q1MDlkMzlkNzBkOTYzZWNlMyIsICJpZ25vcmVmaWxlcyI6IFsidGVzdDEucG5nIiwgInRlc3QzLmJmIiwgInRlc3QyLnR4dCIsICJ0ZXN0NC5weSJdLCAiY3JlYXRlZF9vbiI6IDE2MjQzMzIxNDMuMDcyNTMzLCAibGFzdF9tb2RpZmllZCI6IDAuMH0=
+
+	This custom config feature might be a little different and odd, below are some points that will explain how it makes a difference.
+	1. Even if we specify a custom config file, we still have to specify the password for encryption and decryption.
+	2. The configuration for an encrypted directory stores other properties like ignorefiles, etc. The ignorefiles property is a list of files that are to be ignored during the encryption and decryption process.
 	"""
 
 	def __init__(self, directory = None, password = None, useconfig = False, arguments = None):
@@ -1659,7 +1680,28 @@ class DirectoryEncrypter:
 			return 0
 
 	def customconfigloader(self):
-		""" This method / function serves the functionality of fetching the information of encryption config file for encryption / decryption of a directory. This function loads many information from the class variables like self.directory, etc. """
+		"""
+		This method / function serves the functionality of fetching the information of encryption config file for encryption / decryption of a directory. This function loads many information from the class variables like self.directory, etc. Some additional information is attached below. 
+
+		This class also accepts custom configuration from the user. Using the --use-config flag while launching the command for this, we command this tool to use a custom config file that too is specified by the user. Before encryption / decryption, we then ask the user for entering custom config in two different ways. The ways are listed below.
+		1. .encryption_config at the directory
+
+			In this mode, if there exists a file named '.encryption_config' already present in the user specified directory. Then, the tool loads the config file information from that file only. If the user wants to load information from any other way then there must not exists any file in that directory. This file is loaded in the same way the default config file is loaded in this tool (class object).
+
+		2. Custom config file location
+
+			In this mode, the user is asked to enter the file location which directs the tool to a file which contains the contents of the configuration of the encrypted directory. The file that the user will specify should have proper read permissions and the contents should be valid.
+
+		3. Custom config hash
+
+			In this mode, the user is asked to enter the hash code of the config file. Entering the complete string will be used to extract the configuration of the encrypted directory. The hash code looks something like this, as shown below.
+
+			eyJwYXNzd29yZCI6ICJiOGU5NDZlNmY2NWU3M2Q1MDlkMzlkNzBkOTYzZWNlMyIsICJpZ25vcmVmaWxlcyI6IFsidGVzdDEucG5nIiwgInRlc3QzLmJmIiwgInRlc3QyLnR4dCIsICJ0ZXN0NC5weSJdLCAiY3JlYXRlZF9vbiI6IDE2MjQzMzIxNDMuMDcyNTMzLCAibGFzdF9tb2RpZmllZCI6IDAuMH0=
+
+		This custom config feature might be a little different and odd, below are some points that will explain how it makes a difference.
+		1. Even if we specify a custom config file, we still have to specify the password for encryption and decryption.
+		2. The configuration for an encrypted directory stores other properties like ignorefiles, etc. The ignorefiles property is a list of files that are to be ignored during the encryption and decryption process.
+		"""
 
 		# Checking whether the '.encryption_config' file is present at the user specified directory
 		if '.encryption_config' in listdir(self.directory):
@@ -1667,6 +1709,7 @@ class DirectoryEncrypter:
 
 			try:
 				# Reading the .encryption_config file present at the user specified directory
+				print(f'[$] Config file found at {self.directory}')
 				contents = open(self.directory + '.encryption_config', 'rb').read()
 				contents = decodebytes(contents).decode()
 				contents = loads(contents)
