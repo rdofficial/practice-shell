@@ -7,10 +7,10 @@ Author : Rishav Das (https://github.com/rdofficial/)
 Created on : June 13, 2021
 
 Last modified by : Rishav Das (https://github.com/rdofficial/)
-Last modified on : June 21, 2021
+Last modified on : June 22, 2021
 
 Changes made in the last modification :
-1. In the 'DirectoryEncrypter' class, added the commented docs (__doc__).
+1. In the 'DirectoryEncrypter' class, added the code for serving the functionality of fetching custom config file information before encryption / decryption of a particular directory.
 
 Authors contributed to this script (Add your name below if you have contributed) :
 1. Rishav Das (github:https://github.com/rdofficial/, email:rdofficial192@gmail.com)
@@ -1015,13 +1015,14 @@ class DirectoryEncrypter:
 	* For any bugs and errors, kindly create an issue on the github mirror of this repository or contact the author of this module file (Contact address / email addres listed at the top of the document).
 	"""
 
-	def __init__(self, directory = None, password = None, arguments = None):
+	def __init__(self, directory = None, password = None, useconfig = False, arguments = None):
 		# Checking if arguments provided or just the parameters directly
 		if arguments == None:
 			# If the arguments are not passed to this function by the user, then we continue to use the default provided values
 
 			self.directory = directory
 			self.password = password
+			self.useconfig = useconfig
 		else:
 			# If the arguments are passed to this function by the user, then we continue to parse the arguments
 
@@ -1030,7 +1031,8 @@ class DirectoryEncrypter:
 			# Setting the default value of the variables to None
 			self.directory = None
 			self.password = None
-			self.ignore = None
+			self.ignore = False
+			self.useconfig = False
 			self.documentation = False
 			self.task = None
 
@@ -1072,6 +1074,11 @@ class DirectoryEncrypter:
 					# If the argument is for specifying the ignore flag, then we continue to mark the ignore mode to true in order to ask the user for the files to be ignored
 
 					self.ignore = True
+
+				if argument == '--use-config':
+					# If the argument is for specifying the use-config flag, then we continue to mark the useconfig mode to true in order to further fetch the information from the configuration file
+
+					self.useconfig = True
 
 				if argument == '--help':
 					# If the argument is for specifying the help, then we continue to mark the documentation mode to be true
@@ -1144,8 +1151,14 @@ class DirectoryEncrypter:
 					# Creating the class variable self.ignorefiles before starting the process of the encryption
 					self.ignorefiles = []
 
-					# Checking the user whether ignore flag is marked True or not
-					if self.ignore:
+					# Checking for the ignore and config flag
+					# ----
+					if self.useconfig:
+						# If the useconfig flag is marked true, then we continue to fetch the custom config file
+
+						# Launching the customconfigloader() method in order to fetch for the custom config file
+						self.customconfigloader()
+					elif self.ignore:
 						# If the ignore flag is marked true, then we continue to ask the user for the files for ignoring
 
 						files = input('\nEnter the files to be ignored during the encryption (seperate with ;)\n> ')
@@ -1156,14 +1169,16 @@ class DirectoryEncrypter:
 							# Iterating through each file specified by the user
 
 							if path.isfile(self.directory + file):
-								# If the currently iterated file does exists, then we continue to append it to the ignorefile list
+								# If the currently iterated file does exists, then we continue to append it to the ignorefiles list
 
 								self.ignorefiles.append(file)
 							else:
 								# If the currently iterated file does not exists, then we skip it after displaying the not found message on the console screen
 
-								print(f'[!] File skipped, not found : {file}')
+								print(f'[!] File skipped (not added to ignore list), not found : {file}')
 								continue
+						del files
+					# ----
 
 					# Launching the encrypt() method in order to start the encryption process
 					if self.encrypt() == 0:
@@ -1176,6 +1191,16 @@ class DirectoryEncrypter:
 						print(f'\n[!] Encryption process might have encountered some errors, please check the directory for finding them out.')
 				elif self.task.lower() == 'decrypt' or self.task.lower() == 'decryption':
 					# If the task specified is for decryption, then we continue to decrypt
+
+					# Checking for the config flag
+					# ----
+					if self.useconfig:
+						# If the useconfig flag is marked true, then we continue to fetch the custom config file
+
+						# Launching the customconfigloader() method in order to fetch for the custom config file
+						self.ignore = False  # Marking the ignore flag as True in order to avoid any errors
+						self.customconfigloader()
+					# ----
 
 					# Launching the decrypt() method in order to start the decryption process
 					if self.decrypt() == 0:
@@ -1249,7 +1274,11 @@ class DirectoryEncrypter:
 		# Fetching the contents of the .encryption_config file
 		# ----
 		# Checking whether the config file exists or not in the user specified directory
-		if path.isfile(self.directory + '.encryption_config'):
+		if self.useconfig:
+			# If the useconfig flag is marked true, then it means the user requested to load a custom config file, and we skip it
+
+			pass
+		elif path.isfile(self.directory + '.encryption_config'):
 			# If the config file exist in the user specified directory, then we continue for further checking
 
 			# Reading the contents of the config file
@@ -1292,6 +1321,7 @@ class DirectoryEncrypter:
 				# If the data type of the created_on parameter is neither int nor float, then we display the error message on the console screen
 
 				print(f'created_on is invalid. Required to be a timestamp.')
+				return 0
 
 			if type(self.last_modified) == float or type(self.last_modified) == int:
 				# If the data type of the last_modified parameter is either int or float, then we continue
@@ -1308,6 +1338,7 @@ class DirectoryEncrypter:
 				# If the data type of the last_modified parameter is neither int or float, then we display the error message on the console screen
 
 				print(f'last_modified is invalid. Required to be a timestamp.')
+				return 0
 		else:
 			# If the config file does not exists in the user specified directory, then we display the error message on the console screen
 
@@ -1425,7 +1456,7 @@ class DirectoryEncrypter:
 				# If the user choosed the option for loading the information from the existsing config file, then we continue
 
 				# Reading the contents of the encryption config
-				contents = open('.encryption_config', 'rb').read()
+				contents = open(self.directory + '.encryption_config', 'rb').read()
 				contents = b64decode(contents).decode()
 				contents = loads(contents)
 
@@ -1435,9 +1466,9 @@ class DirectoryEncrypter:
 				self.last_modified = contents["last_modified"]
 				
 				# Adding the ignorefiles item from the config file to class variable list
-				for file in self.ignorefiles:
+				for file in contents["ignorefiles"]:
 					if file not in self.ignorefiles:
-						# If the file is not already listed on the ignorefile list, then we continue to append it
+						# If the file is not already listed on the ignorefiles list, then we continue to append it
 
 						self.ignorefiles.append(contents["ignorefiles"])
 
@@ -1450,6 +1481,7 @@ class DirectoryEncrypter:
 					# If the user entered password does not matches with the original password hash, then we display the warning to the user about the password discontinuity
 
 					print(f'[!] Password match failed with the original password hash')
+					return 1
 			else:
 				# If the user choosed the option for skipping the loading process, then we continue to delete the config file present at the directory
 
@@ -1494,12 +1526,6 @@ class DirectoryEncrypter:
 					encryptedfilename += chr((ord(character) + key) % 256)
 				encryptedfilename = b64encode(encryptedfilename.encode()).decode()
 				rename(self.directory + file, self.directory + encryptedfilename)
-
-				# Adding the changed name and the original name in the self.originalnames list
-				self.originalfilenames.append({
-					"original_name" : file,
-					"encrypted_name" : encryptedfilename,
-				})
 
 				# Deleting some of variables defined under this scope
 				del contents, encryptedfilename
@@ -1573,7 +1599,7 @@ class DirectoryEncrypter:
 			try:
 				# Checking whether the file is mentioned in the ignorefiles list or not
 				if file in self.ignorefiles:
-					# If the currently iterated file is mentioned in the ignorefile list, then we skip the current iteration
+					# If the currently iterated file is mentioned in the ignorefiles list, then we skip the current iteration
 
 					print(f'[#] Ignored : {file}')
 
@@ -1631,3 +1657,204 @@ class DirectoryEncrypter:
 
 			del choice
 			return 0
+
+	def customconfigloader(self):
+		""" This method / function serves the functionality of fetching the information of encryption config file for encryption / decryption of a directory. This function loads many information from the class variables like self.directory, etc. """
+
+		# Checking whether the '.encryption_config' file is present at the user specified directory
+		if '.encryption_config' in listdir(self.directory):
+			# If a config file is already present at the user specified directory, then we continue to fetch for it
+
+			try:
+				# Reading the .encryption_config file present at the user specified directory
+				contents = open(self.directory + '.encryption_config', 'rb').read()
+				contents = decodebytes(contents).decode()
+				contents = loads(contents)
+
+				# Filtering out the information from the contents
+				self.password_hash = contents["password"]
+				self.ignorefiles = contents["ignorefiles"]
+				del contents
+			except Exception as e:
+				# If there are any errors during the extraction of information from the config file, then we continue to skip it and do manuall information entry from the user
+
+				# Displaying the error message on the console screen
+				print(f'[!] Failed to parse the config file at {self.directory}')
+
+				# Checking if the ignore flag is marked true or not
+				if self.ignore:
+					# If the ignore flag is marked true, then we continue to ask the user for specifying the files to be ignored during the encryption / decryption
+
+					# Asking the user to enter the files that are to be ignored during the encryption / decryption process
+					files = input('\nEnter the files to be ignored during the encryption (seperate with ;)\n> ')
+					files = files.split(';')
+
+					# Inserting all the files into the ignorefiles list after validating each one of them
+					for file in files:
+						# Iterating through each file specified by the user
+
+						if path.isfile(self.directory + file):
+							# If the currently iterated file does exists, then we continue to append it to the ignorefiles list
+
+							self.ignorefiles.append(file)
+						else:
+							# If the currently iterated file does not exists, then we skip it after displaying the not found message on the console screen
+
+							print(f'[!] File skipped (not added to ignore list), not found : {file}')
+							continue
+					del files
+			else:
+				# If there are no errors encounted during the process, then we continue further with the fetched information from the config file
+
+				# Matching the user entered password from the original password hash
+				if hashlib.md5(self.password.encode()).hexdigest() == self.password_hash:
+					# If the user entered password matches with the original password hash, then we continue to validate the ignorefiles list
+
+					if type(self.ignorefiles) == list:
+						# If the data type of the ignorefiles class variable is list, then we continue
+
+						return 0
+					else:
+						# If the data type of the ignorefiles class variable is not a list, then we raise an error with a custom message
+
+						raise TypeError(f'The ignorefiles list is invalid in the config file at {self.directory}.')
+				else:
+					# If the user entered password does not matches with the original password hash, then we raise an error with a custom message
+
+					raise ValueError(f'Failed to match the entered password against the password hash in the config file at {self.directory}.')
+		else:
+			# If there are no config files found at the user specified directory, then we continue to ask the user for the config file manually
+
+			# Asking the user for the choice whether to enter the config file hash code or enter the file location for a config file that is to be used by this tool
+			choice = input(f'\n[!] Config file not found at {self.directory}\nChoose :\n1. Enter location for another config file\n2. Enter the config hash code manually\nEnter your choice : ')
+
+			# Checking the option choosed by the user
+			if choice == '1':
+				# If the user choosed the option for entering the location of another config file manually, then we continue to ask the user for the file location
+
+				choice = input('Enter the config file location : ')
+				if path.isfile(choice):
+					# If the file location specified by the user exists on the local machine, then we continue to fetch information out of it
+
+					try:
+						# Reading the .encryption_config file present at the user specified directory
+						contents = open(choice, 'rb').read()
+						contents = decodebytes(contents).decode()
+						contents = loads(contents)
+
+						# Filtering out the information from the contents
+						self.password_hash = contents["password"]
+						self.ignorefiles = contents["ignorefiles"]
+					except Exception as e:
+						# If there are any errors during the extraction of information from the config file, then we continue to skip it and do manuall information entry from the user
+
+						# Displaying the error message on the console screen
+						print(f'[!] Failed to parse the config file "{choice}"')
+
+						# Checking if the ignore flag is marked true or not
+						if self.ignore:
+							# If the ignore flag is marked true, then we continue to ask the user for specifying the files to be ignored during the encryption / decryption
+
+							# Asking the user to enter the files that are to be ignored during the encryption / decryption process
+							files = input('\nEnter the files to be ignored during the encryption (seperate with ;)\n> ')
+							files = files.split(';')
+
+							# Inserting all the files into the ignorefiles list after validating each one of them
+							for file in files:
+								# Iterating through each file specified by the user
+
+								if path.isfile(self.directory + file):
+									# If the currently iterated file does exists, then we continue to append it to the ignorefiles list
+
+									self.ignorefiles.append(file)
+								else:
+									# If the currently iterated file does not exists, then we skip it after displaying the not found message on the console screen
+
+									print(f'[!] File skipped (not added to ignore list), not found : {file}')
+									continue
+								del files
+					else:
+						# If there are no errors encounted during the process, then we continue further with the fetched information from the config file
+
+						# Matching the user entered password from the original password hash
+						if hashlib.md5(self.password.encode()).hexdigest() == self.password_hash:
+							# If the user entered password matches with the original password hash, then we continue to validate the ignorefiles list
+
+							if type(self.ignorefiles) == list:
+								# If the data type of the ignorefiles class variable is list, then we continue
+
+								return 0
+							else:
+								# If the data type of the ignorefiles class variable is not a list, then we raise an error with a custom message
+
+								raise TypeError(f'The ignorefiles list is invalid in the config file at {self.directory}.')
+						else:
+							# If the user entered password does not matches with the original password hash, then we raise an error with a custom message
+
+							raise ValueError(f'Failed to match the entered password against the password hash in the config file at {self.directory}.')
+			elif choice == '2':
+				# If the user choosed to enter the config file hash code, then we continue to ask the user to enter manually
+
+				# Asking the user to enter the hash code of the config file
+				choice = input('\nEnter the config file hash code : ')
+
+				try:
+					# Decoding the hash code to plain contents
+					contents = decodebytes(choice.encode()).decode()
+					contents = loads(contents)
+
+					# Filtering out the information from the contents
+					self.password_hash = contents["password"]
+					self.ignorefiles = contents["ignorefiles"]
+					del contents
+				except Exception as e:
+					# If there are any errors during the extraction of information from the config file, then we continue to skip it and do manuall information entry from the user
+
+					# Displaying the error message on the console screen
+					print(f'[!] Failed to parse the config file at {self.directory}')
+
+					# Checking if the ignore flag is marked true or not
+					if self.ignore:
+						# If the ignore flag is marked true, then we continue to ask the user for specifying the files to be ignored during the encryption / decryption
+
+						# Asking the user to enter the files that are to be ignored during the encryption / decryption process
+						files = input('\nEnter the files to be ignored during the encryption (seperate with ;)\n> ')
+						files = files.split(';')
+
+						# Inserting all the files into the ignorefiles list after validating each one of them
+						for file in files:
+							# Iterating through each file specified by the user
+
+							if path.isfile(self.directory + file):
+								# If the currently iterated file does exists, then we continue to append it to the ignorefiles list
+
+								self.ignorefiles.append(file)
+							else:
+								# If the currently iterated file does not exists, then we skip it after displaying the not found message on the console screen
+
+								print(f'[!] File skipped (not added to ignore list), not found : {file}')
+								continue
+						del files
+				else:
+					# If there are no errors encounted during the process, then we continue further with the fetched information from the config file
+
+					# Matching the user entered password from the original password hash
+					if hashlib.md5(self.password.encode()).hexdigest() == self.password_hash:
+						# If the user entered password matches with the original password hash, then we continue to validate the ignorefiles list
+
+						if type(self.ignorefiles) == list:
+							# If the data type of the ignorefiles class variable is list, then we continue
+
+							return 0
+						else:
+							# If the data type of the ignorefiles class variable is not a list, then we raise an error with a custom message
+
+							raise TypeError(f'The ignorefiles list is invalid in the config file at {self.directory}.')
+					else:
+						# If the user entered password does not matches with the original password hash, then we raise an error with a custom message
+
+						raise ValueError(f'Failed to match the entered password against the password hash in the config file at {self.directory}.')
+			else:
+				# If the user entered an unrecognized option, then we raise an error with custom message
+
+				raise ValueError('No such options recognized. Failed to fetch the custom config for the encryption directory.')
