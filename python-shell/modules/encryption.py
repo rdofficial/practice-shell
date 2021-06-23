@@ -7,10 +7,10 @@ Author : Rishav Das (https://github.com/rdofficial/)
 Created on : June 13, 2021
 
 Last modified by : Rishav Das (https://github.com/rdofficial/)
-Last modified on : June 22, 2021
+Last modified on : June 23, 2021
 
 Changes made in the last modification :
-1. In the 'DirectoryEncrypter' class, updated the commented docs (__doc__) for the main class object as well some of the defined methods under this class.
+1. In the 'DirectoryEncrypter' class, added the help section text that is to be displayed on the console screen when the user asks for the documentation mode of the tool.
 
 Authors contributed to this script (Add your name below if you have contributed) :
 1. Rishav Das (github:https://github.com/rdofficial/, email:rdofficial192@gmail.com)
@@ -1111,7 +1111,7 @@ class DirectoryEncrypter:
 			if self.documentation:
 				# If the user specified the documentation mode, then we continue to display the help text on the console screen
 
-				print('<-- help for directory encrypte -->')
+				print('encrypt directory\nUsage : encrypt <arguments>\n\n"encrypt directory" is a tool which serves the functionality of encryption / decryption of user specified directories. This tool encrypts an entire directory with a password. There are also features like ignoring certain files while encryption / decryption process. All such properties of the encryption are stored in the config file (.encryption_config). This file is necessary for the proper decryption of an already encrytped directory.\n\nArguments are :\n--password            Used to specify the password for encryption / decryption\n--directory  Used to specify the directory for encryption / decryption\n--task  Used to specify whether to encrypt / decrypt\n--ignore \t\t\t  Used to specify certain files to ignore when encrypting\n--use-config  Used to specify a custom config for the encryption / decryption\n--help(\t\t\t  Used to display this help te\n\nPoints to be noted :\n1. The sub-folders in the specified directory are skipped, just the files are encrypted.\n2. The complete process of encryption and decryption might have some flaws. There might occur some errors related to key generation, discontinuity, etc, that could lead to serious loss of the data.\n3. Security is not ensured by us. If there are situations like the data is completly corrupted during the process, then the authors are not responsible for the loss of the data. The authors are responsible for the bugs, not the mistakes commited by the users / clients. Thus, use this tool / class object safely and with your own risk.s\n\nCheck out the docs for more info.')
 			else:
 				# If the user specified the execution mode, then we continue to execute the task
 
