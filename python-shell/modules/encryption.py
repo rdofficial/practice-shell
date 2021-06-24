@@ -10,7 +10,7 @@ Last modified by : Rishav Das (https://github.com/rdofficial/)
 Last modified on : June 24, 2021
 
 Changes made in the last modification :
-1. Created the Hash tool / class. Added the code for serving the hashing functionality via the make() method defined in it.
+1. In the 'Hash' class, added the code for the verify() method. Just verifies with specified hashing algorithms only.
 
 Authors contributed to this script (Add your name below if you have contributed) :
 1. Rishav Das (github:https://github.com/rdofficial/, email:rdofficial192@gmail.com)
@@ -1905,9 +1905,10 @@ class DirectoryEncrypter:
 class Hash:
 	""" """
 
-	def __init__(self, text = None, algorithm = None, arguments = None):
+	def __init__(self, text = None, algorithm = None, original = None, arguments = None):
 		self.text = text
 		self.algorithm = algorithm
+		self.original = original
 
 		# Setting some class properties
 		self._algorithms_supported = [
@@ -2053,4 +2054,166 @@ class Hash:
 		return hash
 
 	def verify(self):
-		pass
+		""" This method / function serves the functionality of verifying a plain with a hash. The plain string, the hashing algorithm and the original string is fetched from the class variables self.text, self.algorithm, self.original.
+
+		If the hashing algorithm is specified by the user, then we just check for the specific hashing algorithm.
+		Otherwise, this function checks for all the functions one by one and verifies the plain text with the original hash.
+
+		This function can be used when we are verifying the user entered plain password against the hash of the password stored in the database. This is one of the implementation of this password in a Login System.
+		"""
+
+		# Checking the self.original class variable before executing any process further
+		if self.original == None:
+			# If the self.original variable is not defined / specified by the user, then we display the error message on the console screen
+
+			print(f'[ Error : The original hash is not specified. ]')
+			return 0
+		else:
+			# If the self.original class variable is defined, then we proceed for further validation
+
+			if type(self.original) == str:
+				# If the type of the variable self.original is string, then we continue for further validation
+
+				if len(self.original) == 0:
+					# If the length of the string stored in self.original variable is 0, then we display the error message on the console screen
+
+					print(f'[ Error : The original hash specified is invalid. ]')
+					return 0
+				else:
+					# If the length of the string stored in self.original variable is not 0, then we continue
+
+					pass
+			else:
+				# If the type of the variable self.original is not string, then we display the error message on the console screen
+
+				print(f'[ Error : The original hash specified is invalid. ]')
+				return 0
+
+		# Checking if the hashing algorithm is specified by the user or not
+		if self.algorithm == None:
+			# If the hashing algorithm is not specified by the user, then we continue to check with all available hashing algorithms
+
+			pass
+		else:
+			# If the hashing algorithm is specified by the user, then we continue to generate the hash out of the plain text and verify it against the orignal hash
+
+			# Checking the algorithm as per specified by the user and then executing the proper algorithm
+			if self.algorithm == 'md5':
+				# If the user specified algorithm is md5, then we continue
+
+				hash = hashlib.md5(self.text).hexdigest()
+			elif self.algorithm == 'sha1':
+				# If the user specified algorithm is sha1, then we continue
+
+				hash = hashlib.sha1(self.text).hexdigest()
+			elif self.algorithm == 'sha224':
+				# If the user specified algorithm is sha224, then we continue
+
+				hash = hashlib.sha224(self.text).hexdigest()
+			elif self.algorithm == 'sha256':
+				# If the user specified algoritm is sha256, then we continue
+
+				hash = hashlib.sha256(self.text).hexdigest()
+			elif self.algorithm == 'sha378':
+				# If the user specified algorithm is sha378, then we continue
+
+				hash = hashlib.sha256(self.text).hexdigest()
+			elif self.algorithm == 'sha512':
+				# If the user specified algorithm is sha512, then we continue
+
+				hash = hashlib.sha256(self.text).hexdigest()
+			elif self.algorithm == 'sha3_224':
+				# If the user specified algorithm is sha3_224, we continue
+
+				hash = hashlib.sha3_224(self.text).hexdigest()
+			elif self.algorithm == 'sha3_256':
+				# If the user specified algorithm is sha3_256, we continue
+
+				hash = hashlib.sha3_256(self.text).hexdigest()
+			elif self.algorithm == 'shake_128':
+				# If the user specified algorithm is shake_128, we continue
+
+				hash = hashlib.shake_128(self.text).hexdigest()
+			elif self.algorithm == 'shake_256':
+				# If the user specified algorithm is shake_256, we continue
+
+				hash = hashlib.shake_256(self.text).hexdigest()
+			elif self.algorithm == 'sha3_384':
+				# If the user specified algorithm is sha3_384, we continue
+
+				hash = hashlib.sha3_384(self.text).hexdigest()
+			elif self.algorithm == 'sha3_512':
+				# If the user specified algorithm is sha3_512, we continue
+
+				hash = hashlib.sha3_512(self.text).hexdigest()
+			elif self.algorithm == 'blake2b':
+				# If the user specified algorithm is blake2b, we continue
+
+				hash = hashlib.blake2b(self.text).hexdigest()
+			elif self.algorithm == 'blake2s':
+				# If the user specified algorithm is blake2s, we continue
+
+				hash = hashlib.blake2s(self.text).hexdigest()
+			elif self.algorithm == 'fuck':
+				# If the user specified algorithm is fuck, we continue
+
+				# CUSTOM ALGORITHM
+				# NAME : fuck
+				# ----
+				# Generating an hash encryption key
+				key = 0
+				isEven = True
+				self.text = self.text.decode()
+				for i in self.text:
+					# Iterating over each character in the encrypted key entered by the user
+						
+					if isEven:
+						# If the current iteration is even number, then we add the char code value
+
+						key += ord(i)
+					else:
+						# If the current iteration is odd number (not even), then we subtract the char code value
+
+						key -= ord(i)
+				del isEven
+
+				# Making the key possitive
+				if key < 0:
+					# If the key value is less than 0, then we change the negative sign to possitive by simply multiplying it with -1
+
+					key *= (-1)
+
+				# Adding the length of the text to itself
+				key += len(self.text)
+
+				# Creating the cipher text from the plain text
+				text = ''
+				for character in self.text:
+					# Iterating through each character in the plain text
+
+					text += chr((ord(character) + key) % 256)
+
+				# Encoding into the base64 format
+				text = b64encode(text.encode()).decode()
+
+				# Making the 'fuck' string out of the semi encrypted text
+				hash = ''
+				for index, character in enumerate(text):
+					# Iterating through each character in the text
+
+					hash += f'fuck{ord(character)}'
+					if index != len(text) - 1:
+						hash += '-' 
+				del text
+				# ----
+
+			# Checking the hash generated from the plain text with the original hash
+			print(hash, self.original)
+			if hash == self.original:
+				# If the hash generated from the plain text matches with the original hash, then we return True
+
+				return True
+			else:
+				# If the hash generated from the plain text does not matches with the original hash, then we return False
+
+				return False
