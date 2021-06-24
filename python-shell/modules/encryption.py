@@ -10,7 +10,8 @@ Last modified by : Rishav Das (https://github.com/rdofficial/)
 Last modified on : June 24, 2021
 
 Changes made in the last modification :
-1. In the 'Hash' class, added the code for the verify() method. Just verifies with specified hashing algorithms only.
+1. In the 'Hash' class, added the code for the verify() method. Now, it verifies even if the user didnt specified the hashing algorithm.
+2. The extent would be only for the hashing algorithms supported by our Hash class.
 
 Authors contributed to this script (Add your name below if you have contributed) :
 1. Rishav Das (github:https://github.com/rdofficial/, email:rdofficial192@gmail.com)
@@ -2093,7 +2094,163 @@ class Hash:
 		if self.algorithm == None:
 			# If the hashing algorithm is not specified by the user, then we continue to check with all available hashing algorithms
 
-			pass
+			# Checking for all the algorithms supported by his tool / class one by one
+			# ----
+			# Checking for the md5 hashing algorithm
+			hash = hashlib.md5(self.text).hexdigest()
+			if hash == self.original:
+				# If the md5 hash of the plain text matches with the original hash, then we continue
+
+				return True
+			
+			# Checking for the sha1 hashing algorithm
+			hash = hashlib.sha1(self.text).hexdigest()
+			if hash == self.original:
+				# If the sha1 hash of the plain text matches with the original hash, then we continue
+
+				return True
+
+			# Checking for the sha224 hashing algorithm
+			hash = hashlib.sha224(self.text).hexdigest()
+			if hash == self.original:
+				# If the sha224 hash of the plain text matches with the original hash, then we continue
+
+				return True
+
+			# Checking for the sha256 hashing algorithm
+			hash = hashlib.sha256(self.text).hexdigest()
+			if hash == self.original:
+				# If the sha256 hash of the plain text matches with the original hash, then we continue
+
+				return True
+
+			# Checking for the sha378 hashing algorithm
+			hash = hashlib.sha378(self.text).hexdigest()
+			if hash == self.original:
+				# If the sha378 hash of the plain text matches with the original hash, then we continue
+
+				return True
+
+			# Checking for the sha512 hashing algorithm
+			hash = hashlib.sha512(self.text).hexdigest()
+			if hash == self.original:
+				# If the sha512 hash of the plain text matches with the original hash, then we continue
+
+				return True
+
+			# Checking for the sha3_224 hashing algorithm
+			hash = hashlib.sha3_224(self.text).hexdigest()
+			if hash == self.original:
+				# If the sha3_224 hash of the plain text matches with the original hash, then we continue
+
+				return True
+
+			# Checking for the sha3_256 hashing algorithm
+			hash = hashlib.sha3_256(self.text).hexdigest()
+			if hash == self.original:
+				# If the sha3_256 hash of the plain text matches with the original hash, then we continue
+
+				return True
+
+			# Checking for the sha3_384 hashing algorithm
+			hash = hashlib.sha3_384(self.text).hexdigest()
+			if hash == self.original:
+				# If the sha3_384 hash of the plain text matches with the original hash, then we continue
+
+				return True
+
+			# Checking for the sha3_512 hashing algorithm
+			hash = hashlib.sha3_512(self.text).hexdigest()
+			if hash == self.original:
+				# If the sha3_512 hash of the plain text matches with the original hash, then we continue
+
+				return True
+
+			# Checking for the shake_128 hashing algorithm
+			hash = hashlib.shake_128(self.text).hexdigest()
+			if hash == self.original:
+				# If the shake_128 hash of the plain text matches with the original hash, then we continue
+
+				return True
+
+			# Checking for the shake_256 hashing algorithm
+			hash = hashlib.shake_256(self.text).hexdigest()
+			if hash == self.original:
+				# If the shake_256 hash of the plain text matches with the original hash, then we continue
+
+				return True
+
+			# Checking for the blake2b hashing algorithm
+			hash = hashlib.blake2b(self.text).hexdigest()
+			if hash == self.original:
+				# If the blake2b hash of the plain text matches with the original hash, then we continue
+
+				return True
+
+			# Checking for the blake2s hashing algorithm
+			hash = hashlib.blake2s(self.text).hexdigest()
+			if hash == self.original:
+				# If the blake2s hash of the plain text matches with the original hash, then we continue
+
+				return True
+
+			# Checking for the fuck hashing algorithm
+			# CUSTOM ALGORITHM
+			# NAME : fuck
+			# ----
+			# Generating an hash encryption key
+			key = 0
+			isEven = True
+			self.text = self.text.decode()
+			for i in self.text:
+				# Iterating over each character in the encrypted key entered by the user
+						
+				if isEven:
+					# If the current iteration is even number, then we add the char code value
+
+					key += ord(i)
+				else:
+					# If the current iteration is odd number (not even), then we subtract the char code value
+
+					key -= ord(i)
+			del isEven
+
+			# Making the key possitive
+			if key < 0:
+				# If the key value is less than 0, then we change the negative sign to possitive by simply multiplying it with -1
+
+				key *= (-1)
+
+			# Adding the length of the text to itself
+			key += len(self.text)
+
+			# Creating the cipher text from the plain text
+			text = ''
+			for character in self.text:
+				# Iterating through each character in the plain text
+
+				text += chr((ord(character) + key) % 256)
+
+			# Encoding into the base64 format
+			text = b64encode(text.encode()).decode()
+
+			# Making the 'fuck' string out of the semi encrypted text
+			hash = ''
+			for index, character in enumerate(text):
+				# Iterating through each character in the text
+
+				hash += f'fuck{ord(character)}'
+				if index != len(text) - 1:
+					hash += '-' 
+			del text
+			# ----
+			if hash == self.original:
+				# If the fuck hash of the plain text matches with the original hash, then we continue
+
+				return True
+
+			# If none of the hashing algorithms are matched till now, then we return False
+			return False
 		else:
 			# If the hashing algorithm is specified by the user, then we continue to generate the hash out of the plain text and verify it against the orignal hash
 
