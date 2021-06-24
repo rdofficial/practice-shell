@@ -7,10 +7,10 @@ Author : Rishav Das (https://github.com/rdofficial/)
 Created on : June 13, 2021
 
 Last modified by : Rishav Das (https://github.com/rdofficial/)
-Last modified on : June 23, 2021
+Last modified on : June 24, 2021
 
 Changes made in the last modification :
-1. In the 'DirectoryEncrypter' class, added the help section text that is to be displayed on the console screen when the user asks for the documentation mode of the tool.
+1. Created the Hash tool / class. Added the code for serving the hashing functionality via the make() method defined in it.
 
 Authors contributed to this script (Add your name below if you have contributed) :
 1. Rishav Das (github:https://github.com/rdofficial/, email:rdofficial192@gmail.com)
@@ -1901,3 +1901,156 @@ class DirectoryEncrypter:
 				# If the user entered an unrecognized option, then we raise an error with custom message
 
 				raise ValueError('No such options recognized. Failed to fetch the custom config for the encryption directory.')
+
+class Hash:
+	""" """
+
+	def __init__(self, text = None, algorithm = None, arguments = None):
+		self.text = text
+		self.algorithm = algorithm
+
+		# Setting some class properties
+		self._algorithms_supported = [
+			'md5',
+			'sha1',
+			'sha224',
+			'sha256',
+			'sha378',
+			'sha512',
+			'sha3_224',
+			'sha3_256',
+			'shake_128',
+			'shake_256',
+			'sha3_384',
+			'sha3_512',
+			'blake2b',
+			'blake2s',
+			'fuck',
+		]
+
+		if type(self.text) == str:
+			self.text = self.text.encode()
+		elif type(self.text) == bytes:
+			pass
+		else:
+			raise TypeError('The input should be a string.')
+
+	def make(self):
+		""" This method / function serves the functionality of conversion of a plain string into hashed format using the specified algorithm. The values of the text, and algorithm are fetched from the class variables self.text, self.algorithm. """
+
+		# Checking the algorithm as per specified by the user and then executing the proper algorithm
+		if self.algorithm == 'md5':
+			# If the user specified algorithm is md5, then we continue
+
+			hash = hashlib.md5(self.text).hexdigest()
+		elif self.algorithm == 'sha1':
+			# If the user specified algorithm is sha1, then we continue
+
+			hash = hashlib.sha1(self.text).hexdigest()
+		elif self.algorithm == 'sha224':
+			# If the user specified algorithm is sha224, then we continue
+
+			hash = hashlib.sha224(self.text).hexdigest()
+		elif self.algorithm == 'sha256':
+			# If the user specified algoritm is sha256, then we continue
+
+			hash = hashlib.sha256(self.text).hexdigest()
+		elif self.algorithm == 'sha378':
+			# If the user specified algorithm is sha378, then we continue
+
+			hash = hashlib.sha256(self.text).hexdigest()
+		elif self.algorithm == 'sha512':
+			# If the user specified algorithm is sha512, then we continue
+
+			hash = hashlib.sha256(self.text).hexdigest()
+		elif self.algorithm == 'sha3_224':
+			# If the user specified algorithm is sha3_224, we continue
+
+			hash = hashlib.sha3_224(self.text).hexdigest()
+		elif self.algorithm == 'sha3_256':
+			# If the user specified algorithm is sha3_256, we continue
+
+			hash = hashlib.sha3_256(self.text).hexdigest()
+		elif self.algorithm == 'shake_128':
+			# If the user specified algorithm is shake_128, we continue
+
+			hash = hashlib.shake_128(self.text).hexdigest()
+		elif self.algorithm == 'shake_256':
+			# If the user specified algorithm is shake_256, we continue
+
+			hash = hashlib.shake_256(self.text).hexdigest()
+		elif self.algorithm == 'sha3_384':
+			# If the user specified algorithm is sha3_384, we continue
+
+			hash = hashlib.sha3_384(self.text).hexdigest()
+		elif self.algorithm == 'sha3_512':
+			# If the user specified algorithm is sha3_512, we continue
+
+			hash = hashlib.sha3_512(self.text).hexdigest()
+		elif self.algorithm == 'blake2b':
+			# If the user specified algorithm is blake2b, we continue
+
+			hash = hashlib.blake2b(self.text).hexdigest()
+		elif self.algorithm == 'blake2s':
+			# If the user specified algorithm is blake2s, we continue
+
+			hash = hashlib.blake2s(self.text).hexdigest()
+		elif self.algorithm == 'fuck':
+			# If the user specified algorithm is fuck, we continue
+
+			# CUSTOM ALGORITHM
+			# NAME : fuck
+			# ----
+			# Generating an hash encryption key
+			key = 0
+			isEven = True
+			self.text = self.text.decode()
+			for i in self.text:
+				# Iterating over each character in the encrypted key entered by the user
+					
+				if isEven:
+					# If the current iteration is even number, then we add the char code value
+
+					key += ord(i)
+				else:
+					# If the current iteration is odd number (not even), then we subtract the char code value
+
+					key -= ord(i)
+			del isEven
+
+			# Making the key possitive
+			if key < 0:
+				# If the key value is less than 0, then we change the negative sign to possitive by simply multiplying it with -1
+
+				key *= (-1)
+
+			# Adding the length of the text to itself
+			key += len(self.text)
+
+			# Creating the cipher text from the plain text
+			text = ''
+			for character in self.text:
+				# Iterating through each character in the plain text
+
+				text += chr((ord(character) + key) % 256)
+
+			# Encoding into the base64 format
+			text = b64encode(text.encode()).decode()
+
+			# Making the 'fuck' string out of the semi encrypted text
+			hash = ''
+			for index, character in enumerate(text):
+				# Iterating through each character in the text
+
+				hash += f'fuck{ord(character)}'
+				if index != len(text) - 1:
+					hash += '-' 
+			del text
+			# ----
+
+		# Finally after completing the process, we return the already formed hash back to the user
+		print(f'[$] Hash : {hash}')  # Displaying the generated hash on the console screen
+		return hash
+
+	def verify(self):
+		pass
