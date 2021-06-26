@@ -10,8 +10,7 @@ Last modified by : Rishav Das (https://github.com/rdofficial/)
 Last modified on : June 24, 2021
 
 Changes made in the last modification :
-1. In the 'Hash' class, added the code for the verify() method. Now, it verifies even if the user didnt specified the hashing algorithm.
-2. The extent would be only for the hashing algorithms supported by our Hash class.
+1. In the 'Hash' class, created the method dictionarycracker() which serves the funtionality of matching out the original strings from the hash code via a wordlist.
 
 Authors contributed to this script (Add your name below if you have contributed) :
 1. Rishav Das (github:https://github.com/rdofficial/, email:rdofficial192@gmail.com)
@@ -2374,3 +2373,262 @@ class Hash:
 				# If the hash generated from the plain text does not matches with the original hash, then we return False
 
 				return False
+
+	@staticmethod
+	def dictionarycracker(self, original = None, wordlist = None, arguments = None):
+		""" This method / function serves the functionality of cracking the hash with finding the original plain text via the dictionary method. All the values are custom passed into this function, instead of passing first into the main class object. The dictionary method is explained below. 
+
+		Dictionary attack :
+		In this attack, the user provides a file with each line of it written with plain string. The tool then checks the hashes of each plain string with the original hash. If the hash matches, then we display the original plain string.
+
+		In this function, per iteration of a plain string, we check it with the original hash with all the possible and available hashing algorithms which are supported by our class / tool.
+		The function displays the output directly on the console screen.
+		"""
+
+		# Validating the user entered information
+		# ----
+		# Checking for the user specified wordlist file
+		if type(wordlist) == str:
+			# If the wordlist file input specified by the user is a string data type, then we continue for further validation
+
+			# Checking if the user specified wordlist file exists or not
+			if path.isfile(wordlist):
+				# If the user specified wordlist file does exist on the local machine, then we continue
+
+				pass
+			else:
+				# If the user specified wordlist file does not exists, then we display the error message on the console screen
+
+				print(f'[ Error : Specified file "{wordlist}" not found ]')
+				return 0
+		else:
+			# If the wordlist file input specified by the user is not a string data type, then we continue for further validation
+
+			print(f'[ Error : Wordlist file invalid. ]')
+			return 0
+
+		# Checking for the original hash input from the user
+		if type(original) == str:
+			# If the original hash input from the user is of string data type, then we continue to validate further
+
+			# Checking the length of the original hash string
+			if len(original) != 0:
+				# If the length of the original hash string is equal to 0, then we display the error message on the console screen
+
+				print(f'[ Error : Original hash invalid. ]')
+				return 0
+			else:
+				# If the length of the original hash string is not equal to 0, then we continue
+
+				pass
+		else:
+			# If the original hash input from the user is not of string data type, then we display the error message on the console screen
+
+			print(f'[ Error : Original hash invalid. ]')
+			return 0
+		# ----
+
+		# Checking the mode whether documentation mode, or exeuction mode
+		if help:
+			# If the user asked for the execution in documentation mode, then we display the help text on the console screen
+
+			print('<-- Help for Hash dictionary cracker -->')
+		else:
+			# If the user asked for the execution in regular mode, then we continue to execute the task
+
+			# Loading the plain texts from the wordlist
+			plainStrings = []
+			contents = open(wordlist, 'r').read()
+			for item in contents:
+				# Iterating through each line of the wordlist file
+
+				item = item.split('\n')[0]
+				plainStrings.append(item)
+
+			# Checking if the plain string list is empty or not
+			if len(plainStrings) == 0:
+				# If the plain string list is empty, then we display the error message on the console screen
+
+				print(f'[ Error : 0 plain strings loaded from the specified wordlist file. ]')
+				return 0
+			else:
+				# If the plain string list is not empty, then we continue
+
+				pass
+
+			# Checking the hash of each plain string against the original hash
+			for string in plainStrings:
+				# Iterating through each item in the plain strings list
+
+				# Checking for all the algorithms supported by his tool / class one by one
+				# ----
+				# Checking for the md5 hahshing algorithm
+				hash = hashlib.md5(string.encode()).hexdigest()
+				if hash == original:
+					# If the md5 hash of the plain text matches with the original hash, then we continue
+
+					print(f'[$] Original hash found : {original}')
+					return 0
+				
+				# Checking for the sha1 hashing algorithm
+				hash = hashlib.sha1(string.encode()).hexdigest()
+				if hash == original:
+					# If the sha1 hash of the plain text matches with the original hash, then we continue
+
+					print(f'[$] Original hash found : {original}')
+					return 0
+
+				# Checking for the sha224 hashing algorithm
+				hash = hashlib.sha224(string.encode()).hexdigest()
+				if hash == orignal:
+					# If the sha224 hash of the plain text matches with the original hash, then we continue
+
+					print(f'[$] Original hash found : {original}')
+					return 0
+
+				# Checking for the sha256 hashing algorithm
+				hash = hashlib.sha256(string.encode()).hexdigest()
+				if hash == orignal:
+					# If the sha256 hash of the plain text matches with the original hash, then we continue
+
+					print(f'[$] Original hash found : {original}')
+					return 0
+
+				# Checking for the sha378 hashing algorithm
+				hash = hashlib.sha378(string.encode()).hexdigest()
+				if hash == orignal:
+					# If the sha378 hash of the plain text matches with the original hash, then we continue
+
+					print(f'[$] Original hash found : {original}')
+					return 0
+
+				# Checking for the sha512 hashing algorithm
+				hash = hashlib.sha512(string.encode()).hexdigest()
+				if hash == orignal:
+					# If the sha512 hash of the plain text matches with the original hash, then we continue
+
+					print(f'[$] Original hash found : {original}')
+					return 0
+
+				# Checking for the sha3_224 hashing algorithm
+				hash = hashlib.sha3_224(string.encode()).hexdigest()
+				if hash == orignal:
+					# If the sha3_224 hash of the plain text matches with the original hash, then we continue
+
+					print(f'[$] Original hash found : {original}')
+					return 0
+
+				# Checking for the sha3_256 hashing algorithm
+				hash = hashlib.sha3_256(string.encode()).hexdigest()
+				if hash == orignal:
+					# If the sha3_256 hash of the plain text matches with the original hash, then we continue
+
+					print(f'[$] Original hash found : {original}')
+					return 0
+
+				# Checking for the sha3_384 hashing algorithm
+				hash = hashlib.sha3_384(string.encode()).hexdigest()
+				if hash == orignal:
+					# If the sha3_384 hash of the plain text matches with the original hash, then we continue
+
+					print(f'[$] Original hash found : {original}')
+					return 0
+
+				# Checking for the sha3_512 hashing algorithm
+				hash = hashlib.sha3_512(string.encode()).hexdigest()
+				if hash == orignal:
+					# If the sha3_512 hash of the plain text matches with the original hash, then we continue
+
+					print(f'[$] Original hash found : {original}')
+					return 0
+
+				# Checking for the shake_128 hashing algorithm
+				hash = hashlib.shake_128(string.encode()).hexdigest()
+				if hash == orignal:
+					# If the shake_128 hash of the plain text matches with the original hash, then we continue
+
+					print(f'[$] Original hash found : {original}')
+					return 0
+
+				# Checking for the shake_256 hashing algorithm
+				hash = hashlib.shake_256(string.encode()).hexdigest()
+				if hash == orignal:
+					# If the shake_256 hash of the plain text matches with the original hash, then we continue
+
+					print(f'[$] Original hash found : {original}')
+					return 0
+
+				# Checking for the blake2b hashing algorithm
+				hash = hashlib.blake2b(string.encode()).hexdigest()
+				if hash == orignal:
+					# If the blake2b hash of the plain text matches with the original hash, then we continue
+
+					print(f'[$] Original hash found : {original}')
+					return 0
+
+				# Checking for the blake2s hashing algorithm
+				hash = hashlib.blake2s(string.encode()).hexdigest()
+				if hash == orignal:
+					# If the blake2s hash of the plain text matches with the original hash, then we continue
+
+					print(f'[$] Original hash found : {original}')
+					return 0
+
+				# Checking for the fuck hashing algorithm
+				# CUSTOM ALGORITHM
+				# NAME : fuck
+				# ----
+				# Generating an hash encryption key
+				key = 0
+				isEven = True
+				for i in string:
+					# Iterating over each character in the encrypted key entered by the user
+							
+					if isEven:
+						# If the current iteration is even number, then we add the char code value
+
+						key += ord(i)
+					else:
+						# If the current iteration is odd number (not even), then we subtract the char code value
+
+						key -= ord(i)
+				del isEven
+
+				# Making the key possitive
+				if key < 0:
+					# If the key value is less than 0, then we change the negative sign to possitive by simply multiplying it with -1
+
+					key *= (-1)
+
+				# Adding the length of the text to itself
+				key += len(string)
+
+				# Creating the cipher text from the plain text
+				text = ''
+				for character in string:
+					# Iterating through each character in the plain text
+
+					text += chr((ord(character) + key) % 256)
+
+				# Encoding into the base64 format
+				text = b64encode(text.encode()).decode()
+
+				# Making the 'fuck' string out of the semi encrypted text
+				hash = ''
+				for index, character in enumerate(text):
+					# Iterating through each character in the text
+
+					hash += f'fuck{ord(character)}'
+					if index != len(text) - 1:
+						hash += '-' 
+				del text
+				# ----
+				if hash == original:
+					# If the fuck hash of the plain text matches with the original hash, then we continue
+
+					print(f'[$] Original hash found : {original}')
+					return 0
+
+			# If the execution reaches upto this point, then we can say that the plain string for the hash is not found. Then, we display the error message on the console screen
+			print(f'[!] Original string not found')
+			return 0
