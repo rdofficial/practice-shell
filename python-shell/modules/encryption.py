@@ -7,10 +7,10 @@ Author : Rishav Das (https://github.com/rdofficial/)
 Created on : June 13, 2021
 
 Last modified by : Rishav Das (https://github.com/rdofficial/)
-Last modified on : June 24, 2021
+Last modified on : June 26, 2021
 
 Changes made in the last modification :
-1. In the 'Hash' class, created the method dictionarycracker() which serves the funtionality of matching out the original strings from the hash code via a wordlist.
+1. In the 'Hash' class, removed the shake_128 and shake_256 hashing algorithms.
 
 Authors contributed to this script (Add your name below if you have contributed) :
 1. Rishav Das (github:https://github.com/rdofficial/, email:rdofficial192@gmail.com)
@@ -1920,8 +1920,6 @@ class Hash:
 			'sha512',
 			'sha3_224',
 			'sha3_256',
-			'shake_128',
-			'shake_256',
 			'sha3_384',
 			'sha3_512',
 			'blake2b',
@@ -1972,14 +1970,6 @@ class Hash:
 			# If the user specified algorithm is sha3_256, we continue
 
 			hash = hashlib.sha3_256(self.text).hexdigest()
-		elif self.algorithm == 'shake_128':
-			# If the user specified algorithm is shake_128, we continue
-
-			hash = hashlib.shake_128(self.text).hexdigest()
-		elif self.algorithm == 'shake_256':
-			# If the user specified algorithm is shake_256, we continue
-
-			hash = hashlib.shake_256(self.text).hexdigest()
 		elif self.algorithm == 'sha3_384':
 			# If the user specified algorithm is sha3_384, we continue
 
@@ -2124,7 +2114,7 @@ class Hash:
 				return True
 
 			# Checking for the sha378 hashing algorithm
-			hash = hashlib.sha378(self.text).hexdigest()
+			hash = hashlib.sha384(self.text).hexdigest()
 			if hash == self.original:
 				# If the sha378 hash of the plain text matches with the original hash, then we continue
 
@@ -2162,20 +2152,6 @@ class Hash:
 			hash = hashlib.sha3_512(self.text).hexdigest()
 			if hash == self.original:
 				# If the sha3_512 hash of the plain text matches with the original hash, then we continue
-
-				return True
-
-			# Checking for the shake_128 hashing algorithm
-			hash = hashlib.shake_128(self.text).hexdigest()
-			if hash == self.original:
-				# If the shake_128 hash of the plain text matches with the original hash, then we continue
-
-				return True
-
-			# Checking for the shake_256 hashing algorithm
-			hash = hashlib.shake_256(self.text).hexdigest()
-			if hash == self.original:
-				# If the shake_256 hash of the plain text matches with the original hash, then we continue
 
 				return True
 
@@ -2286,14 +2262,6 @@ class Hash:
 				# If the user specified algorithm is sha3_256, we continue
 
 				hash = hashlib.sha3_256(self.text).hexdigest()
-			elif self.algorithm == 'shake_128':
-				# If the user specified algorithm is shake_128, we continue
-
-				hash = hashlib.shake_128(self.text).hexdigest()
-			elif self.algorithm == 'shake_256':
-				# If the user specified algorithm is shake_256, we continue
-
-				hash = hashlib.shake_256(self.text).hexdigest()
 			elif self.algorithm == 'sha3_384':
 				# If the user specified algorithm is sha3_384, we continue
 
@@ -2375,7 +2343,7 @@ class Hash:
 				return False
 
 	@staticmethod
-	def dictionarycracker(self, original = None, wordlist = None, arguments = None):
+	def dictionarycracker(original = None, wordlist = None, arguments = None):
 		""" This method / function serves the functionality of cracking the hash with finding the original plain text via the dictionary method. All the values are custom passed into this function, instead of passing first into the main class object. The dictionary method is explained below. 
 
 		Dictionary attack :
@@ -2384,6 +2352,8 @@ class Hash:
 		In this function, per iteration of a plain string, we check it with the original hash with all the possible and available hashing algorithms which are supported by our class / tool.
 		The function displays the output directly on the console screen.
 		"""
+
+		help = False
 
 		# Validating the user entered information
 		# ----
@@ -2412,7 +2382,7 @@ class Hash:
 			# If the original hash input from the user is of string data type, then we continue to validate further
 
 			# Checking the length of the original hash string
-			if len(original) != 0:
+			if len(original) == 0:
 				# If the length of the original hash string is equal to 0, then we display the error message on the console screen
 
 				print(f'[ Error : Original hash invalid. ]')
@@ -2480,7 +2450,7 @@ class Hash:
 
 				# Checking for the sha224 hashing algorithm
 				hash = hashlib.sha224(string.encode()).hexdigest()
-				if hash == orignal:
+				if hash == original:
 					# If the sha224 hash of the plain text matches with the original hash, then we continue
 
 					print(f'[$] Original hash found : {original}')
@@ -2488,15 +2458,15 @@ class Hash:
 
 				# Checking for the sha256 hashing algorithm
 				hash = hashlib.sha256(string.encode()).hexdigest()
-				if hash == orignal:
+				if hash == original:
 					# If the sha256 hash of the plain text matches with the original hash, then we continue
 
 					print(f'[$] Original hash found : {original}')
 					return 0
 
 				# Checking for the sha378 hashing algorithm
-				hash = hashlib.sha378(string.encode()).hexdigest()
-				if hash == orignal:
+				hash = hashlib.sha384(string.encode()).hexdigest()
+				if hash == original:
 					# If the sha378 hash of the plain text matches with the original hash, then we continue
 
 					print(f'[$] Original hash found : {original}')
@@ -2504,7 +2474,7 @@ class Hash:
 
 				# Checking for the sha512 hashing algorithm
 				hash = hashlib.sha512(string.encode()).hexdigest()
-				if hash == orignal:
+				if hash == original:
 					# If the sha512 hash of the plain text matches with the original hash, then we continue
 
 					print(f'[$] Original hash found : {original}')
@@ -2512,7 +2482,7 @@ class Hash:
 
 				# Checking for the sha3_224 hashing algorithm
 				hash = hashlib.sha3_224(string.encode()).hexdigest()
-				if hash == orignal:
+				if hash == original:
 					# If the sha3_224 hash of the plain text matches with the original hash, then we continue
 
 					print(f'[$] Original hash found : {original}')
@@ -2520,7 +2490,7 @@ class Hash:
 
 				# Checking for the sha3_256 hashing algorithm
 				hash = hashlib.sha3_256(string.encode()).hexdigest()
-				if hash == orignal:
+				if hash == original:
 					# If the sha3_256 hash of the plain text matches with the original hash, then we continue
 
 					print(f'[$] Original hash found : {original}')
@@ -2528,7 +2498,7 @@ class Hash:
 
 				# Checking for the sha3_384 hashing algorithm
 				hash = hashlib.sha3_384(string.encode()).hexdigest()
-				if hash == orignal:
+				if hash == original:
 					# If the sha3_384 hash of the plain text matches with the original hash, then we continue
 
 					print(f'[$] Original hash found : {original}')
@@ -2536,31 +2506,15 @@ class Hash:
 
 				# Checking for the sha3_512 hashing algorithm
 				hash = hashlib.sha3_512(string.encode()).hexdigest()
-				if hash == orignal:
+				if hash == original:
 					# If the sha3_512 hash of the plain text matches with the original hash, then we continue
-
-					print(f'[$] Original hash found : {original}')
-					return 0
-
-				# Checking for the shake_128 hashing algorithm
-				hash = hashlib.shake_128(string.encode()).hexdigest()
-				if hash == orignal:
-					# If the shake_128 hash of the plain text matches with the original hash, then we continue
-
-					print(f'[$] Original hash found : {original}')
-					return 0
-
-				# Checking for the shake_256 hashing algorithm
-				hash = hashlib.shake_256(string.encode()).hexdigest()
-				if hash == orignal:
-					# If the shake_256 hash of the plain text matches with the original hash, then we continue
 
 					print(f'[$] Original hash found : {original}')
 					return 0
 
 				# Checking for the blake2b hashing algorithm
 				hash = hashlib.blake2b(string.encode()).hexdigest()
-				if hash == orignal:
+				if hash == original:
 					# If the blake2b hash of the plain text matches with the original hash, then we continue
 
 					print(f'[$] Original hash found : {original}')
@@ -2568,7 +2522,7 @@ class Hash:
 
 				# Checking for the blake2s hashing algorithm
 				hash = hashlib.blake2s(string.encode()).hexdigest()
-				if hash == orignal:
+				if hash == original:
 					# If the blake2s hash of the plain text matches with the original hash, then we continue
 
 					print(f'[$] Original hash found : {original}')
