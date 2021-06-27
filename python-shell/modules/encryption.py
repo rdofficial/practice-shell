@@ -10,7 +10,7 @@ Last modified by : Rishav Das (https://github.com/rdofficial/)
 Last modified on : June 27, 2021
 
 Changes made in the last modification :
-1. In the 'Hash' class, updated the code to parse the shell arguments / tokens.
+1. In the 'Hash' class, updated the code to validate the algorithm parameter input in the make() method.
 
 Authors contributed to this script (Add your name below if you have contributed) :
 1. Rishav Das (github:https://github.com/rdofficial/, email:rdofficial192@gmail.com)
@@ -2038,10 +2038,33 @@ class Hash:
 					# If the task specified by the user is not recognized, then we raise an error with a custom message
 
 					raise SyntaxError('Task not recognized.')
+				del self.task
 				# ----
 
 	def make(self):
 		""" This method / function serves the functionality of conversion of a plain string into hashed format using the specified algorithm. The values of the text, and algorithm are fetched from the class variables self.text, self.algorithm. """
+
+		# Checking the algorithm specified by the user
+		# ----
+		if self.algorithm == None:
+			# If the algorithm parameter is not specified by the user, then we display the error message on the console screen
+
+			print(f'[ Error : Hashing algorithm not specified. ]')
+			return 0
+		else:
+			# If the algorithm parameter is specified by the user, then we continue for further validation
+
+			# Checking the data type of the algorithm parameter input
+			if type(self.algorithm) == str:
+				# If the data type of the algorithm parameter input is string type, then we continue
+
+				pass
+			else:
+				# If the data type of the algorithm parameter input is not a string type, then we display the error message on the console screen
+
+				print(f'[ Error : Hashing algorithm is invalid. ]')
+				return 0
+		# ----
 
 		# Checking the algorithm as per specified by the user and then executing the proper algorithm
 		if self.algorithm == 'md5':
@@ -2159,6 +2182,7 @@ class Hash:
 		"""
 
 		# Checking the self.original class variable before executing any process further
+		# ----
 		if self.original == None:
 			# If the self.original variable is not defined / specified by the user, then we display the error message on the console screen
 
@@ -2184,6 +2208,7 @@ class Hash:
 
 				print(f'[ Error : The original hash specified is invalid. ]')
 				return 0
+		# ----
 
 		# Checking if the hashing algorithm is specified by the user or not
 		if self.algorithm == None:
