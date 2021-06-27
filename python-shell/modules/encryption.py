@@ -2409,11 +2409,9 @@ class Hash:
 			# Loading the plain texts from the wordlist
 			plainStrings = []
 			contents = open(wordlist, 'r').read()
-			for item in contents:
-				# Iterating through each line of the wordlist file
-
-				item = item.split('\n')[0]
-				plainStrings.append(item)
+			contents = contents.split('\n')
+			plainStrings = contents
+			del contents
 
 			# Checking if the plain string list is empty or not
 			if len(plainStrings) == 0:
@@ -2430,6 +2428,7 @@ class Hash:
 			for string in plainStrings:
 				# Iterating through each item in the plain strings list
 
+
 				# Checking for all the algorithms supported by his tool / class one by one
 				# ----
 				# Checking for the md5 hahshing algorithm
@@ -2437,7 +2436,7 @@ class Hash:
 				if hash == original:
 					# If the md5 hash of the plain text matches with the original hash, then we continue
 
-					print(f'[$] Original hash found : {original}')
+					print(f'[$] Original hash found : {string}')
 					return 0
 				
 				# Checking for the sha1 hashing algorithm
@@ -2445,7 +2444,7 @@ class Hash:
 				if hash == original:
 					# If the sha1 hash of the plain text matches with the original hash, then we continue
 
-					print(f'[$] Original hash found : {original}')
+					print(f'[$] Original hash found : {string}')
 					return 0
 
 				# Checking for the sha224 hashing algorithm
@@ -2453,7 +2452,7 @@ class Hash:
 				if hash == original:
 					# If the sha224 hash of the plain text matches with the original hash, then we continue
 
-					print(f'[$] Original hash found : {original}')
+					print(f'[$] Original hash found : {string}')
 					return 0
 
 				# Checking for the sha256 hashing algorithm
@@ -2461,7 +2460,7 @@ class Hash:
 				if hash == original:
 					# If the sha256 hash of the plain text matches with the original hash, then we continue
 
-					print(f'[$] Original hash found : {original}')
+					print(f'[$] Original hash found : {string}')
 					return 0
 
 				# Checking for the sha378 hashing algorithm
@@ -2469,7 +2468,7 @@ class Hash:
 				if hash == original:
 					# If the sha378 hash of the plain text matches with the original hash, then we continue
 
-					print(f'[$] Original hash found : {original}')
+					print(f'[$] Original hash found : {string}')
 					return 0
 
 				# Checking for the sha512 hashing algorithm
@@ -2477,7 +2476,7 @@ class Hash:
 				if hash == original:
 					# If the sha512 hash of the plain text matches with the original hash, then we continue
 
-					print(f'[$] Original hash found : {original}')
+					print(f'[$] Original hash found : {string}')
 					return 0
 
 				# Checking for the sha3_224 hashing algorithm
@@ -2485,7 +2484,7 @@ class Hash:
 				if hash == original:
 					# If the sha3_224 hash of the plain text matches with the original hash, then we continue
 
-					print(f'[$] Original hash found : {original}')
+					print(f'[$] Original hash found : {string}')
 					return 0
 
 				# Checking for the sha3_256 hashing algorithm
@@ -2493,7 +2492,7 @@ class Hash:
 				if hash == original:
 					# If the sha3_256 hash of the plain text matches with the original hash, then we continue
 
-					print(f'[$] Original hash found : {original}')
+					print(f'[$] Original hash found : {string}')
 					return 0
 
 				# Checking for the sha3_384 hashing algorithm
@@ -2501,7 +2500,7 @@ class Hash:
 				if hash == original:
 					# If the sha3_384 hash of the plain text matches with the original hash, then we continue
 
-					print(f'[$] Original hash found : {original}')
+					print(f'[$] Original hash found : {string}')
 					return 0
 
 				# Checking for the sha3_512 hashing algorithm
@@ -2509,7 +2508,7 @@ class Hash:
 				if hash == original:
 					# If the sha3_512 hash of the plain text matches with the original hash, then we continue
 
-					print(f'[$] Original hash found : {original}')
+					print(f'[$] Original hash found : {string}')
 					return 0
 
 				# Checking for the blake2b hashing algorithm
@@ -2517,7 +2516,7 @@ class Hash:
 				if hash == original:
 					# If the blake2b hash of the plain text matches with the original hash, then we continue
 
-					print(f'[$] Original hash found : {original}')
+					print(f'[$] Original hash found : {string}')
 					return 0
 
 				# Checking for the blake2s hashing algorithm
@@ -2525,7 +2524,7 @@ class Hash:
 				if hash == original:
 					# If the blake2s hash of the plain text matches with the original hash, then we continue
 
-					print(f'[$] Original hash found : {original}')
+					print(f'[$] Original hash found : {string}')
 					return 0
 
 				# Checking for the fuck hashing algorithm
@@ -2580,7 +2579,7 @@ class Hash:
 				if hash == original:
 					# If the fuck hash of the plain text matches with the original hash, then we continue
 
-					print(f'[$] Original hash found : {original}')
+					print(f'[$] Original hash found : {string}')
 					return 0
 
 			# If the execution reaches upto this point, then we can say that the plain string for the hash is not found. Then, we display the error message on the console screen
