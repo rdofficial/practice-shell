@@ -7,10 +7,10 @@ Author : Rishav Das (https://github.com/rdofficial/)
 Created on : June 13, 2021
 
 Last modified by : Rishav Das (https://github.com/rdofficial/)
-Last modified on : June 26, 2021
+Last modified on : June 27, 2021
 
 Changes made in the last modification :
-1. In the 'Hash' class, removed the shake_128 and shake_256 hashing algorithms.
+1. In the 'Hash' class, added the code to parse the shell arguments / tokens.
 
 Authors contributed to this script (Add your name below if you have contributed) :
 1. Rishav Das (github:https://github.com/rdofficial/, email:rdofficial192@gmail.com)
@@ -1906,11 +1906,9 @@ class Hash:
 	""" """
 
 	def __init__(self, text = None, algorithm = None, original = None, arguments = None):
-		self.text = text
-		self.algorithm = algorithm
-		self.original = original
-
 		# Setting some class properties
+		# ----
+		# The hashing algorithm supported by this class
 		self._algorithms_supported = [
 			'md5',
 			'sha1',
@@ -1926,13 +1924,121 @@ class Hash:
 			'blake2s',
 			'fuck',
 		]
+		# ----
 
-		if type(self.text) == str:
-			self.text = self.text.encode()
-		elif type(self.text) == bytes:
-			pass
+		# Checking if arguments provided or just the parameters directly
+		if arguments == None:
+			# If the arguments are not passed to this function by the user, then we continue to use the default provided values
+
+			self.text = text
+			self.algorithm = algorithm
+			self.original = original
 		else:
-			raise TypeError('The input should be a string.')
+			# If the arguments are passed to this function by the user, then we continue to parse the arguments
+
+			# Parsing the arguments entered to this function
+			# ----
+			# Setting the default value of the variables to None
+			self.text = None
+			self.algorithm = None
+			self.original = None
+			self.task = None
+			self.documentation = False
+
+			# Iterating through each argument to filter out the values
+			for index, argument in enumerate(arguments):
+				# Iterating through each argument item
+
+				if argument == '--text':
+					# If the argument is for specifying the text, then we continue to parse the next argument as the entered value
+
+					try:
+						self.text = arguments[index + 1]
+					except IndexError:
+						# If the next argument is out of the list index (i.e., it does not exists), then we continue for the next iteration
+
+						continue
+
+				if argument == '--algorithm':
+					# If the argument is for specifying the algorithm, then we continue to parse the next argument as the entered value
+
+					try:
+						self.algorithm = arguments[index + 1]
+					except IndexError:
+						# If the next argument is out of the list index (i.e., it does not exists), then we continue for the next iteration
+
+						continue
+
+				if argument == '--original':
+					# If the argument is for specifying the original, then we continue to parse the next argument as the entered value
+
+					try:
+						self.original = arguments[index + 1]
+					except IndexError:
+						# If the next argument is out of the list index (i.e., it does not exists), then we continue for the next iteration
+
+						continue
+
+				if argument == '--task':
+					# If the argument is for specifying the task (making hash / verifying hash), then we continue to parse the next argument as the entered value
+
+					try:
+						self.task = arguments[index + 1]
+					except IndexError:
+						# If the next argument is out of the list index (i.e., it does not exists), then we continue for the next iteration
+
+						continue
+
+				if argument == '--help':
+					# If the argument is for specifying the help, then we continue to mark the documentation mode to be true
+
+					self.documentation = True
+			# ----
+
+			# Checking whether the task is to be in documentation mode or execution mode
+			if self.documentation:
+				# If the user specified the documentation mode, then we continue to display the help text on the console screen
+
+				print('<-- Help for Hash -->')
+			else:
+				# If the user specified the execution mode, then we continue to execute the task
+
+				# Validating the user entered inputs
+				# ----
+				# Validating the user entered plain string
+				if type(self.text) == str:
+					# If the user entered plain string is of a string data type, then we continue to encode it in the byte format
+
+					self.text = self.text.encode()
+				elif type(self.text) == bytes:
+					# If the user entered plain string is of a bytes data type, then we continue
+
+					pass
+				else:
+					# If the user entered plain string is neither of string data type nor bytes data type, then we raise an error with a custom message
+
+					raise TypeError('Plain string invalid.')
+				# ----
+
+				# Checking the task specified and executing as per user specified
+				# ----
+				if self.task == None:
+					# If the task is not specified by the user, then we raise an error with custom message
+
+					raise SyntaxError('Task not specified.')
+				elif self.task == 'make':
+					# If the task specified by the user is for making hash / generating the hash, then we continue to do so
+
+					pass
+				elif self.task == 'verify':
+					# If the task specified by the user is for verifying hash, then we continue to do so
+
+					pass
+				else:
+					# If the task specified by the user is not recognized, then we raise an error with a custom message
+
+					raise SyntaxError('Task not recognized.')
+				# ----
 
 	def make(self):
 		""" This method / function serves the functionality of conversion of a plain string into hashed format using the specified algorithm. The values of the text, and algorithm are fetched from the class variables self.text, self.algorithm. """
