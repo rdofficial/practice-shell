@@ -10,7 +10,7 @@ Last modified by : Rishav Das (https://github.com/rdofficial/)
 Last modified on : June 27, 2021
 
 Changes made in the last modification :
-1. In the 'Hash' class, added the code to parse the shell arguments / tokens.
+1. In the 'Hash' class, updated the code to parse the shell arguments / tokens.
 
 Authors contributed to this script (Add your name below if you have contributed) :
 1. Rishav Das (github:https://github.com/rdofficial/, email:rdofficial192@gmail.com)
@@ -2029,11 +2029,11 @@ class Hash:
 				elif self.task == 'make':
 					# If the task specified by the user is for making hash / generating the hash, then we continue to do so
 
-					pass
+					self.make()
 				elif self.task == 'verify':
 					# If the task specified by the user is for verifying hash, then we continue to do so
 
-					pass
+					self.verify()
 				else:
 					# If the task specified by the user is not recognized, then we raise an error with a custom message
 
