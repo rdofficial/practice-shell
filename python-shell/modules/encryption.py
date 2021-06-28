@@ -7,10 +7,10 @@ Author : Rishav Das (https://github.com/rdofficial/)
 Created on : June 13, 2021
 
 Last modified by : Rishav Das (https://github.com/rdofficial/)
-Last modified on : June 27, 2021
+Last modified on : June 28, 2021
 
 Changes made in the last modification :
-1. In the 'Hash' class, updated the code to validate the algorithm parameter input in the make() method.
+1. In the 'Hash' class, updated the commented docs (__doc__).
 
 Authors contributed to this script (Add your name below if you have contributed) :
 1. Rishav Das (github:https://github.com/rdofficial/, email:rdofficial192@gmail.com)
@@ -1903,7 +1903,54 @@ class DirectoryEncrypter:
 				raise ValueError('No such options recognized. Failed to fetch the custom config for the encryption directory.')
 
 class Hash:
-	""" """
+	"""
+	This class serves the functionality of hash command / tool. The features served by this class are listed below.
+	1. Creation of a hash using different algorithms
+	2. Verification of a plain string with a hash
+	3. Cracking a hash using the dictionary attack method
+
+	Hashing is a thing mostly done to the passwords (the user credentials), when storing in the web server's database.
+
+	This class serves the tasks as per the user specified inputs to the class object. There are two ways in which this class object takes in the user inputs. They are listed below.
+
+	1. Via argument tokens
+
+		In this mode,
+		The argument tokens entered by the user at the shell (command line) are passed to this class object at the 'arguments' parameters. The syntax is shown below.
+
+		Hash(arguments = [<argument-list>])
+
+		The arguments that are recognized by this class / tool are listed below.
+		--text                Used to specify the plain string for hashing
+		--algorithm           Used to specify the algorithm to be used for hashing
+		--original            Used to specify the original hash (if used for verification)
+		--task                Used to specify the task to be executed
+		--help                Used to launch the documentation mode (the help section is displayed on the console screen)
+
+		If there are any whitespaces in the inputs, then use the backslash (\). Below are some examples for the usage of this tool.
+
+		# For creating a md5 hash
+		hash --text someplainstring123 --algorithm md5 --task make
+
+	2. Directly passing parameters
+
+		In this mode,
+		The parameters are passed directly into the class object. The syntax for the usage is listed below.
+
+		Hash(
+			text = '<plain string>',
+			algorithm = '<hashing algorithm>',
+			original = '<original hash>',
+		)
+
+		Further processes are listed below in the form of examples.
+
+		# For creating a md5 hash
+		Hash(text = '<plain string>', algorithm = 'md5').make()
+
+		# For verifying a md5 hash
+		Hash(text = '<plain string>', algorithm = 'md5', original = '<original hash>').verify()
+	"""
 
 	def __init__(self, text = None, algorithm = None, original = None, arguments = None):
 		# Setting some class properties
