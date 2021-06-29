@@ -10,7 +10,7 @@ Last modified by : Rishav Das (https://github.com/rdofficial/)
 Last modified on : June 29, 2021
 
 Changes made in the last modification :
-1. In the 'Hash' class, added argument token parsing code and the proper exeuction order in the static method dictionarycracker().
+1. Created the classes HashCracker, FileEncryptionCracker, DirectoryEncryptionCracker.
 
 Authors contributed to this script (Add your name below if you have contributed) :
 1. Rishav Das (github:https://github.com/rdofficial/, email:rdofficial192@gmail.com)
@@ -2848,3 +2848,39 @@ class Hash:
 			# If the execution reaches upto this point, then we can say that the plain string for the hash is not found. Then, we display the error message on the console screen
 			print(f'[!] Original string not found')
 			return 0
+
+class HashCracker:
+	""" """
+
+	def __init__(self):
+		pass
+
+	def dictionaryattack(self):
+		pass
+
+	def bruteforceattack(self):
+		pass
+
+class FileEncryptionCracker:
+	""" """
+
+	def __init__(self):
+		pass
+
+	def dictionaryattack(self):
+		pass
+
+	def bruteforceattack(self):
+		pass
+
+class DirectoryEncryptionCracker:
+	""" """
+
+	def __init__(self):
+		pass
+
+	def dictionaryattack(self):
+		pass
+
+	def bruteforceattack(self):
+		pass
