@@ -10,7 +10,7 @@ Last modified by : Rishav Das (https://github.com/rdofficial/)
 Last modified on : June 29, 2021
 
 Changes made in the last modification :
-1. In the 'Hash' class, updated the commented docs (__doc__) for the static method dictionarycracker().
+1. In the 'Hash' class, added argument token parsing code and the proper exeuction order in the static method dictionarycracker().
 
 Authors contributed to this script (Add your name below if you have contributed) :
 1. Rishav Das (github:https://github.com/rdofficial/, email:rdofficial192@gmail.com)
@@ -2573,50 +2573,50 @@ class Hash:
 		2. The original hash should be one of the hash creating under this tool only, or just with the same algorithms that are supported by this tool.
 		"""
 
-		help = False
+		# Checking if arguments provided or just the parameters directly
+		if arguments == None:
+			# If the arguments are not passed to this function by the user, then we continue to use the default provided values
 
-		# Validating the user entered information
-		# ----
-		# Checking for the user specified wordlist file
-		if type(wordlist) == str:
-			# If the wordlist file input specified by the user is a string data type, then we continue for further validation
-
-			# Checking if the user specified wordlist file exists or not
-			if path.isfile(wordlist):
-				# If the user specified wordlist file does exist on the local machine, then we continue
-
-				pass
-			else:
-				# If the user specified wordlist file does not exists, then we display the error message on the console screen
-
-				print(f'[ Error : Specified file "{wordlist}" not found ]')
-				return 0
+			pass
 		else:
-			# If the wordlist file input specified by the user is not a string data type, then we continue for further validation
+			# If the arguments are passed to this function by the user, then we continue to parse the arguments
 
-			print(f'[ Error : Wordlist file invalid. ]')
-			return 0
+			# Parsing the arguments entered to this function
+			# ----
+			# Setting the default value of the variables to None
+			original = None
+			wordlist = None
+			help = False
 
-		# Checking for the original hash input from the user
-		if type(original) == str:
-			# If the original hash input from the user is of string data type, then we continue to validate further
+			# Iterating through each argument to filter out the values
+			for index, argument in enumerate(arguments):
+				# Iterating through each argument item
 
-			# Checking the length of the original hash string
-			if len(original) == 0:
-				# If the length of the original hash string is equal to 0, then we display the error message on the console screen
+				if argument == '--original':
+					# If the argument is for specifying the original hash, then we continue to parse the next argument as the entered value
 
-				print(f'[ Error : Original hash invalid. ]')
-				return 0
-			else:
-				# If the length of the original hash string is not equal to 0, then we continue
+					try:
+						original = arguments[index + 1]
+					except IndexError:
+						# If the next argument is out of the list index (i.e., it does not exists), then we continue for the next iteration
 
-				pass
-		else:
-			# If the original hash input from the user is not of string data type, then we display the error message on the console screen
+						continue
 
-			print(f'[ Error : Original hash invalid. ]')
-			return 0
-		# ----
+				if argument == '--wordlist':
+					# If the argument is for specifying the wordlist file location, then we continue to parse the next argument as the entered value
+
+					try:
+						wordlist = arguments[index + 1]
+					except IndexError:
+						# If the next argument is out of the list index (i.e., it does not exists), then we continue for the next iteration
+
+						continue
+
+				if argument == '--help':
+					# If the argument is for specifying the help, then we continue to mark the documentation mode to be true
+
+					help = True
+			# ----
 
 		# Checking the mode whether documentation mode, or exeuction mode
 		if help:
@@ -2625,6 +2625,49 @@ class Hash:
 			print('<-- Help for Hash dictionary cracker -->')
 		else:
 			# If the user asked for the execution in regular mode, then we continue to execute the task
+
+			# Validating the user entered information
+			# ----
+			# Checking for the user specified wordlist file
+			if type(wordlist) == str:
+				# If the wordlist file input specified by the user is a string data type, then we continue for further validation
+
+				# Checking if the user specified wordlist file exists or not
+				if path.isfile(wordlist):
+					# If the user specified wordlist file does exist on the local machine, then we continue
+
+					pass
+				else:
+					# If the user specified wordlist file does not exists, then we display the error message on the console screen
+
+					print(f'[ Error : Specified file "{wordlist}" not found ]')
+					return 0
+			else:
+				# If the wordlist file input specified by the user is not a string data type, then we continue for further validation
+
+				print(f'[ Error : Wordlist file invalid. ]')
+				return 0
+
+			# Checking for the original hash input from the user
+			if type(original) == str:
+				# If the original hash input from the user is of string data type, then we continue to validate further
+
+				# Checking the length of the original hash string
+				if len(original) == 0:
+					# If the length of the original hash string is equal to 0, then we display the error message on the console screen
+
+					print(f'[ Error : Original hash invalid. ]')
+					return 0
+				else:
+					# If the length of the original hash string is not equal to 0, then we continue
+
+					pass
+			else:
+				# If the original hash input from the user is not of string data type, then we display the error message on the console screen
+
+				print(f'[ Error : Original hash invalid. ]')
+				return 0
+			# ----
 
 			# Loading the plain texts from the wordlist
 			plainStrings = []
