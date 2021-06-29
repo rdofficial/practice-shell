@@ -7,10 +7,10 @@ Author : Rishav Das (https://github.com/rdofficial/)
 Created on : June 13, 2021
 
 Last modified by : Rishav Das (https://github.com/rdofficial/)
-Last modified on : June 28, 2021
+Last modified on : June 29, 2021
 
 Changes made in the last modification :
-1. In the 'Hash' class, updated the commented docs (__doc__).
+1. In the 'Hash' class, updated the commented docs (__doc__) for the static method dictionarycracker().
 
 Authors contributed to this script (Add your name below if you have contributed) :
 1. Rishav Das (github:https://github.com/rdofficial/, email:rdofficial192@gmail.com)
@@ -1932,6 +1932,12 @@ class Hash:
 		# For creating a md5 hash
 		hash --text someplainstring123 --algorithm md5 --task make
 
+		# For verifying a md5 hash
+		hash --text someplainstring123 --algorithm md5 --original <original-hash> --task verify
+
+		# For verifying a hash (algorithm not specified)
+		hash --text someplainstring123 --original <original-hash> --task verify
+
 	2. Directly passing parameters
 
 		In this mode,
@@ -1950,6 +1956,9 @@ class Hash:
 
 		# For verifying a md5 hash
 		Hash(text = '<plain string>', algorithm = 'md5', original = '<original hash>').verify()
+
+		# For verifying a hash (algorithm not specified)
+		Hash(text = '<plain string>', original = '<original hash>').verify()
 	"""
 
 	def __init__(self, text = None, algorithm = None, original = None, arguments = None):
@@ -2529,6 +2538,39 @@ class Hash:
 
 		In this function, per iteration of a plain string, we check it with the original hash with all the possible and available hashing algorithms which are supported by our class / tool.
 		The function displays the output directly on the console screen.
+
+		The function works seperately than the class, it takes input from the user in two ways.They are listed below.
+
+		1. Via argument tokens
+
+			In this mode,
+			The argument tokens entered by the user at the shell (command line) are passed to this class object at the 'arguments' parameters. The syntax is shown below.
+
+			Hash.dictionarycracker(arguments = [<argument-list>])
+
+			The arguments that are recognized by this class / tool are listed below.
+			--original            Used to specify the original hash
+			--wordlist            Used to specify the wordlist file location
+			--help                Used to launch the documentation mode (the help section is displayed on the console screen)
+
+			If there are any whitespaces in the inputs, then use the backslash (\). Below are some examples for the usage of this tool.
+
+			# For cracking a hash string
+			hash dictionary-cracker --original <original-hash> --wordlist /location/to/wordlist/file
+
+		2. Directly passing parameters
+
+			In this mode,
+			The parameters are passed directly into the class object. The syntax for the usage is listed below.
+
+			Hash.dictionarycracker(
+				original = '<original hash>',
+				wordlist = '/location/to/wordlist/file'
+			)
+
+		Some points to be noted :
+		1. The wordlist file should be of proper format. i.e., Each plain string on separate lines.
+		2. The original hash should be one of the hash creating under this tool only, or just with the same algorithms that are supported by this tool.
 		"""
 
 		help = False
