@@ -7,10 +7,10 @@ Author : Rishav Das (https://github.com/rdofficial/)
 Created on : June 13, 2021
 
 Last modified by : Rishav Das (https://github.com/rdofficial/)
-Last modified on : June 29, 2021
+Last modified on : June 30, 2021
 
 Changes made in the last modification :
-1. Created the classes HashCracker, FileEncryptionCracker, DirectoryEncryptionCracker.
+1. In the 'HashCracker' class, added the basic for running the inputs checker.
 
 Authors contributed to this script (Add your name below if you have contributed) :
 1. Rishav Das (github:https://github.com/rdofficial/, email:rdofficial192@gmail.com)
@@ -2136,7 +2136,7 @@ class Hash:
 
 			hash = hashlib.sha224(self.text).hexdigest()
 		elif self.algorithm == 'sha256':
-			# If the user specified algoritm is sha256, then we continue
+			# If the user specified algorithm is sha256, then we continue
 
 			hash = hashlib.sha256(self.text).hexdigest()
 		elif self.algorithm == 'sha378':
@@ -2430,7 +2430,7 @@ class Hash:
 
 				hash = hashlib.sha224(self.text).hexdigest()
 			elif self.algorithm == 'sha256':
-				# If the user specified algoritm is sha256, then we continue
+				# If the user specified algorithm is sha256, then we continue
 
 				hash = hashlib.sha256(self.text).hexdigest()
 			elif self.algorithm == 'sha378':
@@ -2852,13 +2852,93 @@ class Hash:
 class HashCracker:
 	""" """
 
-	def __init__(self):
-		pass
+	def __init__(self, original = None, arguments = None):
+		self.original = original
+		self.algorithm = None
+		self.wordlist = None
+		self.documentation = False
+
+		# Checking whether the task is to be in documentation mode or execution mode
+		if self.documentation:
+			# If the user specified the documentation mode, then we continue to display the help text on the console screen
+
+			print('<-- Help for Hash cracker -->')
+		else:
+			# If the user specified the execution mode, then we continue to execute the task
+
+			# Validating the user entered inputs
+			# ----
+			# Validating the original hash entered by the user
+			if type(self.original) == str:
+				# If the data type of the user specified original hash is string type, then we continue for further validation
+
+				if len(self.original) == 0:
+					# If the length of the user specified original hash is 0, then we raise an error with custom message
+
+					raise ValueError('Original hash invalid.')
+				else:
+					# If the length of the user specified orignal hash is not 0, then we continue
+
+					pass
+			else:
+				# If the data type of the user specified original hash is not string type, then we raise an error with custom message
+
+				raise ValueError('Original hash invalid.')
+			# ----
 
 	def dictionaryattack(self):
-		pass
+		""" This method / function serves the functionality of the cracking the original plain string of the hashed string using the dictionary attack method. """
+
+		# Validating the wordlist file specified by the user
+		# ----
+		if type(self.wordlist) == str:
+			# If the data type of the wordlist input by the user is of string type, then we continue for further validation
+
+			if path.isfile(self.wordlist):
+				# If the wordlist file specified by the user exists on the local machine, then we continue
+
+				pass
+			else:
+				# If the wordlist file specified by the user does not exists on the local machine, then we display the error message on the console screen
+
+				print(f'[ Error : No such file found "{self.wordlist}". ]')
+				return 0
+		else:
+			# If the data type of the wordlist input by the user is not of string type, then we display the error message on the console screen
+
+			print(f'[ Error : Wordlist file is invalid. ]')
+		# ----
+
+		# Loading the plain strings from the wordlist fil
+		# ----
+		# Declaring an empty list for storing all the plain strings
+		plainStrings = []
+
+		# Loading the contents of the wordlist file specified by the user
+		contents = open(wordlist, 'r').read()
+		contents = contents.split('\n')
+		plainStrings = contents
+		del contents
+		# ----
+
+		# Checking if a specific algorithm is specified by the user in order to crack the hash
+		if self.algorithm == None:
+			# If a specific algorithm is not specified by the user, then we continue to check for all the algorithms one by one
+
+			pass
+		else:
+			# If an specific algorithm is specified by the user, then we continue to crack for that particular algorithm
+
+			pass
 
 	def bruteforceattack(self):
+		""" """
+
+		pass
+
+	def makehash(self, algorithm):
+		""" """
+
 		pass
 
 class FileEncryptionCracker:
