@@ -7,10 +7,10 @@ Author : Rishav Das (https://github.com/rdofficial/)
 Created on : June 13, 2021
 
 Last modified by : Rishav Das (https://github.com/rdofficial/)
-Last modified on : June 30, 2021
+Last modified on : July 1, 2021
 
 Changes made in the last modification :
-1. In the 'HashCracker' class, added the basic for running the inputs checker.
+1. In the 'HashCracker' class, added the code for creating the hash out of the plain strings per iteration.
 
 Authors contributed to this script (Add your name below if you have contributed) :
 1. Rishav Das (github:https://github.com/rdofficial/, email:rdofficial192@gmail.com)
@@ -1111,7 +1111,7 @@ class DirectoryEncrypter:
 			if self.documentation:
 				# If the user specified the documentation mode, then we continue to display the help text on the console screen
 
-				print('encrypt directory\nUsage : encrypt <arguments>\n\n"encrypt directory" is a tool which serves the functionality of encryption / decryption of user specified directories. This tool encrypts an entire directory with a password. There are also features like ignoring certain files while encryption / decryption process. All such properties of the encryption are stored in the config file (.encryption_config). This file is necessary for the proper decryption of an already encrytped directory.\n\nArguments are :\n--password            Used to specify the password for encryption / decryption\n--directory  Used to specify the directory for encryption / decryption\n--task  Used to specify whether to encrypt / decrypt\n--ignore \t\t\t  Used to specify certain files to ignore when encrypting\n--use-config  Used to specify a custom config for the encryption / decryption\n--help(\t\t\t  Used to display this help te\n\nPoints to be noted :\n1. The sub-folders in the specified directory are skipped, just the files are encrypted.\n2. The complete process of encryption and decryption might have some flaws. There might occur some errors related to key generation, discontinuity, etc, that could lead to serious loss of the data.\n3. Security is not ensured by us. If there are situations like the data is completly corrupted during the process, then the authors are not responsible for the loss of the data. The authors are responsible for the bugs, not the mistakes commited by the users / clients. Thus, use this tool / class object safely and with your own risk.s\n\nCheck out the docs for more info.')
+				print('encrypt directory\nUsage : encrypt <arguments>\n\n"encrypt directory" is a tool which serves the functionality of encryption / decryption of user specified directories. This tool encrypts an entire directory with a password. There are also features like ignoring certain files while encryption / decryption process. All such properties of the encryption are stored in the config file (.encryption_config). This file is necessary for the proper decryption of an already encrytped directory.\n\nArguments are :\n--password            Used to specify the password for encryption / decryption\n--directory  Used to specify the directory for encryption / decryption\n--task  Used to specify whether to encrypt / decrypt\n--ignore \t\t\t  Used to specify certain files to ignore when encrypting\n--use-config  Used to specify a custom config for the encryption / decryption\n--help(\t\t\t  Used to display this help te\n\nPoints to be noted :\n1. The sub-folders in the specified directory are skipped, just the files are encrypted.\n2. The complete process of encryption and decryption might have some flaws. There might occur some errors related to key generation, discontinuity, etc, that could lead to serious loss of the data.\n3. Security is not ensured by us. If there are situations like the data is completly corrupted during the process, then the authors are not responsible for the loss of the data. The authors are responsible for the bugs, not the mistakes commited by the users / clients. Thus, use this tool / class object safely and with your own risks.\n\nCheck out the docs for more info.')
 			else:
 				# If the user specified the execution mode, then we continue to execute the task
 
@@ -1970,7 +1970,7 @@ class Hash:
 			'sha1',
 			'sha224',
 			'sha256',
-			'sha378',
+			'sha384',
 			'sha512',
 			'sha3_224',
 			'sha3_256',
@@ -2139,14 +2139,14 @@ class Hash:
 			# If the user specified algorithm is sha256, then we continue
 
 			hash = hashlib.sha256(self.text).hexdigest()
-		elif self.algorithm == 'sha378':
-			# If the user specified algorithm is sha378, then we continue
+		elif self.algorithm == 'sha384':
+			# If the user specified algorithm is sha384, then we continue
 
-			hash = hashlib.sha256(self.text).hexdigest()
+			hash = hashlib.sha384(self.text).hexdigest()
 		elif self.algorithm == 'sha512':
 			# If the user specified algorithm is sha512, then we continue
 
-			hash = hashlib.sha256(self.text).hexdigest()
+			hash = hashlib.sha512(self.text).hexdigest()
 		elif self.algorithm == 'sha3_224':
 			# If the user specified algorithm is sha3_224, we continue
 
@@ -2300,10 +2300,10 @@ class Hash:
 
 				return True
 
-			# Checking for the sha378 hashing algorithm
+			# Checking for the sha384 hashing algorithm
 			hash = hashlib.sha384(self.text).hexdigest()
 			if hash == self.original:
-				# If the sha378 hash of the plain text matches with the original hash, then we continue
+				# If the sha384 hash of the plain text matches with the original hash, then we continue
 
 				return True
 
@@ -2433,8 +2433,8 @@ class Hash:
 				# If the user specified algorithm is sha256, then we continue
 
 				hash = hashlib.sha256(self.text).hexdigest()
-			elif self.algorithm == 'sha378':
-				# If the user specified algorithm is sha378, then we continue
+			elif self.algorithm == 'sha384':
+				# If the user specified algorithm is sha384, then we continue
 
 				hash = hashlib.sha256(self.text).hexdigest()
 			elif self.algorithm == 'sha512':
@@ -2726,10 +2726,10 @@ class Hash:
 					print(f'[$] Original hash found : {string}')
 					return 0
 
-				# Checking for the sha378 hashing algorithm
+				# Checking for the sha384 hashing algorithm
 				hash = hashlib.sha384(string.encode()).hexdigest()
 				if hash == original:
-					# If the sha378 hash of the plain text matches with the original hash, then we continue
+					# If the sha384 hash of the plain text matches with the original hash, then we continue
 
 					print(f'[$] Original hash found : {string}')
 					return 0
@@ -2936,10 +2936,133 @@ class HashCracker:
 
 		pass
 
-	def makehash(self, algorithm):
-		""" """
+	@staticmethod
+	def makehash(text, algorithm):
+		"""
+		This method / function serves the functionality of creating / generating the hash out of the plain string that is passed to this function. In this function, the plain string is converted to hash code using the algorithm specified. The values of the text, and the hashing algorithm is taken from the user inputs via parameters : text, algorithm.
 
-		pass
+		The function returns the hashed string back to the user if it is formed successfully, and also if there are some errors in the process, then we return 0. """
+
+		# Checking the hashing algorithm specified
+		if algorithm == 'md5':
+			# If the user specified hashing algorithm is md5, then we continue to form it
+
+			hash = hashlib.md5(text.encode()).hexdigest()
+			return hash
+		elif algorithm == 'sha1':
+			# If the user specified hashing algorithm is sha1, then we continue to form it
+
+			hash = hashlib.sha1(text.encode()).hexdigest()
+			return hash
+		elif algorithm == 'sha224':
+			# If the user specified hashing algorithm is sha224, then we continue to form it
+
+			hash = hashlib.sha224(text.encode()).hexdigest()
+			return hash
+		elif algorithm == 'sha256':
+			# If the user specified hashing algorithm is sha256, then we continue to form it
+
+			hash = hashlib.sha256(text.encode()).hexdigest()
+			return hash
+		elif algorithm == 'sha384':
+			# If the user specified hashing algorithm is sha384, then we continue to form it
+
+			hash = hashlib.sha384(text.encode()).hexdigest()
+			return hash
+		elif algorithm == 'sha512':
+			# If the user specified hashing algorithm is sha512, then we continue to form it
+
+			hash = hashlib.sha512(text.encode()).hexdigest()
+			return hash
+		elif self.algorithm == 'sha3_224':
+			# If the user specified hashing algorithm is sha3_224, we continue to form it
+
+			hash = hashlib.sha3_224(self.text.encode()).hexdigest()
+			return hash
+		elif self.algorithm == 'sha3_256':
+			# If the user specified hashing algorithm is sha3_256, we continue to form it
+
+			hash = hashlib.sha3_256(self.text.encode()).hexdigest()
+			return hash
+		elif self.algorithm == 'sha3_384':
+			# If the user specified hashing algorithm is sha3_384, we continue to form it
+
+			hash = hashlib.sha3_384(self.text.encode()).hexdigest()
+			return hash
+		elif self.algorithm == 'sha3_512':
+			# If the user specified hashing algorithm is sha3_512, we continue to form it
+
+			hash = hashlib.sha3_512(self.text.encode()).hexdigest()
+			return hash
+		elif self.algorithm == 'blake2b':
+			# If the user specified hashing algorithm is blake2b, we continue to form it
+
+			hash = hashlib.blake2b(self.text.encode()).hexdigest()
+			return hash
+		elif self.algorithm == 'blake2s':
+			# If the user specified hashing algorithm is blake2s, we continue to form it
+			
+			hash = hashlib.blake2s(self.text.encode()).hexdigest()
+			return hash
+		elif self.algorithm == 'fuck':
+			# If the user specified hashing algorithm is fuck, we continue to form it
+
+			# CUSTOM ALGORITHM
+			# NAME : fuck
+			# ----
+			# Generating an hash encryption key
+			key = 0
+			isEven = True
+			self.text = self.text.decode()
+			for i in self.text:
+				# Iterating over each character in the encrypted key entered by the user
+					
+				if isEven:
+					# If the current iteration is even number, then we add the char code value
+
+					key += ord(i)
+				else:
+					# If the current iteration is odd number (not even), then we subtract the char code value
+
+					key -= ord(i)
+			del isEven
+
+			# Making the key possitive
+			if key < 0:
+				# If the key value is less than 0, then we change the negative sign to possitive by simply multiplying it with -1
+
+				key *= (-1)
+
+			# Adding the length of the text to itself
+			key += len(self.text)
+
+			# Creating the cipher text from the plain text
+			text = ''
+			for character in self.text:
+				# Iterating through each character in the plain text
+
+				text += chr((ord(character) + key) % 256)
+
+			# Encoding into the base64 format
+			text = b64encode(text.encode()).decode()
+
+			# Making the 'fuck' string out of the semi encrypted text
+			hash = ''
+			for index, character in enumerate(text):
+				# Iterating through each character in the text
+
+				hash += f'fuck{ord(character)}'
+				if index != len(text) - 1:
+					hash += '-' 
+			del text
+			# ----
+
+			# Returning the fuck algorithm hash formed
+			return hash
+		else:
+			# If the user specified hashing algorithm is not recognized, then we return 0
+
+			return 0
 
 class FileEncryptionCracker:
 	""" """
