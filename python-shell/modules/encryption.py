@@ -7,10 +7,10 @@ Author : Rishav Das (https://github.com/rdofficial/)
 Created on : June 13, 2021
 
 Last modified by : Rishav Das (https://github.com/rdofficial/)
-Last modified on : July 1, 2021
+Last modified on : July 2, 2021
 
 Changes made in the last modification :
-1. In the 'HashCracker' class, added the code for creating the hash out of the plain strings per iteration.
+1. In the 'HashCracker' class, added the code for specified algorithm hash cracker via dictionary attack method.
 
 Authors contributed to this script (Add your name below if you have contributed) :
 1. Rishav Das (github:https://github.com/rdofficial/, email:rdofficial192@gmail.com)
@@ -21,6 +21,7 @@ try:
 	from base64 import b64encode, b64decode, decodebytes
 	from io import TextIOWrapper
 	from os import path, listdir, remove, rename
+	from sys import stdout
 	import hashlib
 	from json import loads, dumps
 	from datetime import datetime
@@ -2915,7 +2916,7 @@ class HashCracker:
 		plainStrings = []
 
 		# Loading the contents of the wordlist file specified by the user
-		contents = open(wordlist, 'r').read()
+		contents = open(self.wordlist, 'r').read()
 		contents = contents.split('\n')
 		plainStrings = contents
 		del contents
@@ -2929,7 +2930,25 @@ class HashCracker:
 		else:
 			# If an specific algorithm is specified by the user, then we continue to crack for that particular algorithm
 
-			pass
+			for index, string in enumerate(plainStrings):
+				# Iterating through each of the plain strings
+
+				# Displaying the current number of the plain string try
+				stdout.write('\r')
+				stdout.write(f'[ Trying plain string {index + 1} out of {len(plainStrings)} ]')
+				stdout.flush()
+
+				# Creating the hash of the plain strings using the user specified hashing algorithm
+				hash = self.makehash(string, self.algorithm)
+				if hash == self.original:
+					# If the hash of the currently iterated plain string matches with the original hash, then we display the success message on the console screen and exit the loop
+
+					print(f'\n[ Original string found ]\n[#] String : {string}')
+					break
+				else:
+					# If the hash of the currently iterated plain string matches with the original hash, then we continue for next iteration
+
+					continue
 
 	def bruteforceattack(self):
 		""" """
