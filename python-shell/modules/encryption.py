@@ -7,10 +7,10 @@ Author : Rishav Das (https://github.com/rdofficial/)
 Created on : June 13, 2021
 
 Last modified by : Rishav Das (https://github.com/rdofficial/)
-Last modified on : July 2, 2021
+Last modified on : July 3, 2021
 
 Changes made in the last modification :
-1. In the 'HashCracker' class, added the code for specified algorithm hash cracker via dictionary attack method.
+1. In the 'FileEncryptionCracker' and 'DirectoryEncrypterCracker' class, added structure for two more methods checkpassword() and generatekey().
 
 Authors contributed to this script (Add your name below if you have contributed) :
 1. Rishav Das (github:https://github.com/rdofficial/, email:rdofficial192@gmail.com)
@@ -3095,6 +3095,12 @@ class FileEncryptionCracker:
 	def bruteforceattack(self):
 		pass
 
+	def generatekey(self):
+		pass
+
+	def checkpassword(self):
+		pass
+
 class DirectoryEncryptionCracker:
 	""" """
 
@@ -3105,4 +3111,10 @@ class DirectoryEncryptionCracker:
 		pass
 
 	def bruteforceattack(self):
+		pass
+
+	def generatekey(self):
+		pass
+
+	def checkpassword(self):
 		pass
