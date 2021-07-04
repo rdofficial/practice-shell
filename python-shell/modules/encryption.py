@@ -7,10 +7,10 @@ Author : Rishav Das (https://github.com/rdofficial/)
 Created on : June 13, 2021
 
 Last modified by : Rishav Das (https://github.com/rdofficial/)
-Last modified on : July 3, 2021
+Last modified on : July 4, 2021
 
 Changes made in the last modification :
-1. In the 'FileEncryptionCracker' and 'DirectoryEncrypterCracker' class, added structure for two more methods checkpassword() and generatekey().
+1. In the 'HashCracker' class, added the code to serve the functionality of the entire dictionaryattack() method.
 
 Authors contributed to this script (Add your name below if you have contributed) :
 1. Rishav Das (github:https://github.com/rdofficial/, email:rdofficial192@gmail.com)
@@ -2926,7 +2926,120 @@ class HashCracker:
 		if self.algorithm == None:
 			# If a specific algorithm is not specified by the user, then we continue to check for all the algorithms one by one
 
-			pass
+			for index, string in enumerate(plainStrings):
+				# Displaying the current number of the plain strings try
+				stdout.write('\r')
+				stdout.write(f'[ Trying plain string {index + 1} out of {len(plainStrings)} ]')
+				stdout.flush()
+
+				# Creating the hash from different algorithms
+				# Checking for md5 hashing algorithm
+				hash = self.makehash(string, 'md5')
+				if hash == self.original:
+					# If the md5 hash of the currently iterated plain string matches with the original hash, then we display the success message on the console screen and exit the loop
+
+					print(f'\n[ Original string found ]\n[#] String : {string}')
+					return 0
+				
+				# Checking the sha1 hashing algorithm
+				hash = self.makehash(string, 'sha1')
+				if hash == self.original:
+					# If the sha1 hash of the currently iterated plain string matches with the original hash, then we display the success message on the console screen and exit the loop
+
+					print(f'\n[ Original string found ]\n[#] String : {string}')
+					return 0
+
+				# Checking the sha224 hashing algorithm
+				hash = self.makehash(string, 'sha224')
+				if hash == self.original:
+					# If the sha224 hash of the currently iterated plain string matches with the original hash, then we display the success message on the console screen and exit the loop
+
+					print(f'\n[ Original string found ]\n[#] String : {string}')
+					return 0
+
+				# Checking the sha256 hashing algorithm
+				hash = self.makehash(string, 'sha256')
+				if hash == self.original:
+					# If the sha256 hash of the currently iterated plain string matches with the original hash, then we display the success message on the console screen and exit the loop
+
+					print(f'\n[ Original string found ]\n[#] String : {string}')
+					return 0
+
+				# Checking the sha384 hashing algorithm
+				hash = self.makehash(string, 'sha384')
+				if hash == self.original:
+					# If the sha384 hash of the currently iterated plain string matches with the original hash, then we display the success message on the console screen and exit the loop
+
+					print(f'\n[ Original string found ]\n[#] String : {string}')
+					return 0
+
+				# Checking the sha512 hashing algorithm
+				hash = self.makehash(string, 'sha512')
+				if hash == self.original:
+					# If the sha512 hash of the currently iterated plain string matches with the original hash, then we display the success message on the console screen and exit the loop
+
+					print(f'\n[ Original string found ]\n[#] String : {string}')
+					return 0
+
+				# Checking the sha3_256 hashing algorithm
+				hash = self.makehash(string, 'sha3_256')
+				if hash == self.original:
+					# If the sha3_256 hash of the currently iterated plain string matches with the original hash, then we display the success message on the console screen and exit the loop
+
+					print(f'\n[ Original string found ]\n[#] String : {string}')
+					return 0
+
+				# Checking the sha3_384 hashing algorithm
+				hash = self.makehash(string, 'sha3_384')
+				if hash == self.original:
+					# If the sha3_384 hash of the currently iterated plain string matches with the original hash, then we display the success message on the console screen and exit the loop
+
+					print(f'\n[ Original string found ]\n[#] String : {string}')
+					return 0
+
+				# Checking the sha3_512 hashing algorithm
+				hash = self.makehash(string, 'sha3_512')
+				if hash == self.original:
+					# If the sha3_512 hash of the currently iterated plain string matches with the original hash, then we display the success message on the console screen and exit the loop
+
+					print(f'\n[ Original string found ]\n[#] String : {string}')
+					return 0
+
+				# Checking the shake_128 hashing algorithm
+				hash = self.makehash(string, 'shake_128')
+				if hash == self.original:
+					# If the shake_128 hash of the currently iterated plain string matches with the original hash, then we display the success message on the console screen and exit the loop
+
+					print(f'\n[ Original string found ]\n[#] String : {string}')
+					return 0
+
+				# Checking the shake_256 hashing algorithm
+				hash = self.makehash(string, 'shake_256')
+				if hash == self.original:
+					# If the shake_256 hash of the currently iterated plain string matches with the original hash, then we display the success message on the console screen and exit the loop
+
+					print(f'\n[ Original string found ]\n[#] String : {string}')
+					return 0
+
+				# Checking the blake2s hashing algorithm
+				hash = self.makehash(string, 'blake2s')
+				if hash == self.original:
+					# If the blake2s hash of the currently iterated plain string matches with the original hash, then we display the success message on the console screen and exit the loop
+
+					print(f'\n[ Original string found ]\n[#] String : {string}')
+					return 0
+
+				# Checking the blake2b hashing algorithm
+				hash = self.makehash(string, 'blake2b')
+				if hash == self.original:
+					# If the blake2b hash of the currently iterated plain string matches with the original hash, then we display the success message on the console screen and exit the loop
+
+					print(f'\n[ Original string found ]\n[#] String : {string}')
+					return 0
+
+			# If we reached out of the loop, then we can assume that the wordlist file did not contained the actual password, then we display the error message on the console screen
+			print(f'\n[ Original string not found in the wordlist ]')
+			return 0
 		else:
 			# If an specific algorithm is specified by the user, then we continue to crack for that particular algorithm
 
@@ -2944,11 +3057,15 @@ class HashCracker:
 					# If the hash of the currently iterated plain string matches with the original hash, then we display the success message on the console screen and exit the loop
 
 					print(f'\n[ Original string found ]\n[#] String : {string}')
-					break
+					return 0
 				else:
 					# If the hash of the currently iterated plain string matches with the original hash, then we continue for next iteration
 
 					continue
+
+			# If we reached out of the loop, then we can assume that the wordlist file did not contained the actual password, then we display the error message on the console screen
+			print(f'\n[ Original string not found in the wordlist ]')
+			return 0
 
 	def bruteforceattack(self):
 		""" """
@@ -2993,37 +3110,37 @@ class HashCracker:
 
 			hash = hashlib.sha512(text.encode()).hexdigest()
 			return hash
-		elif self.algorithm == 'sha3_224':
+		elif algorithm == 'sha3_224':
 			# If the user specified hashing algorithm is sha3_224, we continue to form it
 
-			hash = hashlib.sha3_224(self.text.encode()).hexdigest()
+			hash = hashlib.sha3_224(text.encode()).hexdigest()
 			return hash
-		elif self.algorithm == 'sha3_256':
+		elif algorithm == 'sha3_256':
 			# If the user specified hashing algorithm is sha3_256, we continue to form it
 
-			hash = hashlib.sha3_256(self.text.encode()).hexdigest()
+			hash = hashlib.sha3_256(text.encode()).hexdigest()
 			return hash
-		elif self.algorithm == 'sha3_384':
+		elif algorithm == 'sha3_384':
 			# If the user specified hashing algorithm is sha3_384, we continue to form it
 
-			hash = hashlib.sha3_384(self.text.encode()).hexdigest()
+			hash = hashlib.sha3_384(text.encode()).hexdigest()
 			return hash
-		elif self.algorithm == 'sha3_512':
+		elif algorithm == 'sha3_512':
 			# If the user specified hashing algorithm is sha3_512, we continue to form it
 
-			hash = hashlib.sha3_512(self.text.encode()).hexdigest()
+			hash = hashlib.sha3_512(text.encode()).hexdigest()
 			return hash
-		elif self.algorithm == 'blake2b':
+		elif algorithm == 'blake2b':
 			# If the user specified hashing algorithm is blake2b, we continue to form it
 
-			hash = hashlib.blake2b(self.text.encode()).hexdigest()
+			hash = hashlib.blake2b(text.encode()).hexdigest()
 			return hash
-		elif self.algorithm == 'blake2s':
+		elif algorithm == 'blake2s':
 			# If the user specified hashing algorithm is blake2s, we continue to form it
 			
-			hash = hashlib.blake2s(self.text.encode()).hexdigest()
+			hash = hashlib.blake2s(text.encode()).hexdigest()
 			return hash
-		elif self.algorithm == 'fuck':
+		elif algorithm == 'fuck':
 			# If the user specified hashing algorithm is fuck, we continue to form it
 
 			# CUSTOM ALGORITHM
@@ -3032,7 +3149,7 @@ class HashCracker:
 			# Generating an hash encryption key
 			key = 0
 			isEven = True
-			self.text = self.text.decode()
+			text = text.decode()
 			for i in self.text:
 				# Iterating over each character in the encrypted key entered by the user
 					
