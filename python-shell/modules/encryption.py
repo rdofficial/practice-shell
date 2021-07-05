@@ -3068,9 +3068,29 @@ class HashCracker:
 			return 0
 
 	def bruteforceattack(self):
-		""" """
+		""" This method / function serves the functionality of the cracking the original plain string of the hashed string using the bruteforce attack method. """
 
-		pass
+		# Checking the plain string length specifed by the user
+		# ----
+		if type(self.plainstringlength) == int:
+			# If the data type of the plain string length input specified by the user is not integer type, then we continue for further validation
+
+		if self.plainstringlength == 0:
+			# If the plain string length specified by the user is 0, then we display the error message on the console screen
+
+			print(f'[ Error : Invalid plain string length speicified for the bruteforce attack. ]')
+			return 0
+		else:
+			# If the plain string length specified by the user is not 0, then we continue
+
+			pass
+		else:
+			# If the data type of the plain string length input specified by the user is not integer type, then we display the error message on the console screen
+
+			print(f'[ Error : Invalid plain string input speicified for the bruteforce attack. ]')
+			return 0
+		# ----
+
 
 	@staticmethod
 	def makehash(text, algorithm):
