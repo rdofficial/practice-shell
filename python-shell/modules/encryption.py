@@ -7,10 +7,10 @@ Author : Rishav Das (https://github.com/rdofficial/)
 Created on : June 13, 2021
 
 Last modified by : Rishav Das (https://github.com/rdofficial/)
-Last modified on : July 4, 2021
+Last modified on : July 5, 2021
 
 Changes made in the last modification :
-1. In the 'HashCracker' class, added the code to serve the functionality of the entire dictionaryattack() method.
+1. In the 'HashCracker' class, added just basic user input validation code in the bruteforcecracker() method.
 
 Authors contributed to this script (Add your name below if you have contributed) :
 1. Rishav Das (github:https://github.com/rdofficial/, email:rdofficial192@gmail.com)
@@ -1112,7 +1112,7 @@ class DirectoryEncrypter:
 			if self.documentation:
 				# If the user specified the documentation mode, then we continue to display the help text on the console screen
 
-				print('encrypt directory\nUsage : encrypt <arguments>\n\n"encrypt directory" is a tool which serves the functionality of encryption / decryption of user specified directories. This tool encrypts an entire directory with a password. There are also features like ignoring certain files while encryption / decryption process. All such properties of the encryption are stored in the config file (.encryption_config). This file is necessary for the proper decryption of an already encrytped directory.\n\nArguments are :\n--password            Used to specify the password for encryption / decryption\n--directory  Used to specify the directory for encryption / decryption\n--task  Used to specify whether to encrypt / decrypt\n--ignore \t\t\t  Used to specify certain files to ignore when encrypting\n--use-config  Used to specify a custom config for the encryption / decryption\n--help(\t\t\t  Used to display this help te\n\nPoints to be noted :\n1. The sub-folders in the specified directory are skipped, just the files are encrypted.\n2. The complete process of encryption and decryption might have some flaws. There might occur some errors related to key generation, discontinuity, etc, that could lead to serious loss of the data.\n3. Security is not ensured by us. If there are situations like the data is completly corrupted during the process, then the authors are not responsible for the loss of the data. The authors are responsible for the bugs, not the mistakes commited by the users / clients. Thus, use this tool / class object safely and with your own risks.\n\nCheck out the docs for more info.')
+				print('encrypt directory\nUsage : encrypt <arguments>\n\n"encrypt directory" is a tool which serves the functionality of encryption / decryption of user specified directories. This tool encrypts an entire directory with a password. There are also features like ignoring certain files while encryption / decryption process. All such properties of the encryption are stored in the config file (.encryption_config). This file is necessary for the proper decryption of an already encrytped directory.\n\nArguments are :\n--password            Used to specify the password for encryption / decryption\n--directory  Used to specify the directory for encryption / decryption\n--task  Used to specify whether to encrypt / decrypt\n--ignore \t\t\t  Used to specify certain files to ignore when encrypting\n--use-config  Used to specify a custom config for the encryption / decryption\n--help(\t\t\t  Used to display this help text\n\nPoints to be noted :\n1. The sub-folders in the specified directory are skipped, just the files are encrypted.\n2. The complete process of encryption and decryption might have some flaws. There might occur some errors related to key generation, discontinuity, etc, that could lead to serious loss of the data.\n3. Security is not ensured by us. If there are situations like the data is completly corrupted during the process, then the authors are not responsible for the loss of the data. The authors are responsible for the bugs, not the mistakes commited by the users / clients. Thus, use this tool / class object safely and with your own risks.\n\nCheck out the docs for more info.')
 			else:
 				# If the user specified the execution mode, then we continue to execute the task
 
@@ -2056,7 +2056,7 @@ class Hash:
 			if self.documentation:
 				# If the user specified the documentation mode, then we continue to display the help text on the console screen
 
-				print('<-- Help for Hash -->')
+				print('hash\nUsage : hash <arguments>\n\n"hash" is a tool which serves the functionality of converting a plain text into a hash (encrypted format). Hashing is used for information security, search over internet for more information. There are several hashing algorithms available like - md5, sha1, sha224, etc. There are some custom algorithms too in the tool, like - fuck, etc. You can create as well as verify hashes using this tool.\n\nArguments are :\n--text                Used to specify the plain text for hashing\n--original            Used to specify the original hash in case of hash verify\n--algorithm  Used to specify the algorithm required for hashing\n--task  Used to specify whether to make / verify\n--help(\t\t\t  Used to display this help text\n\nPoints to be noted :\n1. For more advanced usage of the tool, along with examples, check out the documentation.\n2. Plain text input should not include any whitespace, or else any sort of errors might be encountered.\n\nCheck out the docs for more info.')
 			else:
 				# If the user specified the execution mode, then we continue to execute the task
 
@@ -3073,17 +3073,17 @@ class HashCracker:
 		# Checking the plain string length specifed by the user
 		# ----
 		if type(self.plainstringlength) == int:
-			# If the data type of the plain string length input specified by the user is not integer type, then we continue for further validation
+			# If the data type of the plain string length input specified by the user is integer type, then we continue for further validation
 
-		if self.plainstringlength == 0:
-			# If the plain string length specified by the user is 0, then we display the error message on the console screen
+			if self.plainstringlength == 0:
+				# If the plain string length specified by the user is 0, then we display the error message on the console screen
 
-			print(f'[ Error : Invalid plain string length speicified for the bruteforce attack. ]')
-			return 0
-		else:
-			# If the plain string length specified by the user is not 0, then we continue
+				print(f'[ Error : Invalid plain string length speicified for the bruteforce attack. ]')
+				return 0
+			else:
+				# If the plain string length specified by the user is not 0, then we continue
 
-			pass
+				pass
 		else:
 			# If the data type of the plain string length input specified by the user is not integer type, then we display the error message on the console screen
 
